@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">EasyKitchen</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="vegetable">蔬菜</string>
+    <string name="meat">肉类</string>
+    <string name="fruit">水果</string>
+    <string name="seasoning">调味品</string>
+    <string name="action_settings">Settings</string>
+</resources>
