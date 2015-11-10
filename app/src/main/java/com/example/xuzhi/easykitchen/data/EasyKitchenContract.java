@@ -24,7 +24,7 @@ public class EasyKitchenContract {
     // looking at weather data. content://com.example.android.sunshine.app/givemeroot/ will fail,
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
-    public static final String PATH_MATERIAL = "material";
+    public static final String PATH_MATERIAL = "Material";
 
     public static final class Material implements BaseColumns {
 
@@ -38,15 +38,22 @@ public class EasyKitchenContract {
 
         public static final String TABLE_NAME = "material";
         public static final String COLUMN_NAME = "name";
-        public static final String COLUMN_TYPE= "type";
+        public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_IMAGE = "image";
+        public static final String COLUMN_IMAGE_GREY = "image_grey";
+        public static final String COLUMN_STATUS = "inKitchen";
 
-        public static Uri buildMatrialUriByName(String name)
+        static public String MATERIAL_TYPE_VEGETABLE = "VEGETABLE";
+        // static public String MATERIAL_TYPE_FRUIT = "FRUIT";
+        static public String MATERIAL_TYPE_MEAT = "MEAT";
+        static public String MATERIAL_TYPE_SEASONING = "SEASONING";
+
+        public static Uri buildMaterialUriByName(String name)
         {
             return CONTENT_URI.buildUpon().appendPath(name).build();
         }
 
-        public static Uri buildMatrialUriByType(String type)
+        public static Uri buildMaterialUriByType(String type)
         {
             return CONTENT_URI.buildUpon().appendPath(type).build();
         }
@@ -54,12 +61,18 @@ public class EasyKitchenContract {
         public static String getTypeFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }
-
+        public static String getStatusFromUri(Uri uri) {
+            return uri.getPathSegments().get(3);
+        }
+        public static String getStatusWithoutTypeFromUri(Uri uri) {
+            return getTypeFromUri(uri);
+        }
         public static String getNameFromUri(Uri uri) {
-            return uri.getPathSegments().get(2);
+            return getTypeFromUri(uri);
         }
         public static Uri buildMaterialUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
 }

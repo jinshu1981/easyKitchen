@@ -1,15 +1,20 @@
 package com.example.xuzhi.easykitchen;
 
-import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -20,43 +25,50 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-    static public MaterialAdapter mVegetableAdapter;
-    static public MaterialAdapter mMeatAdapter;
-    static public MaterialAdapter mFruitAdapter;
-    static public MaterialAdapter mSeasoningAdapter;
+   // static public MaterialAdapter mVegetableAdapter;
+   static public SimpleCursorAdapter mVegetableAdapter;
+    static public SimpleCursorAdapter mMeatAdapter;
+    static public SimpleCursorAdapter mFruitAdapter;
+    static public SimpleCursorAdapter mSeasoningAdapter;
 
-    static public String MATERIAL_TYPE_VEGETABLE = "VEGETABLE";
-    static public String MATERIAL_TYPE_FRUIT = "FRUIT";
-    static public String MATERIAL_TYPE_MEAT = "MEAT";
-    static public String MATERIAL_TYPE_SEASONING = "SEASONING";
+
 
     private static final int MATERIAL_LOADER_VEGETABLE = 0;
     private static final int MATERIAL_LOADER_MEAT = 1;
-    private static final int MATERIAL_LOADER_FRUIT = 2;
+    //private static final int MATERIAL_LOADER_FRUIT = 2;
     private static final int MATERIAL_LOADER_SEASONING = 3;
 
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     public MainActivityFragment() {
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
 
-        mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
+       // mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
+        String [] dataColumns = {"image","name"};
+        int [] viewIDs = {R.id.image,R.id.name};
+
+        mVegetableAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
         gridView.setAdapter(mVegetableAdapter);
 
-        mFruitAdapter = new MaterialAdapter(getActivity(), null, 0);
-        gridView = (GridView) rootView.findViewById(R.id.grid_view_fruit);
-        gridView.setAdapter(mFruitAdapter);
+        //mFruitAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+       // gridView = (GridView) rootView.findViewById(R.id.grid_view_fruit);
+       // gridView.setAdapter(mFruitAdapter);
 
-        mMeatAdapter = new MaterialAdapter(getActivity(), null, 0);
+        mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
         gridView.setAdapter(mMeatAdapter);
 
-        mSeasoningAdapter = new MaterialAdapter(getActivity(), null, 0);
+        mSeasoningAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
         gridView.setAdapter(mSeasoningAdapter);
         return rootView;
@@ -66,39 +78,56 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MATERIAL_LOADER_VEGETABLE, null, this);
         getLoaderManager().initLoader(MATERIAL_LOADER_MEAT, null, this);
-        getLoaderManager().initLoader(MATERIAL_LOADER_FRUIT, null, this);
+        //getLoaderManager().initLoader(MATERIAL_LOADER_FRUIT, null, this);
         getLoaderManager().initLoader(MATERIAL_LOADER_SEASONING, null, this);
 
-        insertVegetables();
+        //insertVegetables(getActivity());
         super.onActivityCreated(savedInstanceState);
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_main_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // 处理动作按钮的点击事件
+        switch (item.getItemId()) {
+            case R.id.action_modify:
+                openModifyActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         //String locationSetting = Utility.getPreferredLocation(getActivity());
 
         // Sort order:  Ascending, by date.
-        String sortOrder = EasyKitchenContract.Material._ID + " ASC";
+        String sortOrder = EasyKitchenContract.Material.COLUMN_NAME + " ASC";
         Uri movieUri;
-        String type = MATERIAL_TYPE_VEGETABLE;
+        String type = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
         switch (i)
         {
             case MATERIAL_LOADER_VEGETABLE:
-                type = MATERIAL_TYPE_VEGETABLE;
-                break;
-            case MATERIAL_LOADER_FRUIT:
-                type = MATERIAL_TYPE_FRUIT;
+                type =EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
                 break;
             case MATERIAL_LOADER_MEAT:
-                type = MATERIAL_TYPE_MEAT;
+                type = EasyKitchenContract.Material.MATERIAL_TYPE_MEAT;
                 break;
             case MATERIAL_LOADER_SEASONING:
-                type = MATERIAL_TYPE_SEASONING;
+                type = EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING;
                 break;
             default:
                 break;
 
         }
-        movieUri = EasyKitchenContract.Material.CONTENT_URI.buildUpon().appendPath("type").appendPath(type).build();
+        movieUri = EasyKitchenContract.Material.CONTENT_URI.buildUpon().appendPath("type").appendPath(type).appendPath("YES").build();
 
         return new CursorLoader(getActivity(),
                 movieUri,
@@ -110,7 +139,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        MaterialAdapter adapter = mVegetableAdapter;
+
+        SimpleCursorAdapter adapter = mVegetableAdapter;
         if (cursor==null)
         {
             Log.v(LOG_TAG, " return cursorLoader.getId()" +cursorLoader.getId());
@@ -121,10 +151,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             case MATERIAL_LOADER_VEGETABLE:
                 adapter = mVegetableAdapter;
                 break;
-            case MATERIAL_LOADER_FRUIT:
-                adapter = mFruitAdapter;
-                break;
-            case MATERIAL_LOADER_MEAT:
+             case MATERIAL_LOADER_MEAT:
                 adapter = mMeatAdapter;
                 break;
             case MATERIAL_LOADER_SEASONING:
@@ -133,7 +160,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             default:
                 break;
         }
-        Log.v(LOG_TAG, "cursorLoader.getId()" +cursorLoader.getId());
+
         Log.v(LOG_TAG, cursor.toString());
         adapter.swapCursor(cursor);
         Log.v(LOG_TAG, "onLoadFinished");
@@ -142,16 +169,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        MaterialAdapter adapter = mVegetableAdapter;
+
+        SimpleCursorAdapter adapter = mVegetableAdapter;
         switch (cursorLoader.getId())
         {
             case MATERIAL_LOADER_VEGETABLE:
                 adapter = mVegetableAdapter;
                 break;
-            case MATERIAL_LOADER_FRUIT:
-                adapter = mFruitAdapter;
-                break;
-            case MATERIAL_LOADER_MEAT:
+             case MATERIAL_LOADER_MEAT:
                 adapter = mMeatAdapter;
                 break;
             case MATERIAL_LOADER_SEASONING:
@@ -160,33 +185,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             default:
                 break;
         }
-        adapter.swapCursor(null);
+         adapter.swapCursor(null);
     }
-    public void insertVegetables()
-    {
-        // Now that the content provider is set up, inserting rows of data is pretty simple.
-        // First create a ContentValues object to hold the data you want to insert.
-        ContentValues locationValues = new ContentValues();
 
-        // Then add the data, along with the corresponding name of the data type,
-        // so the content provider knows what kind of value is being inserted.
-        locationValues.put(EasyKitchenContract.Material.COLUMN_NAME, "huanggua");
-        locationValues.put(EasyKitchenContract.Material.COLUMN_TYPE, "VEGETABLE");
-        locationValues.put(EasyKitchenContract.Material.COLUMN_IMAGE, "huanggua");
-        // Finally, insert location data into the database.
-        Uri insertedUri = getActivity().getContentResolver().insert(
-                EasyKitchenContract.Material.CONTENT_URI,
-                locationValues
-        );
-       /* locationValues.put(EasyKitchenContract.Material.COLUMN_NAME, "ou");
-        locationValues.put(EasyKitchenContract.Material.COLUMN_TYPE, "VEGETABLE");
-        locationValues.put(EasyKitchenContract.Material.COLUMN_IMAGE, "ou");
-        // Finally, insert location data into the database.
-         insertedUri = getActivity().getContentResolver().insert(
-                EasyKitchenContract.Material.CONTENT_URI,
-                locationValues
-        );*/
+    public void  openModifyActivity()
+    {
+        Intent intent = new Intent(getActivity(), ArrangeActivity.class);
+        startActivity(intent);
     }
+
 }
 
 

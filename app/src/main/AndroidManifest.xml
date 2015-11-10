@@ -16,9 +16,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="com.example.xuzhi.easykitchen"
-            android:name=".data.EasyKitchenProvider" />
+            android:name=".data.EasyKitchenProvider"
+            android:authorities="com.example.xuzhi.easykitchen" />
+
+        <activity
+            android:name=".ArrangeActivity"
+            android:label="@string/title_activity_arrange"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

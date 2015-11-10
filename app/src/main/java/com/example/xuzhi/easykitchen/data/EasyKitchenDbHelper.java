@@ -11,7 +11,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract.Material;
  */
 public class EasyKitchenDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 6;
 
     static final String DATABASE_NAME = "easyKitchen.db";
 
@@ -21,19 +21,13 @@ public class EasyKitchenDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String SQL_CREATE_MATERIAL_TABLE = "CREATE TABLE " + Material.TABLE_NAME + " (" +
-                // Why AutoIncrement here, and not above?
-                // Unique keys will be auto-generated in either case.  But for weather
-                // forecasting, it's reasonable to assume the user will want information
-                // for a certain date and all dates *following*, so the forecast data
-                // should be sorted accordingly.
                 Material._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-
-                // the ID of the location entry associated with this weather data
                 Material.COLUMN_NAME + " TEXT NOT NULL, " +
                 Material.COLUMN_TYPE + " TEXT NOT NULL, " +
-                Material.COLUMN_IMAGE + " TEXT NOT NULL, " +
-                // To assure the application have just one weather entry per day
-                // per location, it's created a UNIQUE constraint with REPLACE strategy
+                Material.COLUMN_IMAGE + " INTEGER NOT NULL, " +
+                Material.COLUMN_IMAGE_GREY + " INTEGER NOT NULL, " +
+                Material.COLUMN_STATUS + " TEXT NOT NULL, " +
+
                 " UNIQUE (" + Material.COLUMN_NAME+ ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_MATERIAL_TABLE);

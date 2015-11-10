@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">EasyKitchen</string>
     <string name="hello_world">Hello world!</string>
-    <string name="vegetable">蔬菜</string>
-    <string name="meat">肉类</string>
+    <string name="vegetable">素菜</string>
+    <string name="meat">荤菜</string>
     <string name="fruit">水果</string>
     <string name="seasoning">调味品</string>
     <string name="action_settings">Settings</string>
+    <string name="action_modify">整理</string>
+    <string name="title_activity_arrange">ArrangeActivity</string>
+    <string name="add">买入</string>
+    <string name="delete">耗尽</string>
 </resources>
