@@ -25,6 +25,10 @@ public class EasyKitchenProvider extends ContentProvider {
     static final int EASY_KITCHEN_MATERIAL_WITH_STATUS = 103;
     static final int EASY_KITCHEN_MATERIAL_WITH_TYPE_AND_STATUS = 104;
 
+    static final int EASY_KITCHEN_RECIPE = 200;
+    static final int EASY_KITCHEN_RECIPE_WITH_NAME = 201;
+    static final int EASY_KITCHEN_RECIPE_WITH_MATERIAL = 202;
+
     private static final SQLiteQueryBuilder sEasyKitchenQueryBuilder;
     static{
         sEasyKitchenQueryBuilder = new SQLiteQueryBuilder();
@@ -46,6 +50,11 @@ public class EasyKitchenProvider extends ContentProvider {
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/name/*", EASY_KITCHEN_MATERIAL_WITH_NAME);
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/inKitchen/*", EASY_KITCHEN_MATERIAL_WITH_STATUS);
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/type/*/*", EASY_KITCHEN_MATERIAL_WITH_TYPE_AND_STATUS);
+
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE, EASY_KITCHEN_RECIPE);
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/material/*", EASY_KITCHEN_RECIPE_WITH_MATERIAL);
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/name/*", EASY_KITCHEN_RECIPE_WITH_NAME);
+
         return matcher;
     }
 
@@ -69,6 +78,12 @@ public class EasyKitchenProvider extends ContentProvider {
                 return EasyKitchenContract.Material.CONTENT_TYPE;
             case EASY_KITCHEN_MATERIAL_WITH_NAME:
                 return EasyKitchenContract.Material.CONTENT_ITEM_TYPE;
+
+            case EASY_KITCHEN_RECIPE:
+            case EASY_KITCHEN_RECIPE_WITH_MATERIAL:
+                return EasyKitchenContract.Recipe.CONTENT_TYPE;
+            case EASY_KITCHEN_RECIPE_WITH_NAME:
+                return EasyKitchenContract.Recipe.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -97,7 +112,7 @@ public class EasyKitchenProvider extends ContentProvider {
 
     private Cursor getAllMaterial(
             Uri uri, String[] projection, String sortOrder) {
-
+        sEasyKitchenQueryBuilder.setTables("material");
         return mOpenHelper.getReadableDatabase().query(
                 EasyKitchenContract.Material.TABLE_NAME,
                 projection,
@@ -171,6 +186,29 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
+    //Recipe.material match
+    private static final String sEasyKitchenByRecipeMaterialMatchSelection =
+            EasyKitchenContract.Recipe.TABLE_NAME+
+                    "." + EasyKitchenContract.Recipe.COLUMN_MATERIAL + " MATCH ? ";
+
+
+    private Cursor getRecipeByMatchMaterial(
+            Uri uri, String[] projection, String sortOrder) {
+
+        String material = EasyKitchenContract.Recipe.getMaterialFromUri(uri);
+
+        Log.v(LOG_TAG,"material = " + material);
+        sEasyKitchenQueryBuilder.setTables("recipe");
+        return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEasyKitchenByRecipeMaterialMatchSelection,
+                new String[]{material+ '*' },
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
@@ -202,7 +240,10 @@ public class EasyKitchenProvider extends ContentProvider {
                 break;
             }
 
-
+            case EASY_KITCHEN_RECIPE_WITH_MATERIAL: {
+                retCursor = getRecipeByMatchMaterial(uri, projection, sortOrder);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -221,6 +262,15 @@ public class EasyKitchenProvider extends ContentProvider {
                 long _id = db.insert(EasyKitchenContract.Material.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = EasyKitchenContract.Material.buildMaterialUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+
+            case EASY_KITCHEN_RECIPE: {
+                long _id = db.insert(EasyKitchenContract.Recipe.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = EasyKitchenContract.Recipe.buildRecipeUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -244,6 +294,11 @@ public class EasyKitchenProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         EasyKitchenContract.Material.TABLE_NAME, selection, selectionArgs);
                 break;
+            case EASY_KITCHEN_RECIPE:
+                rowsDeleted = db.delete(
+                        EasyKitchenContract.Recipe.TABLE_NAME, selection, selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -268,6 +323,11 @@ public class EasyKitchenProvider extends ContentProvider {
                 rowsUpdated = db.update(EasyKitchenContract.Material.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
+            case EASY_KITCHEN_RECIPE:
+                rowsUpdated = db.update(EasyKitchenContract.Recipe.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -289,6 +349,24 @@ public class EasyKitchenProvider extends ContentProvider {
                     for (ContentValues value : values) {
 
                         long _id = db.insert(EasyKitchenContract.Material.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            }
+            case EASY_KITCHEN_RECIPE:{
+                db.beginTransaction();
+                int returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+
+                        long _id = db.insert(EasyKitchenContract.Recipe.TABLE_NAME, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }

@@ -26,6 +26,8 @@ public class EasyKitchenContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_MATERIAL = "Material";
 
+    public static final String PATH_RECIPE = "Recipe";
+
     public static final class Material implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -44,7 +46,6 @@ public class EasyKitchenContract {
         public static final String COLUMN_STATUS = "inKitchen";
 
         static public String MATERIAL_TYPE_VEGETABLE = "VEGETABLE";
-        // static public String MATERIAL_TYPE_FRUIT = "FRUIT";
         static public String MATERIAL_TYPE_MEAT = "MEAT";
         static public String MATERIAL_TYPE_SEASONING = "SEASONING";
 
@@ -53,9 +54,10 @@ public class EasyKitchenContract {
             return CONTENT_URI.buildUpon().appendPath(name).build();
         }
 
-        public static Uri buildMaterialUriByType(String type)
+        public static Uri buildMaterialUriByType(String type,String status)
         {
-            return CONTENT_URI.buildUpon().appendPath(type).build();
+            //return CONTENT_URI.buildUpon().appendPath(type).build();
+            return CONTENT_URI.buildUpon().appendPath("type").appendPath(type).appendPath(status).build();
         }
 
         public static String getTypeFromUri(Uri uri) {
@@ -74,5 +76,33 @@ public class EasyKitchenContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
+
+    public static final class Recipe implements BaseColumns{
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_RECIPE).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RECIPE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RECIPE;
+
+        public static final String TABLE_NAME = "recipe";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_MATERIAL = "material";
+        public static final String COLUMN_STEP = "step";
+        public static final String COLUMN_IMAGE = "image";
+
+        public static Uri buildRecipeUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static String getMaterialFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+    }
+
+
 
 }

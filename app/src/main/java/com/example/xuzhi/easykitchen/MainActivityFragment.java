@@ -35,10 +35,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     private static final int MATERIAL_LOADER_VEGETABLE = 0;
     private static final int MATERIAL_LOADER_MEAT = 1;
-    //private static final int MATERIAL_LOADER_FRUIT = 2;
-    private static final int MATERIAL_LOADER_SEASONING = 3;
+    private static final int MATERIAL_LOADER_SEASONING = 2;
 
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    static private boolean InitFlag = true;//此处需要修改为Shared Preferences
     public MainActivityFragment() {
     }
     @Override
@@ -60,10 +60,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
         gridView.setAdapter(mVegetableAdapter);
 
-        //mFruitAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-       // gridView = (GridView) rootView.findViewById(R.id.grid_view_fruit);
-       // gridView.setAdapter(mFruitAdapter);
-
         mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
         gridView.setAdapter(mMeatAdapter);
@@ -78,10 +74,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MATERIAL_LOADER_VEGETABLE, null, this);
         getLoaderManager().initLoader(MATERIAL_LOADER_MEAT, null, this);
-        //getLoaderManager().initLoader(MATERIAL_LOADER_FRUIT, null, this);
         getLoaderManager().initLoader(MATERIAL_LOADER_SEASONING, null, this);
+        if (InitFlag == true)
+        {
+            Utility.insertVegetables(getActivity());
+            Utility.insertRecipes(getActivity());
+            InitFlag = false;
+        }
 
-        //insertVegetables(getActivity());
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -127,7 +127,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 break;
 
         }
-        movieUri = EasyKitchenContract.Material.CONTENT_URI.buildUpon().appendPath("type").appendPath(type).appendPath("YES").build();
+        movieUri = EasyKitchenContract.Material.buildMaterialUriByType(type, "YES");
 
         return new CursorLoader(getActivity(),
                 movieUri,

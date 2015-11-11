@@ -85,4 +85,21 @@ public class Utility {
         }
         return OppositeStatus;
     }
+
+    static public void insertRecipes(Context c) {
+        // Now that the content provider is set up, inserting rows of data is pretty simple.
+        // First create a ContentValues object to hold the data you want to insert.
+        ContentValues recipeValues = new ContentValues();
+        Uri insertedUri;
+
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_NAME, "凉拌黄瓜");
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MATERIAL, "黄瓜，盐，白醋");
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_STEP, "1234");
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_IMAGE, R.mipmap.temp);
+            // Finally, insert location data into the database.
+            insertedUri = c.getContentResolver().insert(
+                    EasyKitchenContract.Recipe.CONTENT_URI,
+                    recipeValues
+            );
+    }
 }
