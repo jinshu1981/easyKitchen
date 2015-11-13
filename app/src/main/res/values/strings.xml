@@ -10,4 +10,6 @@
     <string name="title_activity_arrange">ArrangeActivity</string>
     <string name="add">买入</string>
     <string name="delete">耗尽</string>
+    <string name="title_activity_recipe">RecipeActivity</string>
+    <string name="title_activity_menu">MenuActivity</string>
 </resources>

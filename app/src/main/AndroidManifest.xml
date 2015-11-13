@@ -29,6 +29,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xuzhi.easykitchen.MainActivity" />
         </activity>
+        <activity
+            android:name=".RecipeActivity"
+            android:label="@string/title_activity_recipe"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MenuActivity"
+            android:label="@string/title_activity_menu"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

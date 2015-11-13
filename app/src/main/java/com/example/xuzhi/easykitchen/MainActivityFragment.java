@@ -11,12 +11,14 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
@@ -26,7 +28,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
    // static public MaterialAdapter mVegetableAdapter;
-   static public SimpleCursorAdapter mVegetableAdapter;
+    static public SimpleCursorAdapter mVegetableAdapter;
     static public SimpleCursorAdapter mMeatAdapter;
     static public SimpleCursorAdapter mFruitAdapter;
     static public SimpleCursorAdapter mSeasoningAdapter;
@@ -39,6 +41,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
     static private boolean InitFlag = true;//此处需要修改为Shared Preferences
+
+    private GestureDetector.SimpleOnGestureListener detector;
     public MainActivityFragment() {
     }
     @Override
@@ -46,6 +50,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        detector = new GestureDetector.SimpleOnGestureListener();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +64,23 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         mVegetableAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
         gridView.setAdapter(mVegetableAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                //ImageView MoviesDetail = (ImageView)mMoviesImageAdapter.getItem(position);
+                // Log.v(LOG_TAG, "MoviesDetail = " + String.valueOf(MoviesDetail));
+                //Log.v(LOG_TAG, "MoviesDetail.id = " + String.valueOf(MoviesDetail.getId()));
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    int nameIndex = cursor.getColumnIndex("name");
+                    String name = cursor.getString(nameIndex);
+                    Log.v(LOG_TAG, "name = " + name);
+                    Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
+                    startActivity(intent);
+                }
+            }
+        });
 
         mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
@@ -67,6 +89,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         mSeasoningAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
         gridView.setAdapter(mSeasoningAdapter);
+
+
         return rootView;
     }
 
@@ -193,7 +217,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         Intent intent = new Intent(getActivity(), ArrangeActivity.class);
         startActivity(intent);
     }
+    /*begin SimpleGestureFilter*/
 
+
+    /*end SimpleGestureFilter*/
 }
 
 

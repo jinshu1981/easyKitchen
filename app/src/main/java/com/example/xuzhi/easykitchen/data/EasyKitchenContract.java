@@ -96,7 +96,9 @@ public class EasyKitchenContract {
         public static Uri buildRecipeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-
+        public static Uri buildRecipeUriByMaterialName(String materialName) {
+            return CONTENT_URI.buildUpon().appendPath("material").appendPath(materialName).build();
+        }
         public static String getMaterialFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }

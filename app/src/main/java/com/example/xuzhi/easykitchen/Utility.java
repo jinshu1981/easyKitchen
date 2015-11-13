@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
@@ -11,6 +12,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  * Created by xuzhi on 2015/11/4.
  */
 public class Utility {
+    private final static String LOG_TAG = Utility.class.getSimpleName();
 
     static public void insertVegetables(Context c) {
         // Now that the content provider is set up, inserting rows of data is pretty simple.
@@ -93,13 +95,17 @@ public class Utility {
         Uri insertedUri;
 
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_NAME, "凉拌黄瓜");
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MATERIAL, "黄瓜，盐，白醋");
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_STEP, "1234");
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MATERIAL, "蒜泥、黄瓜、生抽、醋、糖");
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_STEP, "1 将黄瓜反复洗涤干净，我这里用淘米水浸泡了15分钟.\n" +
+                "2 将黄瓜拍碎.\n" +
+                "3 准备调味汁.我这里用的是蒜泥\\生抽\\醋少许，糖一点点，芝麻油略多点.\n" +
+                "也可以按自己的喜好添加其他的调味品进去.比如说：辣椒油\\花椒油\\芝麻酱等等");
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_IMAGE, R.mipmap.temp);
             // Finally, insert location data into the database.
             insertedUri = c.getContentResolver().insert(
                     EasyKitchenContract.Recipe.CONTENT_URI,
                     recipeValues
             );
+        Log.v(LOG_TAG,"insertedUri = "+ insertedUri);
     }
 }

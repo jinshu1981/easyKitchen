@@ -186,23 +186,25 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
-    //Recipe.material match
+    //Recipe.material match ?
     private static final String sEasyKitchenByRecipeMaterialMatchSelection =
             EasyKitchenContract.Recipe.TABLE_NAME+
-                    "." + EasyKitchenContract.Recipe.COLUMN_MATERIAL + " MATCH ? ";
+                    "." + EasyKitchenContract.Recipe.COLUMN_MATERIAL + " LIKE ?";
 
+    private static final String sEasyKitchenByRecipeMaterialSelection =
+            EasyKitchenContract.Recipe.TABLE_NAME+
+                    "." + EasyKitchenContract.Recipe.COLUMN_MATERIAL + " = ?";
 
     private Cursor getRecipeByMatchMaterial(
             Uri uri, String[] projection, String sortOrder) {
 
         String material = EasyKitchenContract.Recipe.getMaterialFromUri(uri);
-
         Log.v(LOG_TAG,"material = " + material);
         sEasyKitchenQueryBuilder.setTables("recipe");
         return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 sEasyKitchenByRecipeMaterialMatchSelection,
-                new String[]{material+ '*' },
+                new String[]{"%"+material+"%"},
                 null,
                 null,
                 sortOrder
