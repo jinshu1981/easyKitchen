@@ -51,7 +51,7 @@ public class EasyKitchenContract {
 
         public static Uri buildMaterialUriByName(String name)
         {
-            return CONTENT_URI.buildUpon().appendPath(name).build();
+            return CONTENT_URI.buildUpon().appendPath("name").appendPath(name).build();
         }
 
         public static Uri buildMaterialUriByType(String type,String status)
@@ -92,6 +92,7 @@ public class EasyKitchenContract {
         public static final String COLUMN_MATERIAL = "material";
         public static final String COLUMN_STEP = "step";
         public static final String COLUMN_IMAGE = "image";
+        public static final String COLUMN_WEIGHT  ="weight";
 
         public static Uri buildRecipeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -102,7 +103,23 @@ public class EasyKitchenContract {
         public static String getMaterialFromUri(Uri uri) {
             return uri.getPathSegments().get(2);
         }
-
+        public static String getNameFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static String getWeightFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static Uri buildRecipeUriByMoreThanOneMaterials() {
+            return CONTENT_URI.buildUpon().appendPath("allMaterials").build();
+        }
+        public static Uri buildRecipeUriByName(String name)
+        {
+            return CONTENT_URI.buildUpon().appendPath("name").appendPath(name).build();
+        }
+        public static Uri buildRecipeUriByWeight(int weight)
+        {
+            return CONTENT_URI.buildUpon().appendPath("weight").appendPath(Integer.toString(weight)).build();
+        }
     }
 
 

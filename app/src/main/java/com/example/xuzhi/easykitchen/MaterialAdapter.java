@@ -3,7 +3,6 @@ package com.example.xuzhi.easykitchen;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,16 +47,16 @@ public class MaterialAdapter extends CursorAdapter {
 
         text.setText(textString);
 
-        Log.v(LOG_TAG,"text = "+ textString +",status = " + status);
+        //Log.v(LOG_TAG,"text = "+ textString +",status = " + status);
         if (status.equals("YES"))
         {
             image.setImageResource(R.mipmap.temp);
-            Log.v(LOG_TAG, "text = " + textString + ",status = " + status);
+            //Log.v(LOG_TAG, "text = " + textString + ",status = " + status);
         }
         else
         {
             image.setImageResource(R.mipmap.temp_grey);
-            Log.v(LOG_TAG, "text = " + textString + ",status = " + status);
+           // Log.v(LOG_TAG, "text = " + textString + ",status = " + status);
         }
 
 

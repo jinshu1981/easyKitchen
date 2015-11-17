@@ -12,7 +12,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract.Recipe;
  */
 public class EasyKitchenDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
 
     static final String DATABASE_NAME = "easyKitchen.db";
 
@@ -39,6 +39,7 @@ public class EasyKitchenDbHelper extends SQLiteOpenHelper {
                 Recipe.COLUMN_MATERIAL + " TEXT NOT NULL, " +
                 Recipe.COLUMN_STEP + " TEXT NOT NULL, " +
                 Recipe.COLUMN_IMAGE + " INTEGER NOT NULL, " +
+                Recipe.COLUMN_WEIGHT + " INTEGER NOT NULL, " +
 
                 " UNIQUE (" + Recipe.COLUMN_NAME+ ") ON CONFLICT REPLACE);";
         sqLiteDatabase.execSQL(SQL_CREATE_RECIPE_TABLE);

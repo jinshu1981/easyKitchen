@@ -50,11 +50,11 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
 
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
         String materialName = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
-        Uri movieUri;
+        Uri recipeUri;
 
-        movieUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(materialName);
+        recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(materialName);
         return new CursorLoader(getActivity(),
-                movieUri,
+                recipeUri,
                 null,
                 null,
                 null,

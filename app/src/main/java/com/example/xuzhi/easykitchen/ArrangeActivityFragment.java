@@ -38,8 +38,8 @@ public class ArrangeActivityFragment extends Fragment implements LoaderManager.L
                              Bundle savedInstanceState) {
          View rootView = inflater.inflate(R.layout.fragment_arrange, container, false);
 
-        String [] dataColumns = {"image","name"};
-        int [] viewIDs = {R.id.image,R.id.name};
+        //String [] dataColumns = {"image","name"};
+       // int [] viewIDs = {R.id.image,R.id.name};
 
         mAddAdapter = new MaterialAdapter(getActivity(), null, 0);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_add_material);

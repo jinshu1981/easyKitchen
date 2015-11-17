@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <material>
+            <string>黄瓜</string>
+            <string name>V</string>
+            <int name="image">R.mipmap.temp</int>
+            <int name="image_gray">R.mipmap.temp_grey</int>
+            <int name="status">NO</int>
+    </material>
+    <material>
+        <string name="name">生菜</string>
+        <string name="type">V</string>
+        <int name="image">R.mipmap.temp</int>
+        <int name="image_gray">R.mipmap.temp_grey</int>
+        <int name="status">NO</int>
+    </material>
+</resources>

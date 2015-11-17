@@ -2,16 +2,19 @@ package com.example.xuzhi.easykitchen;
 
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.TextView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
@@ -22,14 +25,23 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
     static public SimpleCursorAdapter mMenuAdapter;
     private static final int MATERIAL_LOADER_MENU = 0;
     private final String LOG_TAG = this.getClass().getSimpleName();
-
+    View mRootView;
     public MenuActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_menu, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
+        mRootView = rootView;
+        String [] dataColumns = {"image","name"};
+        int [] viewIDs = {R.id.image,R.id.name};
+
+        mMenuAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
+        gridView.setAdapter(mMenuAdapter);
+        return rootView;
+
     }
 
     @Override
@@ -40,16 +52,12 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        //String locationSetting = Utility.getPreferredLocation(getActivity());
 
-        // Sort order:  Ascending, by date.
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        Uri movieUri;
-
-        movieUri = EasyKitchenContract.Material.buildMaterialUriByType(type, "YES");
-
+        //weight = 0 means all materials are in kitchen
+        Uri uri = EasyKitchenContract.Recipe.buildRecipeUriByWeight(0);
         return new CursorLoader(getActivity(),
-                movieUri,
+                uri,
                 null,
                 null,
                 null,
@@ -59,51 +67,18 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        SimpleCursorAdapter adapter = mVegetableAdapter;
-        if (cursor==null)
+        mMenuAdapter.swapCursor(cursor);
+        if ((cursor == null)||(cursor.getCount()==0))
         {
-            Log.v(LOG_TAG, " return cursorLoader.getId()" + cursorLoader.getId());
-            return;
+            ((TextView) mRootView.findViewById(R.id.no_menu_text))
+                    .setText("对不起，找到没有合适的菜单");
         }
-        switch (cursorLoader.getId())
-        {
-            case MATERIAL_LOADER_VEGETABLE:
-                adapter = mVegetableAdapter;
-                break;
-            case MATERIAL_LOADER_MEAT:
-                adapter = mMeatAdapter;
-                break;
-            case MATERIAL_LOADER_SEASONING:
-                adapter = mSeasoningAdapter;
-                break;
-            default:
-                break;
-        }
-
-        Log.v(LOG_TAG, cursor.toString());
-        adapter.swapCursor(cursor);
         Log.v(LOG_TAG, "onLoadFinished");
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-        SimpleCursorAdapter adapter = mVegetableAdapter;
-        switch (cursorLoader.getId())
-        {
-            case MATERIAL_LOADER_VEGETABLE:
-                adapter = mVegetableAdapter;
-                break;
-            case MATERIAL_LOADER_MEAT:
-                adapter = mMeatAdapter;
-                break;
-            case MATERIAL_LOADER_SEASONING:
-                adapter = mSeasoningAdapter;
-                break;
-            default:
-                break;
-        }
-        adapter.swapCursor(null);
+        mMenuAdapter.swapCursor(null);
     }
 }

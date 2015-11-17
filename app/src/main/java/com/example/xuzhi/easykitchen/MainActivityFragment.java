@@ -73,7 +73,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 //Log.v(LOG_TAG, "MoviesDetail.id = " + String.valueOf(MoviesDetail.getId()));
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    int nameIndex = cursor.getColumnIndex("name");
+                    int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
                     String name = cursor.getString(nameIndex);
                     Log.v(LOG_TAG, "name = " + name);
                     Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
@@ -85,11 +85,26 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
         gridView.setAdapter(mMeatAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                //ImageView MoviesDetail = (ImageView)mMoviesImageAdapter.getItem(position);
+                // Log.v(LOG_TAG, "MoviesDetail = " + String.valueOf(MoviesDetail));
+                //Log.v(LOG_TAG, "MoviesDetail.id = " + String.valueOf(MoviesDetail.getId()));
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
+                    String name = cursor.getString(nameIndex);
+                    Log.v(LOG_TAG, "name = " + name);
+                    Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
+                    startActivity(intent);
+                }
+            }
+        });
         mSeasoningAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
         gridView.setAdapter(mSeasoningAdapter);
-
 
         return rootView;
     }
