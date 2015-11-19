@@ -81,9 +81,9 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
             ((TextView) mRootView.findViewById(R.id.step))
                     .setText(content);
 
-            index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_IMAGE);
-            int imageid = cursor.getInt(index);
-            ((ImageView) mRootView.findViewById(R.id.image)).setImageResource(imageid);
+            //index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_IMAGE);
+            //int imageid = cursor.getInt(index);
+            ((ImageView) mRootView.findViewById(R.id.image)).setImageResource(Utility.getImagebyName(content));
 
         }
         else

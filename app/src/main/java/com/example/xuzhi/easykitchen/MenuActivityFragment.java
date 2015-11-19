@@ -7,14 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
@@ -22,7 +22,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  * A placeholder fragment containing a simple view.
  */
 public class MenuActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-    static public SimpleCursorAdapter mMenuAdapter;
+    static public MaterialAdapter mMenuAdapter;
     private static final int MATERIAL_LOADER_MENU = 0;
     private final String LOG_TAG = this.getClass().getSimpleName();
     View mRootView;
@@ -34,12 +34,29 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         mRootView = rootView;
-        String [] dataColumns = {"image","name"};
-        int [] viewIDs = {R.id.image,R.id.name};
+       // String [] dataColumns = {"image","name"};
+       // int [] viewIDs = {R.id.image,R.id.name};
 
-        mMenuAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        /*mMenuAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
+        gridView.setAdapter(mMenuAdapter);*/
+
+        mMenuAdapter = new MaterialAdapter(getActivity(), null, 0);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
         gridView.setAdapter(mMenuAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                    //Utility.UpdateSingleCursor(getActivity(), cursor);
+                    Toast.makeText(getActivity(), "This is an Android Toast Message", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         return rootView;
 
     }

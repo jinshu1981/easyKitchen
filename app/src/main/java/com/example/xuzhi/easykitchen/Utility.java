@@ -2,15 +2,16 @@ package com.example.xuzhi.easykitchen;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
+import com.example.xuzhi.easykitchen.data.EasyKitchenDbHelper;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.regex.Matcher;
@@ -140,11 +141,11 @@ public class Utility {
         return num;
     }
 
-    static void checkDB(Context c) throws Exception {
+   /* static void checkDB(Context c) throws Exception {
         try {
             SQLiteDatabase dbe = SQLiteDatabase
                     .openDatabase(
-                            "/data/data/com.yourpackagename/databases/yourfile.sqlite",
+                            "/data/data/com.example.xuzhi.easykitchen/databases/easyKitchen.sqlite",
                             null, 0);
             Log.d("opendb", "EXIST");
             dbe.close();
@@ -152,17 +153,63 @@ public class Utility {
 
             AssetManager am = c.getAssets();
             OutputStream os = new FileOutputStream(
-                    "/data/data/com.yourpackagename/databases/yourfile.sqlite");
+                    "/data/data/com.example.xuzhi.easykitchen/databases/easyKitchen.sqlite");
             byte[] b = new byte[100];
 
             int r;
-            InputStream is = am.open("yourfile.sqlite");
+            InputStream is = am.open("easyKitchen.sqlite");
             while ((r = is.read(b)) != -1) {
                 os.write(b, 0, r);
             }
             Log.i("DATABASE_HELPER", "Copying the database ");
             is.close();
             os.close();
+        }
+    }*/
+
+    /**
+     * Copies your database from your local assets-folder to the just created
+     * empty database in the system folder, from where it can be accessed and
+     * handled. This is done by transfering bytestream.
+     * */
+    static public void copyDataBase(Context c) throws IOException {
+        String dbname = "easyKitchen1.db";
+        // Open your local db as the input stream
+        InputStream myInput = c.getAssets().open(dbname);
+        // Path to the just created empty db
+        //String outFileName = getDatabasePath(dbname);
+        // Open the empty db as the output stream
+        final File dir = new File(c.getFilesDir() + "/data/data/com.example.xuzhi.easykitchen/databases");
+        dir.mkdirs(); //create folders where write files
+        //final File file = new File(dir, "easyKitchen.db");
+
+        EasyKitchenDbHelper myDbHelper = new EasyKitchenDbHelper(c);
+        myDbHelper.getReadableDatabase();
+
+        OutputStream myOutput = new FileOutputStream("/data/data/com.example.xuzhi.easykitchen/databases/easyKitchen.db");
+
+        // transfer bytes from the inputfile to the outputfile
+        byte[] buffer = new byte[618496];
+        int length;
+        while ((length = myInput.read(buffer)) > 0) {
+            myOutput.write(buffer, 0, length);
+            Log.v(LOG_TAG,"length = " + length +"buffer = " + buffer.toString());
+        }
+        // Close the streams
+        myOutput.flush();
+        myOutput.close();
+        myInput.close();
+    }
+    static public int getImagebyName(String name)
+    {
+        return R.mipmap.temp;
+    }
+    static public int getImagebyNameandStatus(String name,String status)
+    {
+        if (status.equals("YES")) {
+            return R.mipmap.temp;
+        } else {
+            return R.mipmap.temp_grey;
         }
     }
 }

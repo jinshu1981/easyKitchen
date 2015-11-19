@@ -10,9 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity  {
     private GestureDetectorCompat mDetector;
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    static private boolean InitFlag = true;//此处需要修改为Shared Preferences
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +24,16 @@ public class MainActivity extends AppCompatActivity  {
         // application context and an implementation of
         // GestureDetector.OnGestureListener
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        if (InitFlag == true) {
+
+
+            try {
+                Utility.copyDataBase(getBaseContext());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            InitFlag = false;
+        }
     }
 
 

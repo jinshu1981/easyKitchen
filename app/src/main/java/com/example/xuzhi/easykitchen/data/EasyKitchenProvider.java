@@ -50,7 +50,7 @@ public class EasyKitchenProvider extends ContentProvider {
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL, EASY_KITCHEN_MATERIAL);
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/type/*", EASY_KITCHEN_MATERIAL_WITH_TYPE);
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/name/*", EASY_KITCHEN_MATERIAL_WITH_NAME);
-        matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/inKitchen/*", EASY_KITCHEN_MATERIAL_WITH_STATUS);
+        matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/status/*", EASY_KITCHEN_MATERIAL_WITH_STATUS);
         matcher.addURI(authority, EasyKitchenContract.PATH_MATERIAL + "/type/*/*", EASY_KITCHEN_MATERIAL_WITH_TYPE_AND_STATUS);
 
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE, EASY_KITCHEN_RECIPE);
@@ -269,9 +269,10 @@ public class EasyKitchenProvider extends ContentProvider {
         // and query the database accordingly.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "movie_by_high_rating/*"
+
 
             case EASY_KITCHEN_MATERIAL: {
+                Log.v(LOG_TAG,"EASY_KITCHEN_MATERIAL");
                 retCursor = getAllMaterial(uri, projection, sortOrder);
 
                 break;

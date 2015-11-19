@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -28,10 +26,10 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
    // static public MaterialAdapter mVegetableAdapter;
-    static public SimpleCursorAdapter mVegetableAdapter;
-    static public SimpleCursorAdapter mMeatAdapter;
-    static public SimpleCursorAdapter mFruitAdapter;
-    static public SimpleCursorAdapter mSeasoningAdapter;
+    static public MaterialAdapter mVegetableAdapter;
+    static public MaterialAdapter mMeatAdapter;
+    static public MaterialAdapter mFruitAdapter;
+    static public MaterialAdapter mSeasoningAdapter;
 
 
 
@@ -40,7 +38,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private static final int MATERIAL_LOADER_SEASONING = 2;
 
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
-    static private boolean InitFlag = true;//此处需要修改为Shared Preferences
+    //static private boolean InitFlag = true;//此处需要修改为Shared Preferences
 
     private GestureDetector.SimpleOnGestureListener detector;
     public MainActivityFragment() {
@@ -61,16 +59,17 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         String [] dataColumns = {"image","name"};
         int [] viewIDs = {R.id.image,R.id.name};
 
-        mVegetableAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //mVegetableAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
+        //gridView.setAdapter(mVegetableAdapter);
+        mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
         gridView.setAdapter(mVegetableAdapter);
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //ImageView MoviesDetail = (ImageView)mMoviesImageAdapter.getItem(position);
-                // Log.v(LOG_TAG, "MoviesDetail = " + String.valueOf(MoviesDetail));
-                //Log.v(LOG_TAG, "MoviesDetail.id = " + String.valueOf(MoviesDetail.getId()));
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
@@ -82,16 +81,16 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-        mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+       // mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+       // gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
+       // gridView.setAdapter(mMeatAdapter);
+        mMeatAdapter = new MaterialAdapter(getActivity(), null, 0);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
         gridView.setAdapter(mMeatAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //ImageView MoviesDetail = (ImageView)mMoviesImageAdapter.getItem(position);
-                // Log.v(LOG_TAG, "MoviesDetail = " + String.valueOf(MoviesDetail));
-                //Log.v(LOG_TAG, "MoviesDetail.id = " + String.valueOf(MoviesDetail.getId()));
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
@@ -102,10 +101,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 }
             }
         });
-        mSeasoningAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        //mSeasoningAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
+        //gridView.setAdapter(mSeasoningAdapter);
+        mSeasoningAdapter = new MaterialAdapter(getActivity(), null, 0);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
         gridView.setAdapter(mSeasoningAdapter);
-
         return rootView;
     }
 
@@ -114,12 +116,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         getLoaderManager().initLoader(MATERIAL_LOADER_VEGETABLE, null, this);
         getLoaderManager().initLoader(MATERIAL_LOADER_MEAT, null, this);
         getLoaderManager().initLoader(MATERIAL_LOADER_SEASONING, null, this);
-        if (InitFlag == true)
-        {
-            Utility.insertVegetables(getActivity());
-            Utility.insertRecipes(getActivity());
-            InitFlag = false;
-        }
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -179,7 +175,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        SimpleCursorAdapter adapter = mVegetableAdapter;
+        MaterialAdapter adapter = mVegetableAdapter;
         if (cursor==null)
         {
             Log.v(LOG_TAG, " return cursorLoader.getId()" +cursorLoader.getId());
@@ -209,7 +205,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
-        SimpleCursorAdapter adapter = mVegetableAdapter;
+        MaterialAdapter adapter = mVegetableAdapter;
         switch (cursorLoader.getId())
         {
             case MATERIAL_LOADER_VEGETABLE:

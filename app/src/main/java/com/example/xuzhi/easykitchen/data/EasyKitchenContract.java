@@ -43,11 +43,11 @@ public class EasyKitchenContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_IMAGE_GREY = "image_grey";
-        public static final String COLUMN_STATUS = "inKitchen";
+        public static final String COLUMN_STATUS = "status";
 
-        static public String MATERIAL_TYPE_VEGETABLE = "VEGETABLE";
-        static public String MATERIAL_TYPE_MEAT = "MEAT";
-        static public String MATERIAL_TYPE_SEASONING = "SEASONING";
+        static public String MATERIAL_TYPE_VEGETABLE = "素";
+        static public String MATERIAL_TYPE_MEAT = "荤";
+        static public String MATERIAL_TYPE_SEASONING = "调";
 
         public static Uri buildMaterialUriByName(String name)
         {

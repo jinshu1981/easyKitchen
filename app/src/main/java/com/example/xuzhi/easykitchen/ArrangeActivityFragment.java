@@ -29,7 +29,7 @@ public class ArrangeActivityFragment extends Fragment implements LoaderManager.L
     private static final int MATERIAL_LOADER_ADD = 10;
   //  private static final int MATERIAL_LOADER_DELETE = 1;
 
-    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    private final String LOG_TAG = this.getClass().getSimpleName();
     public ArrangeActivityFragment() {
     }
 
@@ -75,16 +75,7 @@ public class ArrangeActivityFragment extends Fragment implements LoaderManager.L
 
         // Sort order:  Ascending, by date.
         String sortOrder = EasyKitchenContract.Material.COLUMN_NAME + " ASC";
-        Uri movieUri;
-       // if (i == MATERIAL_LOADER_ADD)
-        {
-            movieUri = EasyKitchenContract.Material.CONTENT_URI.buildUpon().build();
-        }
-       /* else
-        {
-            movieUri = EasyKitchenContract.Material.CONTENT_URI.buildUpon().appendPath("status").appendPath("YES").build();
-        }*/
-
+        Uri movieUri= EasyKitchenContract.Material.CONTENT_URI.buildUpon().build();
         return new CursorLoader(getActivity(),
                 movieUri,
                 null,
@@ -102,17 +93,6 @@ public class ArrangeActivityFragment extends Fragment implements LoaderManager.L
             Log.v(LOG_TAG, " return cursorLoader.getId()" + cursorLoader.getId());
             return;
         }
-        switch (cursorLoader.getId())
-        {
-            case MATERIAL_LOADER_ADD:
-                adapter = mAddAdapter;
-                break;
-            /*case MATERIAL_LOADER_DELETE:
-                adapter = mDeleteAdapter;
-                break;*/
-            default:
-                break;
-        }
 
         Log.v(LOG_TAG, cursor.toString());
         adapter.swapCursor(cursor);
@@ -124,17 +104,6 @@ public class ArrangeActivityFragment extends Fragment implements LoaderManager.L
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
         MaterialAdapter adapter = mAddAdapter;
-        switch (cursorLoader.getId())
-        {
-            case MATERIAL_LOADER_ADD:
-                adapter = mAddAdapter;
-                break;
-           /* case MATERIAL_LOADER_DELETE:
-                adapter = mDeleteAdapter;
-                break;*/
-            default:
-                break;
-        }
         adapter.swapCursor(null);
     }
 }

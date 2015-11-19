@@ -15,7 +15,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  * Created by xuzhi on 2015/11/4.
  */
 public class MaterialAdapter extends CursorAdapter {
-    private final String LOG_TAG = MaterialAdapter.class.getSimpleName();
+    private final String LOG_TAG = this.getClass().getSimpleName();
     public MaterialAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -35,31 +35,27 @@ public class MaterialAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        //image.setImageResource(R.mipmap.ic_launcher);
+
         ImageView image = (ImageView)view.findViewById(R.id.image);
         TextView text = (TextView)view.findViewById(R.id.name);
 
-        int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
         int textIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
-
-        String status = cursor.getString(statusIndex);
         String textString = cursor.getString(textIndex);
-
         text.setText(textString);
 
-        //Log.v(LOG_TAG,"text = "+ textString +",status = " + status);
-        if (status.equals("YES"))
+        int imageIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_IMAGE);
+        int imageValue = cursor.getInt(imageIndex);
+        //Log.v(LOG_TAG,"imageValue =" + imageValue + ",R.mipmap.temp = " + R.mipmap.temp);
+        //Log.v(LOG_TAG,"Activity =" + context.getClass().toString());
+        if (context.getClass().toString().contains("MenuActivity"))
         {
-            image.setImageResource(R.mipmap.temp);
-            //Log.v(LOG_TAG, "text = " + textString + ",status = " + status);
+            image.setImageResource(Utility.getImagebyName(textString));
         }
-        else
-        {
-            image.setImageResource(R.mipmap.temp_grey);
-           // Log.v(LOG_TAG, "text = " + textString + ",status = " + status);
+        else {
+            int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
+            String status = cursor.getString(statusIndex);
+            image.setImageResource(Utility.getImagebyNameandStatus(textString,status));
         }
-
-
 
     }
 }
