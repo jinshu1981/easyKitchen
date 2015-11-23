@@ -3,6 +3,7 @@ package com.example.xuzhi.easykitchen;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
@@ -62,7 +63,7 @@ public class Utility {
         //update material status
         int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
         String name = cursor.getString(nameIndex);
-
+        Log.v(LOG_TAG, "recipe's materialName = " + name);
         int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
         String status = getTheOppositeStatus(cursor.getString(statusIndex));
 
@@ -85,11 +86,12 @@ public class Utility {
                 recipeName = recipeCursor.getString(recipeNameIndex);
 
                 weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
-                Log.v(LOG_TAG, "weightIndex = " + weightIndex);
+                //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
                 weight = recipeCursor.getInt(weightIndex) + subWeight;
                 recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, weight);
                 Log.v(LOG_TAG, "weight = " + weight + ",recipeName = " + recipeName);
                 c.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(recipeName), recipeValues, null, null);
+                recipeCursor.moveToNext();
             }
         }
 
@@ -141,31 +143,7 @@ public class Utility {
         return num;
     }
 
-   /* static void checkDB(Context c) throws Exception {
-        try {
-            SQLiteDatabase dbe = SQLiteDatabase
-                    .openDatabase(
-                            "/data/data/com.example.xuzhi.easykitchen/databases/easyKitchen.sqlite",
-                            null, 0);
-            Log.d("opendb", "EXIST");
-            dbe.close();
-        } catch (Exception e) {
 
-            AssetManager am = c.getAssets();
-            OutputStream os = new FileOutputStream(
-                    "/data/data/com.example.xuzhi.easykitchen/databases/easyKitchen.sqlite");
-            byte[] b = new byte[100];
-
-            int r;
-            InputStream is = am.open("easyKitchen.sqlite");
-            while ((r = is.read(b)) != -1) {
-                os.write(b, 0, r);
-            }
-            Log.i("DATABASE_HELPER", "Copying the database ");
-            is.close();
-            os.close();
-        }
-    }*/
 
     /**
      * Copies your database from your local assets-folder to the just created
@@ -184,7 +162,8 @@ public class Utility {
         //final File file = new File(dir, "easyKitchen.db");
 
         EasyKitchenDbHelper myDbHelper = new EasyKitchenDbHelper(c);
-        myDbHelper.getReadableDatabase();
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        db.close();
 
         OutputStream myOutput = new FileOutputStream("/data/data/com.example.xuzhi.easykitchen/databases/easyKitchen.db");
 
@@ -200,6 +179,7 @@ public class Utility {
         myOutput.close();
         myInput.close();
     }
+
     static public int getImagebyName(String name)
     {
         return R.mipmap.temp;
