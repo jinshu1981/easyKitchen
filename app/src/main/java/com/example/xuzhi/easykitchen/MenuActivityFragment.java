@@ -41,7 +41,7 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
         gridView.setAdapter(mMenuAdapter);*/
 
-        mMenuAdapter = new MaterialAdapter(getActivity(), null, 0);
+        mMenuAdapter = new MaterialAdapter(getContext(), null, 0);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
         gridView.setAdapter(mMenuAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

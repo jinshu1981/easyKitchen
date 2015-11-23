@@ -3,6 +3,7 @@ package com.example.xuzhi.easykitchen;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,15 +45,15 @@ public class MaterialAdapter extends CursorAdapter {
         text.setText(textString);
 
         int imageIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_IMAGE);
-        int imageValue = cursor.getInt(imageIndex);
-        //Log.v(LOG_TAG,"imageValue =" + imageValue + ",R.mipmap.temp = " + R.mipmap.temp);
-        //Log.v(LOG_TAG,"Activity =" + context.getClass().toString());
-        if (context.getClass().toString().contains("MenuActivity"))
+
+        Log.v(LOG_TAG,"Activity =" + context.getClass().toString());
+        if (-1 == cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS))
         {
             image.setImageResource(Utility.getImagebyName(textString));
         }
         else {
             int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
+            Log.v(LOG_TAG,"statusIndex = " + statusIndex + ",name = " + textString);
             String status = cursor.getString(statusIndex);
             image.setImageResource(Utility.getImagebyNameandStatus(textString,status));
         }

@@ -1,95 +1,174 @@
 package com.example.xuzhi.easykitchen;
-
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity  {
-    private GestureDetectorCompat mDetector;
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
-    static private boolean InitFlag = true;//此处需要修改为Shared Preferences
+public class MainActivity extends FragmentActivity {
+
+    private List<Fragment> mFragmentList = new ArrayList<Fragment>();
+    private FragmentAdapter mFragmentAdapter;
+
+    private ViewPager mPageVp;
+    /**
+     * Tab显示内容TextView
+     */
+    private TextView mTabChatTv, mTabContactsTv, mTabFriendTv;
+    /**
+     * Tab的那个引导线
+     */
+    private ImageView mTabLineIv;
+    /**
+     * Fragment
+     */
+    private MainActivityFragment mChatFg;
+    private ArrangeActivityFragment mFriendFg;
+    private MenuActivityFragment mContactsFg;
+    /**
+     * ViewPager的当前选中页
+     */
+    private int currentIndex;
+    /**
+     * 屏幕的宽度
+     */
+    private int screenWidth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Instantiate the gesture detector with the
-        // application context and an implementation of
-        // GestureDetector.OnGestureListener
-        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-        if (InitFlag == true) {
+        findById();
+        init();
+        initTabLineWidth();
 
-
-            try {
-                Utility.copyDataBase(getBaseContext());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            InitFlag = false;
-        }
     }
 
+    private void findById() {
+        mTabContactsTv = (TextView) this.findViewById(R.id.id_contacts_tv);
+        mTabChatTv = (TextView) this.findViewById(R.id.id_chat_tv);
+        mTabFriendTv = (TextView) this.findViewById(R.id.id_friend_tv);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        mTabLineIv = (ImageView) this.findViewById(R.id.id_tab_line_iv);
+
+        mPageVp = (ViewPager) this.findViewById(R.id.id_page_vp);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private void init() {
+        mFriendFg = new ArrangeActivityFragment();
+        mContactsFg = new MenuActivityFragment();
+        mChatFg = new MainActivityFragment();
+        mFragmentList.add(mChatFg);
+        mFragmentList.add(mFriendFg);
+        mFragmentList.add(mContactsFg);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        mFragmentAdapter = new FragmentAdapter(
+                this.getSupportFragmentManager(), mFragmentList);
+        mPageVp.setAdapter(mFragmentAdapter);
+        mPageVp.setCurrentItem(0);
 
-        return super.onOptionsItemSelected(item);
-    }
+        mPageVp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-        Log.v(LOG_TAG,"onTouchEvent");
-        this.mDetector.onTouchEvent(event);
-        // Be sure to call the superclass implementation
-        return super.onTouchEvent(event);
-    }
+            /**
+             * state滑动中的状态 有三种状态（0，1，2） 1：正在滑动 2：滑动完毕 0：什么都没做。
+             */
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final String DEBUG_TAG = "Gestures";
-
-        @Override
-        public boolean onDown(MotionEvent event) {
-            Log.d(DEBUG_TAG,"onDown: " + event.toString());
-            return true;
-        }
-
-        @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
-            Log.d(DEBUG_TAG, "onFling: " + event1.toString()+event2.toString());
-            final float xDistance = Math.abs(event1.getX() - event2.getX());
-            if (xDistance >100)
-            {
-                Intent intent  = new Intent(getBaseContext(), MenuActivity.class);
-                startActivity(intent);
-                //设置切换动画，从右边进入，左边退出
-                overridePendingTransition(R.anim.out_to_left, R.anim.in_from_right);
             }
 
-            return true;
-        }
+            /**
+             * position :当前页面，及你点击滑动的页面 offset:当前页面偏移的百分比
+             * offsetPixels:当前页面偏移的像素位置
+             */
+            @Override
+            public void onPageScrolled(int position, float offset,
+                                       int offsetPixels) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabLineIv
+                        .getLayoutParams();
+
+                Log.e("offset:", offset + "");
+                /**
+                 * 利用currentIndex(当前所在页面)和position(下一个页面)以及offset来
+                 * 设置mTabLineIv的左边距 滑动场景：
+                 * 记3个页面,
+                 * 从左到右分别为0,1,2
+                 * 0->1; 1->2; 2->1; 1->0
+                 */
+
+                if (currentIndex == 0 && position == 0)// 0->1
+                {
+                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / 3) + currentIndex
+                            * (screenWidth / 3));
+
+                } else if (currentIndex == 1 && position == 0) // 1->0
+                {
+                    lp.leftMargin = (int) (-(1 - offset)
+                            * (screenWidth * 1.0 / 3) + currentIndex
+                            * (screenWidth / 3));
+
+                } else if (currentIndex == 1 && position == 1) // 1->2
+                {
+                    lp.leftMargin = (int) (offset * (screenWidth * 1.0 / 3) + currentIndex
+                            * (screenWidth / 3));
+                } else if (currentIndex == 2 && position == 1) // 2->1
+                {
+                    lp.leftMargin = (int) (-(1 - offset)
+                            * (screenWidth * 1.0 / 3) + currentIndex
+                            * (screenWidth / 3));
+                }
+                mTabLineIv.setLayoutParams(lp);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                resetTextView();
+                switch (position) {
+                    case 0:
+                        mTabChatTv.setTextColor(Color.BLUE);
+                        break;
+                    case 1:
+                        mTabFriendTv.setTextColor(Color.BLUE);
+                        break;
+                    case 2:
+                        mTabContactsTv.setTextColor(Color.BLUE);
+                        break;
+                }
+                currentIndex = position;
+            }
+        });
+
     }
+
+    /**
+     * 设置滑动条的宽度为屏幕的1/3(根据Tab的个数而定)
+     */
+    private void initTabLineWidth() {
+        DisplayMetrics dpMetrics = new DisplayMetrics();
+        getWindow().getWindowManager().getDefaultDisplay()
+                .getMetrics(dpMetrics);
+        screenWidth = dpMetrics.widthPixels;
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTabLineIv
+                .getLayoutParams();
+        lp.width = screenWidth / 3;
+        mTabLineIv.setLayoutParams(lp);
+    }
+
+    /**
+     * 重置颜色
+     */
+    private void resetTextView() {
+        mTabChatTv.setTextColor(Color.BLACK);
+        mTabFriendTv.setTextColor(Color.BLACK);
+        mTabContactsTv.setTextColor(Color.BLACK);
+    }
+
 }
