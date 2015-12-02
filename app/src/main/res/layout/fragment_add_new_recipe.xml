@@ -38,60 +38,48 @@
             android:visibility="gone"
             android:id="@+id/textview_1"/>
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="菜谱名"
-            android:ems = "6"
-            android:id="@+id/new_recipe_name"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="gone"/>
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="菜谱名"
+        android:ems = "6"
+        android:id="@+id/new_recipe_name"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"/>
 
 
-        <TextView android:text="@string/recipe_material" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:id="@+id/textview_2"/>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:id = "@+id/edit_text_layout"
-    android:visibility="gone">
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="材料1"
-            android:ems = "6"
-            android:id="@+id/new_recipe_material1"
-            android:layout_gravity="center"
-            android:gravity="center"/>
-    <Button
+    <TextView android:text="@string/recipe_material" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/textview_2"/>
+
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button_add_material"
-        android:text="add"
-        android:layout_weight="0.5"/>
-</LinearLayout>
+        android:hint="材料"
+        android:ems = "6"
+        android:id="@+id/new_recipe_material"
+        android:layout_gravity="center"
+        android:gravity="center"/>
 
-        <TextView android:text="@string/recipe_steps" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:id="@+id/textview_3"/>
+    <TextView android:text="@string/recipe_steps" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:id="@+id/textview_3"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="步骤"
-            android:inputType="textMultiLine"
-            android:ems = "6"
-            android:id="@+id/new_recipe_steps"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="gone"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="步骤"
+        android:inputType="textMultiLine"
+        android:ems = "6"
+        android:id="@+id/new_recipe_steps"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/button_confirm"

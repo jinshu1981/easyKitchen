@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,11 +33,10 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
     EditText mRecipeName,mRecipeMaterials,mRecipeSteps;
     SimpleCursorAdapter mCustomRecipeslistAdapter;
     View mRootView;
-    Button mButton_add,mButton_confirm,mButton_add_material;
+    Button mButton_add,mButton_confirm;
     ListView mCustomListView;
     Context mContext;
     Cursor mCursor;
-    LinearLayout mEditTextLayout;
     private static final int RECIPE_LOADER_CUSTOM = 0;
     public AddNewRecipeActivityFragment() {
 
@@ -59,11 +57,9 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
 
         mButton_add = (Button)rootView.findViewById(R.id.button_add);
         mButton_confirm = (Button)rootView.findViewById(R.id.button_confirm);
-        mButton_add_material = (Button)rootView.findViewById(R.id.button_add_material);
         mRecipeName = (EditText)rootView.findViewById(R.id.new_recipe_name);
-        //mRecipeMaterials = (EditText)rootView.findViewById(R.id.new_recipe_material);
+        mRecipeMaterials = (EditText)rootView.findViewById(R.id.new_recipe_material);
         mRecipeSteps = (EditText)rootView.findViewById(R.id.new_recipe_steps);
-        mEditTextLayout = (LinearLayout)rootView.findViewById(R.id.edit_text_layout);
 
         //Show items of add new recipes and hide recipe list
         mButton_add.setOnClickListener(new View.OnClickListener() {
@@ -97,14 +93,6 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
                 return true;
             }
 
-        });
-
-        //add new material edittext
-        mButton_add_material.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-               
-
-            }
         });
 
         return rootView;
@@ -193,9 +181,8 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
             public void onClick(DialogInterface dialog, int which) {
                 mButton_confirm.setVisibility(View.GONE);
                 mRecipeName.setVisibility(View.GONE);
-                //mRecipeMaterials.setVisibility(View.GONE);
+                mRecipeMaterials.setVisibility(View.GONE);
                 mRecipeSteps.setVisibility(View.GONE);
-                mEditTextLayout.setVisibility(View.GONE);
                 ((TextView) mRootView.findViewById(R.id.textview_1)).setVisibility((View.GONE));
                 ((TextView) mRootView.findViewById(R.id.textview_2)).setVisibility((View.GONE));
                 ((TextView) mRootView.findViewById(R.id.textview_3)).setVisibility((View.GONE));
@@ -279,9 +266,8 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
     {
         mButton_confirm.setVisibility(View.VISIBLE);
         mRecipeName.setVisibility(View.VISIBLE);
-        //mRecipeMaterials.setVisibility(View.VISIBLE);
+        mRecipeMaterials.setVisibility(View.VISIBLE);
         mRecipeSteps.setVisibility(View.VISIBLE);
-        mEditTextLayout.setVisibility(View.VISIBLE);
         ((TextView)mRootView.findViewById(R.id.textview_1)).setVisibility((View.VISIBLE));
         ((TextView)mRootView.findViewById(R.id.textview_2)).setVisibility((View.VISIBLE));
         ((TextView)mRootView.findViewById(R.id.textview_3)).setVisibility((View.VISIBLE));
