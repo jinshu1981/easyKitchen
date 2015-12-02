@@ -23,7 +23,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class MenuActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     static public MaterialAdapter mMenuAdapter;
-    private static final int MATERIAL_LOADER_MENU = 0;
+    private static final int MATERIAL_LOADER_MENU = 5;
     private final String LOG_TAG = this.getClass().getSimpleName();
     View mRootView;
     public MenuActivityFragment() {
@@ -34,12 +34,6 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         mRootView = rootView;
-       // String [] dataColumns = {"image","name"};
-       // int [] viewIDs = {R.id.image,R.id.name};
-
-        /*mMenuAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
-        gridView.setAdapter(mMenuAdapter);*/
 
         mMenuAdapter = new MaterialAdapter(getContext(), null, 0);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
@@ -51,7 +45,6 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
 
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    //Utility.UpdateSingleCursor(getActivity(), cursor);
                     Toast.makeText(getActivity(), "This is an Android Toast Message", Toast.LENGTH_LONG).show();
                 }
             }

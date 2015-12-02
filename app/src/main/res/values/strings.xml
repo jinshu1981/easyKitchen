@@ -8,8 +8,21 @@
     <string name="action_settings">Settings</string>
     <string name="action_modify">整理</string>
     <string name="title_activity_arrange">ArrangeActivity</string>
-    <string name="add">买入</string>
+    <string name="add">单击增加或删除食材</string>
     <string name="delete">耗尽</string>
     <string name="title_activity_recipe">RecipeActivity</string>
     <string name="title_activity_menu">MenuActivity</string>
+    <drawable name="bkcolor">#ffeff6</drawable>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="my_favorite_menu">我喜欢的菜单</string>
+    <string name="add_new_menu">添加新菜单</string>
+    <string name="display_new_menu">自定义菜单</string>
+    <string name="my_info">关于我</string>
+
+    <string name="title_activity_mine">MineActivity</string>
+    <string name="title_activity_add_new_recipe">AddNewRecipeActivity</string>
+    <string name="recipe_name">菜谱名</string>
+    <string name="recipe_material">材料</string>
+    <string name="recipe_steps">步骤</string>
 </resources>

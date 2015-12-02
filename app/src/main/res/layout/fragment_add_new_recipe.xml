@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.xuzhi.easykitchen.AddNewRecipeActivityFragment"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <ListView
+        android:id="@+id/custom_recipes_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@color/grey"
+        android:id="@+id/textview_4"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+    <Button
+        android:id="@+id/button_add"
+        android:text="添加新菜单"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"/>
+    </LinearLayout>
+
+    <TextView android:text="@string/recipe_name" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:id="@+id/textview_1"/>
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="菜谱名"
+            android:ems = "6"
+            android:id="@+id/new_recipe_name"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+
+        <TextView android:text="@string/recipe_material" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:id="@+id/textview_2"/>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id = "@+id/edit_text_layout"
+    android:visibility="gone">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="材料1"
+            android:ems = "6"
+            android:id="@+id/new_recipe_material1"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_add_material"
+        android:text="add"
+        android:layout_weight="0.5"/>
+</LinearLayout>
+
+        <TextView android:text="@string/recipe_steps" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:id="@+id/textview_3"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="步骤"
+            android:inputType="textMultiLine"
+            android:ems = "6"
+            android:id="@+id/new_recipe_steps"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/button_confirm"
+        android:text="确定"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+</LinearLayout>
+

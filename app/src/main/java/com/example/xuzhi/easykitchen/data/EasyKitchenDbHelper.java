@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract.Material;
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract.Recipe;
 
-
 /**
  * Created by xuzhi on 2015/11/4.
  */
@@ -55,8 +54,8 @@ public class EasyKitchenDbHelper extends SQLiteOpenHelper {
         // It does NOT depend on the version number for your application.
         // If you want to update the schema without wiping data, commenting out the next 2 lines
         // should be your top priority before modifying this method.
-        //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Material.TABLE_NAME);
-        //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Recipe.TABLE_NAME);
-        //onCreate(sqLiteDatabase);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Material.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + Recipe.TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 }

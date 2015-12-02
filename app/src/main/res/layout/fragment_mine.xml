@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.example.xuzhi.easykitchen.MineFragment"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20sp"
+        android:background="@color/grey"  />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/my_info"
+        android:id = "@+id/id_my_info"
+        android:layout_marginLeft="10sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:background="@color/grey"  />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/my_favorite_menu"
+        android:id = "@+id/id_my_favorite_menu"
+        android:layout_marginLeft="10sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:background="@color/grey"  />
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="@string/display_new_menu"
+        android:id = "@+id/id_add_new_menu"
+        android:layout_marginLeft="10sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:background="@color/grey"  />
+
+
+
+</LinearLayout>

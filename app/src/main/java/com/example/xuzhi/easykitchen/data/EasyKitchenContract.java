@@ -25,8 +25,8 @@ public class EasyKitchenContract {
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_MATERIAL = "Material";
-
     public static final String PATH_RECIPE = "Recipe";
+    public static final String PATH_CUSTOM_RECIPE = "CustomRecipe";
 
     public static final class Material implements BaseColumns {
 
@@ -93,6 +93,64 @@ public class EasyKitchenContract {
         public static final String COLUMN_STEP = "step";
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_WEIGHT  ="weight";
+        public static final String COLUMN_SOURCE  ="source";
+        public static final String COLUMN_FAVORITE  ="favorite";
+
+        public static Uri buildRecipeUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+        public static Uri buildRecipeUriByMaterialName(String materialName) {
+            return CONTENT_URI.buildUpon().appendPath("material").appendPath(materialName).build();
+        }
+        public static String getMaterialFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+        public static String getNameFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static String getWeightFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static String getSourceFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static Uri buildRecipeUriByMoreThanOneMaterials() {
+            return CONTENT_URI.buildUpon().appendPath("allMaterials").build();
+        }
+        public static Uri buildRecipeUriByName(String name)
+        {
+            return CONTENT_URI.buildUpon().appendPath("name").appendPath(name).build();
+        }
+        public static Uri buildRecipeUriByWeight(int weight)
+        {
+            return CONTENT_URI.buildUpon().appendPath("weight").appendPath(Integer.toString(weight)).build();
+        }
+        public static Uri buildRecipeUriBySource(String source)
+        {
+            return CONTENT_URI.buildUpon().appendPath(COLUMN_SOURCE).appendPath(source).build();
+        }
+        public static Uri buildRecipeUriByFavorite()
+        {
+            return CONTENT_URI.buildUpon().appendPath(COLUMN_FAVORITE).build();
+        }
+    }
+/*
+    public static final class CustomRecipe implements BaseColumns{
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CUSTOM_RECIPE).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RECIPE;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RECIPE;
+
+        public static final String TABLE_NAME = "customRecipe";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_MATERIAL = "material";
+        public static final String COLUMN_STEP = "step";
+        public static final String COLUMN_IMAGE = "image";
+        public static final String COLUMN_WEIGHT  ="weight";
 
         public static Uri buildRecipeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -120,8 +178,7 @@ public class EasyKitchenContract {
         {
             return CONTENT_URI.buildUpon().appendPath("weight").appendPath(Integer.toString(weight)).build();
         }
-    }
-
+    }*/
 
 
 }

@@ -30,6 +30,14 @@ public class EasyKitchenProvider extends ContentProvider {
     static final int EASY_KITCHEN_RECIPE_WITH_MATERIAL = 202;
     static final int EASY_KITCHEN_RECIPE_WITH_ALL_MATERIAL = 203;
     static final int EASY_KITCHEN_RECIPE_WITH_WEIGHT = 204;
+    static final int EASY_KITCHEN_RECIPE_WITH_SOURCE = 205;
+    static final int EASY_KITCHEN_RECIPE_WITH_FAVORITE = 206;
+
+    /*static final int EASY_KITCHEN_CUSTOM_RECIPE = 300;
+    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_NAME = 301;
+    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_MATERIAL = 302;
+    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_ALL_MATERIAL = 303;
+    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_WEIGHT = 304;*/
 
     private static final SQLiteQueryBuilder sEasyKitchenQueryBuilder;
     static{
@@ -58,6 +66,14 @@ public class EasyKitchenProvider extends ContentProvider {
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/name/*", EASY_KITCHEN_RECIPE_WITH_NAME);
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/allMaterials/*", EASY_KITCHEN_RECIPE_WITH_ALL_MATERIAL);
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/weight/*", EASY_KITCHEN_RECIPE_WITH_WEIGHT);
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/source/*", EASY_KITCHEN_RECIPE_WITH_SOURCE);
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/favorite", EASY_KITCHEN_RECIPE_WITH_FAVORITE);
+
+      /*  matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE, EASY_KITCHEN_CUSTOM_RECIPE);
+        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/material/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_MATERIAL);
+        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/name/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_NAME);
+        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/allMaterials/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_ALL_MATERIAL);
+        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/weight/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_WEIGHT);*/
 
         return matcher;
     }
@@ -87,33 +103,43 @@ public class EasyKitchenProvider extends ContentProvider {
             case EASY_KITCHEN_RECIPE_WITH_MATERIAL:
             case EASY_KITCHEN_RECIPE_WITH_ALL_MATERIAL:
             case EASY_KITCHEN_RECIPE_WITH_WEIGHT:
+            case EASY_KITCHEN_RECIPE_WITH_SOURCE:
+            case EASY_KITCHEN_RECIPE_WITH_FAVORITE:
                 return EasyKitchenContract.Recipe.CONTENT_TYPE;
             case EASY_KITCHEN_RECIPE_WITH_NAME:
                 return EasyKitchenContract.Recipe.CONTENT_ITEM_TYPE;
+
+           /* case EASY_KITCHEN_CUSTOM_RECIPE:
+            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_MATERIAL:
+            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_ALL_MATERIAL:
+            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_WEIGHT:
+                return EasyKitchenContract.CustomRecipe.CONTENT_TYPE;
+            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_NAME:
+                return EasyKitchenContract.CustomRecipe.CONTENT_ITEM_TYPE;*/
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
 
-
-    //Material.type = ?
-    private static final String sEasyKitchenByMaterialTypeSelection =
-            EasyKitchenContract.Material.TABLE_NAME+
-                    "." + EasyKitchenContract.Material.COLUMN_TYPE + " = ? ";
-    //Material.inKitchen = ?
-    private static final String sEasyKitchenByMaterialStatusSelection =
-            EasyKitchenContract.Material.TABLE_NAME+
-                    "." + EasyKitchenContract.Material.COLUMN_STATUS + " = ? ";
-    //Material.type = ? AND status = ?
-    private static final String sEasyKitchenByMaterialTypeAndStatusSelection =
-            EasyKitchenContract.Material.TABLE_NAME+
-                    "." + EasyKitchenContract.Material.COLUMN_TYPE + " = ? AND " +
-                    EasyKitchenContract.Material.COLUMN_STATUS + " = ? ";
-    //Material.name = ?
-    private static final String sEasyKitchenByMaterialNameSelection=
-            EasyKitchenContract.Material.TABLE_NAME+
-                    "." + EasyKitchenContract.Material.COLUMN_NAME + " = ? ";
+    /***********************************Material Table*********************************************/
+        //Material.type = ?
+        private static final String sEasyKitchenByMaterialTypeSelection =
+                EasyKitchenContract.Material.TABLE_NAME +
+                        "." + EasyKitchenContract.Material.COLUMN_TYPE + " = ? ";
+        //Material.inKitchen = ?
+        private static final String sEasyKitchenByMaterialStatusSelection =
+                EasyKitchenContract.Material.TABLE_NAME +
+                        "." + EasyKitchenContract.Material.COLUMN_STATUS + " = ? ";
+        //Material.type = ? AND status = ?
+        private static final String sEasyKitchenByMaterialTypeAndStatusSelection =
+                EasyKitchenContract.Material.TABLE_NAME +
+                        "." + EasyKitchenContract.Material.COLUMN_TYPE + " = ? AND " +
+                        EasyKitchenContract.Material.COLUMN_STATUS + " = ? ";
+        //Material.name = ?
+        private static final String sEasyKitchenByMaterialNameSelection =
+                EasyKitchenContract.Material.TABLE_NAME +
+                        "." + EasyKitchenContract.Material.COLUMN_NAME + " = ? ";
 
 
     private Cursor getAllMaterial(
@@ -133,7 +159,7 @@ public class EasyKitchenProvider extends ContentProvider {
             Uri uri, String[] projection, String sortOrder) {
 
         String type = EasyKitchenContract.Material.getTypeFromUri(uri);
-        Log.v(LOG_TAG,"type = " + type);
+        Log.v(LOG_TAG, "type = " + type);
         sEasyKitchenQueryBuilder.setTables("material");
         return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
@@ -149,7 +175,7 @@ public class EasyKitchenProvider extends ContentProvider {
             Uri uri, String[] projection, String sortOrder) {
 
         String status = EasyKitchenContract.Material.getStatusWithoutTypeFromUri(uri);
-        Log.v(LOG_TAG,"status = " + status);
+        Log.v(LOG_TAG, "status = " + status);
         sEasyKitchenQueryBuilder.setTables("material");
         return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
@@ -160,6 +186,7 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
+
     private Cursor getMaterialByName(
             Uri uri, String[] projection, String sortOrder) {
 
@@ -181,12 +208,12 @@ public class EasyKitchenProvider extends ContentProvider {
         String type = EasyKitchenContract.Material.getTypeFromUri(uri);
         String status = EasyKitchenContract.Material.getStatusFromUri(uri);
 
-        Log.v(LOG_TAG,"type = " + type);
+        Log.v(LOG_TAG, "type = " + type);
         sEasyKitchenQueryBuilder.setTables("material");
         return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 sEasyKitchenByMaterialTypeAndStatusSelection,
-                new String[]{type,status},
+                new String[]{type, status},
                 null,
                 null,
                 sortOrder
@@ -202,6 +229,8 @@ public class EasyKitchenProvider extends ContentProvider {
                 new String[]{name});
 
     }
+
+    /***********************************Recipe Table*********************************************/
     //Recipe.material Like ?
     private static final String sEasyKitchenByRecipeMaterialMatchSelection =
             EasyKitchenContract.Recipe.TABLE_NAME+
@@ -214,6 +243,14 @@ public class EasyKitchenProvider extends ContentProvider {
     private static final String sEasyKitchenByRecipeNameSelection =
             EasyKitchenContract.Recipe.TABLE_NAME+
                     "." + EasyKitchenContract.Recipe.COLUMN_NAME + " = ?";
+    //Recipe.source = ?
+    private static final String sEasyKitchenByRecipeSourceSelection=
+            EasyKitchenContract.Recipe.TABLE_NAME+
+                    "." + EasyKitchenContract.Recipe.COLUMN_SOURCE + " = ?";
+    //Recipe.favorite
+    private static final String sEasyKitchenByRecipeFavoriteSelection =
+            EasyKitchenContract.Recipe.TABLE_NAME+
+                    "." + EasyKitchenContract.Recipe.COLUMN_FAVORITE;
 
     //Recipe.weight = ?
     private static final String sEasyKitchenByRecipeWeightSelection =
@@ -252,14 +289,52 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
+    private Cursor getRecipeBySource(
+            Uri uri, String[] projection, String sortOrder) {
+
+        String source = EasyKitchenContract.Recipe.getSourceFromUri(uri);
+        Log.v(LOG_TAG,"source = " + source);
+        sEasyKitchenQueryBuilder.setTables("recipe");
+        return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEasyKitchenByRecipeSourceSelection,
+                new String[]{source},
+                null,
+                null,
+                sortOrder
+        );
+    }
+    private Cursor getFavoriteRecipes(
+            Uri uri, String[] projection, String sortOrder) {
+
+        sEasyKitchenQueryBuilder.setTables("recipe");
+        return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEasyKitchenByRecipeFavoriteSelection,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
     private int UpdateRecipeByName(Uri uri, ContentValues values) {
 
         String name = EasyKitchenContract.Recipe.getNameFromUri(uri);
-        Log.v(LOG_TAG,"name = " + name);
+        Log.v(LOG_TAG, "name = " + name);
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         return db.update(EasyKitchenContract.Recipe.TABLE_NAME, values, sEasyKitchenByRecipeNameSelection,
                 new String[]{name});
+
+    }
+    private int DeleteTheRecipeByName(Uri uri) {
+
+        String name = EasyKitchenContract.Recipe.getNameFromUri(uri);
+        Log.v(LOG_TAG, "name = " + name);
+
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        return  db.delete(
+                EasyKitchenContract.Recipe.TABLE_NAME, sEasyKitchenByRecipeNameSelection, new String[]{name});
 
     }
     @Override
@@ -268,13 +343,12 @@ public class EasyKitchenProvider extends ContentProvider {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
+        Log.v(LOG_TAG,"query uri = " + uri.toString());
         switch (sUriMatcher.match(uri)) {
 
 
             case EASY_KITCHEN_MATERIAL: {
-                Log.v(LOG_TAG,"EASY_KITCHEN_MATERIAL");
                 retCursor = getAllMaterial(uri, projection, sortOrder);
-
                 break;
             }
             case EASY_KITCHEN_MATERIAL_WITH_TYPE: {
@@ -302,6 +376,14 @@ public class EasyKitchenProvider extends ContentProvider {
                 retCursor = getRecipeByWeight(uri, projection, sortOrder);
                 break;
             }
+            case EASY_KITCHEN_RECIPE_WITH_SOURCE: {
+                retCursor = getRecipeBySource(uri, projection, sortOrder);
+                break;
+            }
+            case EASY_KITCHEN_RECIPE_WITH_FAVORITE:{
+                retCursor = getFavoriteRecipes(uri, projection, sortOrder);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -314,7 +396,7 @@ public class EasyKitchenProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
-
+        Log.v(LOG_TAG,"insert uri = " + uri.toString());
         switch (match) {
             case EASY_KITCHEN_MATERIAL: {
                 long _id = db.insert(EasyKitchenContract.Material.TABLE_NAME, null, values);
@@ -356,7 +438,9 @@ public class EasyKitchenProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         EasyKitchenContract.Recipe.TABLE_NAME, selection, selectionArgs);
                 break;
-
+            case EASY_KITCHEN_RECIPE_WITH_NAME:
+                rowsDeleted = DeleteTheRecipeByName(uri);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -391,7 +475,6 @@ public class EasyKitchenProvider extends ContentProvider {
             case EASY_KITCHEN_RECIPE_WITH_NAME:
                 rowsUpdated = UpdateRecipeByName(uri, values);
                 break;
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

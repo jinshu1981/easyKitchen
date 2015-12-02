@@ -22,7 +22,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class RecipeActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private static final int RECIPE_LOADER = 0;
+    private static final int RECIPE_LOADER = 4;
     private final String LOG_TAG = RecipeActivityFragment.class.getSimpleName();
     View mRootView;
 

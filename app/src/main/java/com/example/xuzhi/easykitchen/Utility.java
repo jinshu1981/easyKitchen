@@ -1,7 +1,9 @@
 package com.example.xuzhi.easykitchen;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -75,6 +77,7 @@ public class Utility {
         Uri recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name);
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
         Cursor recipeCursor = c.getContentResolver().query(recipeUri, null, null, null, sortOrder);
+        try{
         if ((recipeCursor != null) && (recipeCursor.moveToFirst())) {
             ContentValues recipeValues = new ContentValues();
             int weightIndex;
@@ -84,6 +87,12 @@ public class Utility {
             for (int i = 0; i < recipeCursor.getCount(); i++) {
                 recipeNameIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
                 recipeName = recipeCursor.getString(recipeNameIndex);
+                //filter the unsuitable recipes
+              /*  if (recipeFiltered(name,recipeCursor))
+                {
+                    recipeCursor.moveToNext();
+                    continue;
+                }*/
 
                 weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
                 //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
@@ -93,10 +102,38 @@ public class Utility {
                 c.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(recipeName), recipeValues, null, null);
                 recipeCursor.moveToNext();
             }
+        }}finally {
+            recipeCursor.moveToFirst();
+            recipeCursor.close();
         }
 
     }
+    static public boolean recipeFiltered(String materialName,Cursor recipeCursor)
+    {
+        String [][] recipes = {{"油","蚝油，麻油"}};
+        int recipeMaterialIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MATERIAL);
+        String recipeMaterial = recipeCursor.getString(recipeMaterialIndex);
 
+
+        for (String[] materialCouple:recipes)
+        {
+            if (materialCouple[0] == materialName)
+            {
+                return filterTheMaterials(materialCouple[1].split("，"),recipeMaterial);
+            }
+        }
+        return false;
+    }
+
+    static public boolean filterTheMaterials(String[] conditions,String recipeMaterial)
+    {
+        for (String condition:conditions)
+        {
+            if (recipeMaterial.contains(condition))
+                return true;
+        }
+        return false;
+    }
     static public String getTheOppositeStatus(String status) {
         String OppositeStatus;
         if (status.equals("YES")) {
@@ -107,29 +144,7 @@ public class Utility {
         return OppositeStatus;
     }
 
-    static public void insertRecipes(Context c) {
-        // Now that the content provider is set up, inserting rows of data is pretty simple.
-        // First create a ContentValues object to hold the data you want to insert.
-        ContentValues recipeValues = new ContentValues();
-        Uri insertedUri;
 
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_NAME, "凉拌黄瓜");
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MATERIAL, "蒜泥，黄瓜，生抽，醋，糖");
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_STEP, "1 将黄瓜反复洗涤干净，我这里用淘米水浸泡了15分钟.\n" +
-                "2 将黄瓜拍碎.\n" +
-                "3 准备调味汁.我这里用的是蒜泥\\生抽\\醋少许，糖一点点，芝麻油略多点.\n" +
-                "也可以按自己的喜好添加其他的调味品进去.比如说：辣椒油\\花椒油\\芝麻酱等等");
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_IMAGE, R.mipmap.temp);
-        //init weight by materials number
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, getRecipeWeight("蒜泥，黄瓜，生抽，醋，糖"));
-        // Finally, insert recipe data into the database.
-        insertedUri = c.getContentResolver().insert(
-                EasyKitchenContract.Recipe.CONTENT_URI,
-                recipeValues
-        );
-
-        Log.v(LOG_TAG, "insertedUri = " + insertedUri);
-    }
 
     static public int getRecipeWeight(String materials) {
         //Regular Expressions
@@ -142,7 +157,6 @@ public class Utility {
         Log.v(LOG_TAG, "RecipeWeight = " + num);
         return num;
     }
-
 
 
     /**

@@ -9,7 +9,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,43 +24,30 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-   // static public MaterialAdapter mVegetableAdapter;
+
     static public MaterialAdapter mVegetableAdapter;
     static public MaterialAdapter mMeatAdapter;
-    static public MaterialAdapter mFruitAdapter;
     static public MaterialAdapter mSeasoningAdapter;
-
-
 
     private static final int MATERIAL_LOADER_VEGETABLE = 0;
     private static final int MATERIAL_LOADER_MEAT = 1;
     private static final int MATERIAL_LOADER_SEASONING = 2;
 
-    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
-    //static private boolean InitFlag = true;//此处需要修改为Shared Preferences
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
-    private GestureDetector.SimpleOnGestureListener detector;
     public MainActivityFragment() {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
-        setHasOptionsMenu(true);
-        detector = new GestureDetector.SimpleOnGestureListener();
+        //setHasOptionsMenu(true);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
 
-       // mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
-        String [] dataColumns = {"image","name"};
-        int [] viewIDs = {R.id.image,R.id.name};
-
-        //mVegetableAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        //GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
-        //gridView.setAdapter(mVegetableAdapter);
         mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
         GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
         gridView.setAdapter(mVegetableAdapter);
@@ -74,16 +60,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 if (cursor != null) {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
                     String name = cursor.getString(nameIndex);
-                    Log.v(LOG_TAG, "name = " + name);
                     Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
                     startActivity(intent);
                 }
             }
         });
 
-       // mMeatAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-       // gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
-       // gridView.setAdapter(mMeatAdapter);
         mMeatAdapter = new MaterialAdapter(getActivity(), null, 0);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
         gridView.setAdapter(mMeatAdapter);
@@ -95,16 +77,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 if (cursor != null) {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
                     String name = cursor.getString(nameIndex);
-                    Log.v(LOG_TAG, "name = " + name);
                     Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
                     startActivity(intent);
                 }
             }
         });
 
-        //mSeasoningAdapter = new SimpleCursorAdapter(getActivity(), R.layout.gridview_item_main, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        //gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
-        //gridView.setAdapter(mSeasoningAdapter);
         mSeasoningAdapter = new MaterialAdapter(getActivity(), null, 0);
         gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
         gridView.setAdapter(mSeasoningAdapter);
@@ -196,7 +174,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 break;
         }
 
-        Log.v(LOG_TAG, cursor.toString());
+       // Log.v(LOG_TAG, cursor.toString());
         adapter.swapCursor(cursor);
         Log.v(LOG_TAG, "onLoadFinished");
 
@@ -228,10 +206,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         Intent intent = new Intent(getActivity(), ArrangeActivity.class);
         startActivity(intent);
     }
-    /*begin SimpleGestureFilter*/
 
 
-    /*end SimpleGestureFilter*/
 }
 
 
