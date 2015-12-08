@@ -32,12 +32,8 @@ public class EasyKitchenProvider extends ContentProvider {
     static final int EASY_KITCHEN_RECIPE_WITH_WEIGHT = 204;
     static final int EASY_KITCHEN_RECIPE_WITH_SOURCE = 205;
     static final int EASY_KITCHEN_RECIPE_WITH_FAVORITE = 206;
+    static final int EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT = 207;
 
-    /*static final int EASY_KITCHEN_CUSTOM_RECIPE = 300;
-    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_NAME = 301;
-    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_MATERIAL = 302;
-    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_ALL_MATERIAL = 303;
-    static final int EASY_KITCHEN_CUSTOM_RECIPE_WITH_WEIGHT = 304;*/
 
     private static final SQLiteQueryBuilder sEasyKitchenQueryBuilder;
     static{
@@ -68,12 +64,7 @@ public class EasyKitchenProvider extends ContentProvider {
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/weight/*", EASY_KITCHEN_RECIPE_WITH_WEIGHT);
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/source/*", EASY_KITCHEN_RECIPE_WITH_SOURCE);
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/favorite", EASY_KITCHEN_RECIPE_WITH_FAVORITE);
-
-      /*  matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE, EASY_KITCHEN_CUSTOM_RECIPE);
-        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/material/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_MATERIAL);
-        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/name/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_NAME);
-        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/allMaterials/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_ALL_MATERIAL);
-        matcher.addURI(authority, EasyKitchenContract.PATH_CUSTOM_RECIPE + "/weight/*", EASY_KITCHEN_CUSTOM_RECIPE_WITH_WEIGHT);*/
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/mealType/*/*", EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT);
 
         return matcher;
     }
@@ -105,17 +96,11 @@ public class EasyKitchenProvider extends ContentProvider {
             case EASY_KITCHEN_RECIPE_WITH_WEIGHT:
             case EASY_KITCHEN_RECIPE_WITH_SOURCE:
             case EASY_KITCHEN_RECIPE_WITH_FAVORITE:
+            case EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT:
                 return EasyKitchenContract.Recipe.CONTENT_TYPE;
+
             case EASY_KITCHEN_RECIPE_WITH_NAME:
                 return EasyKitchenContract.Recipe.CONTENT_ITEM_TYPE;
-
-           /* case EASY_KITCHEN_CUSTOM_RECIPE:
-            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_MATERIAL:
-            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_ALL_MATERIAL:
-            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_WEIGHT:
-                return EasyKitchenContract.CustomRecipe.CONTENT_TYPE;
-            case EASY_KITCHEN_CUSTOM_RECIPE_WITH_NAME:
-                return EasyKitchenContract.CustomRecipe.CONTENT_ITEM_TYPE;*/
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -256,6 +241,11 @@ public class EasyKitchenProvider extends ContentProvider {
     private static final String sEasyKitchenByRecipeWeightSelection =
             EasyKitchenContract.Recipe.TABLE_NAME+
                     "." + EasyKitchenContract.Recipe.COLUMN_WEIGHT + " = ?";
+    //recipe.mealType LIKE ? AND status = ?
+    private static final String sEasyKitchenByRecipeTypeAndWeightSelection =
+            EasyKitchenContract.Recipe.TABLE_NAME +
+                    "." + EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE + " LIKE ? AND " +
+                    EasyKitchenContract.Recipe.COLUMN_WEIGHT + " = ? ";
 
     private Cursor getRecipeByMatchMaterial(
             Uri uri, String[] projection, String sortOrder) {
@@ -333,6 +323,8 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
+
+
     private int UpdateRecipeByName(Uri uri, ContentValues values) {
 
         String name = EasyKitchenContract.Recipe.getNameFromUri(uri);
@@ -353,6 +345,24 @@ public class EasyKitchenProvider extends ContentProvider {
                 EasyKitchenContract.Recipe.TABLE_NAME, sEasyKitchenByRecipeNameSelection, new String[]{name});
 
     }
+
+    private Cursor getRecipeByMealTypeAndWeight(
+            Uri uri, String[] projection, String sortOrder) {
+
+        String mealType = EasyKitchenContract.Recipe.getMealTypeFromUri(uri);
+        String weight = EasyKitchenContract.Recipe.getWeightFromUriWithMealType(uri);
+        Log.v(LOG_TAG,"mealType = " + mealType +",weight = " + weight);
+        sEasyKitchenQueryBuilder.setTables("recipe");
+        return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEasyKitchenByRecipeTypeAndWeightSelection,
+                new String[]{"%" + mealType + "%",weight},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
@@ -402,6 +412,10 @@ public class EasyKitchenProvider extends ContentProvider {
             }
             case EASY_KITCHEN_RECIPE_WITH_NAME: {
                 retCursor = getRecipeByName(uri, projection, sortOrder);
+                break;
+            }
+            case EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT: {
+                retCursor = getRecipeByMealTypeAndWeight(uri, projection, sortOrder);
                 break;
             }
             default:

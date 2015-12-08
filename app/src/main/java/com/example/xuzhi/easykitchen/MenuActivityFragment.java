@@ -65,8 +65,17 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        //weight = 0 means all materials are in kitchen
-        Uri uri = EasyKitchenContract.Recipe.buildRecipeUriByWeight(0);
+        String extra = getActivity().getIntent().getStringExtra("mealType");
+        Uri uri;
+        if (extra == null)/*all type*/ {
+
+            //weight = 0 means all materials are in kitchen
+            uri = EasyKitchenContract.Recipe.buildRecipeUriByWeight(0);
+        }
+        else
+        {
+            uri = EasyKitchenContract.Recipe.buildRecipeUriByMealTypeAndWeight(extra,0);
+        }
         return new CursorLoader(getActivity(),
                 uri,
                 null,

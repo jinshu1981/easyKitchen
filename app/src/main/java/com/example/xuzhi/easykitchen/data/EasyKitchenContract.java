@@ -26,7 +26,7 @@ public class EasyKitchenContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_MATERIAL = "Material";
     public static final String PATH_RECIPE = "Recipe";
-    public static final String PATH_CUSTOM_RECIPE = "CustomRecipe";
+
 
     public static final class Material implements BaseColumns {
 
@@ -58,7 +58,7 @@ public class EasyKitchenContract {
             return CONTENT_URI.buildUpon().appendPath(COLUMN_STATUS).appendPath(status).build();
         }
 
-        public static Uri buildMaterialUriByType(String type,String status)
+        public static Uri buildMaterialUriByTypeAndStatus(String type,String status)
         {
             //return CONTENT_URI.buildUpon().appendPath(type).build();
             return CONTENT_URI.buildUpon().appendPath(COLUMN_TYPE).appendPath(type).appendPath(status).build();
@@ -99,6 +99,10 @@ public class EasyKitchenContract {
         public static final String COLUMN_WEIGHT  ="weight";
         public static final String COLUMN_SOURCE  ="source";
         public static final String COLUMN_FAVORITE  ="favorite";
+        public static final String COLUMN_MEAL_TYPE  ="mealType";
+
+        public static final String MEAL_TYPE_BREAKFAST = "B";
+        public static final String MEAL_TYPE_MEAL = "M";
 
         public static Uri buildRecipeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -118,6 +122,12 @@ public class EasyKitchenContract {
         public static String getSourceFromUri(Uri uri) {
             return getMaterialFromUri(uri);
         }
+        public static String getMealTypeFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static String getWeightFromUriWithMealType(Uri uri) {
+            return uri.getPathSegments().get(3);
+        }
         public static Uri buildRecipeUriByMoreThanOneMaterials() {
             return CONTENT_URI.buildUpon().appendPath("allMaterials").build();
         }
@@ -136,6 +146,11 @@ public class EasyKitchenContract {
         public static Uri buildRecipeUriByFavorite()
         {
             return CONTENT_URI.buildUpon().appendPath(COLUMN_FAVORITE).build();
+        }
+
+        public static Uri buildRecipeUriByMealTypeAndWeight(String mealType,int weight)
+        {
+            return CONTENT_URI.buildUpon().appendPath(COLUMN_MEAL_TYPE).appendPath(mealType).appendPath(Integer.toString(weight)).build();
         }
     }
 

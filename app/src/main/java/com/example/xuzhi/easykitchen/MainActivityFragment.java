@@ -141,7 +141,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 break;
 
         }
-        movieUri = EasyKitchenContract.Material.buildMaterialUriByType(type, "YES");
+        movieUri = EasyKitchenContract.Material.buildMaterialUriByTypeAndStatus(type, "YES");
 
         return new CursorLoader(getActivity(),
                 movieUri,

@@ -25,7 +25,32 @@ public class StartActivityFragment extends Fragment {
         breakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MenuActivity.class);
+                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType","B");
+                startActivity(intent);
+            }
+        });
+
+        TextView lunch = (TextView)rootView.findViewById(R.id.id_lunch);
+        lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType","M");
+                startActivity(intent);
+            }
+        });
+        TextView supper = (TextView)rootView.findViewById(R.id.id_supper);
+        supper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType","M");
+                startActivity(intent);
+            }
+        });
+        TextView myKitchen = (TextView)rootView.findViewById(R.id.id_my_kitchen);
+        myKitchen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
         });

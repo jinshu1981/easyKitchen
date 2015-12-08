@@ -1,3 +1,6 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -19,7 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/grid_view_menu"
         android:columnWidth="90dp"
-        android:numColumns="2"
+        android:numColumns="1"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
         android:stretchMode="columnWidth"
@@ -34,3 +37,4 @@
     </ListView>
 
 </LinearLayout>
+</ScrollView>

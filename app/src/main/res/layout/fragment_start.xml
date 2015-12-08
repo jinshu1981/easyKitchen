@@ -5,20 +5,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.xuzhi.easykitchen.StartActivityFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#6495ED">
 
     <TextView android:text="逸厨" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity = "center"
         android:textSize="50sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:typeface="monospace"/>
 
 
     <TextView android:text="早 餐" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity = "center"
         android:background="@drawable/textview_border"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="40sp"
         android:id = "@+id/id_breakfast"/>
 
     <TextView android:text="午 餐" android:layout_width="wrap_content"
@@ -34,5 +36,12 @@
         android:background="@drawable/textview_border"
         android:layout_marginTop="20sp"
         android:id = "@+id/id_supper"/>
+
+    <TextView android:text="看我的厨房" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity = "center"
+        android:background="@drawable/textview_border"
+        android:layout_marginTop="40sp"
+        android:id = "@+id/id_my_kitchen"/>
 
 </LinearLayout>
