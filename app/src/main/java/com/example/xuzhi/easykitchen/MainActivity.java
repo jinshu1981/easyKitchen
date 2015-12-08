@@ -1,14 +1,11 @@
 package com.example.xuzhi.easykitchen;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements MineFragment.OnFragmentInteractionListener{
 
@@ -20,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements MineFragment.OnFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Restore preferences
-        SharedPreferences settings = getPreferences(0);
+       /* SharedPreferences settings = getPreferences(0);
         boolean dbExist = settings.getBoolean("dbExist", false);
         Log.v(LOG_TAG, "dbExist =" + dbExist);
         if(!dbExist) {
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MineFragment.OnFr
                 e.printStackTrace();
             }
 
-        }
+        }*/
         //set button click listener
         setFragmentIndicator();
         // Check that the activity is using the layout version with

@@ -127,7 +127,7 @@ public class EasyKitchenProvider extends ContentProvider {
         private static final String sEasyKitchenByMaterialTypeSelection =
                 EasyKitchenContract.Material.TABLE_NAME +
                         "." + EasyKitchenContract.Material.COLUMN_TYPE + " = ? ";
-        //Material.inKitchen = ?
+        //Material.status = ?
         private static final String sEasyKitchenByMaterialStatusSelection =
                 EasyKitchenContract.Material.TABLE_NAME +
                         "." + EasyKitchenContract.Material.COLUMN_STATUS + " = ? ";
@@ -247,10 +247,10 @@ public class EasyKitchenProvider extends ContentProvider {
     private static final String sEasyKitchenByRecipeSourceSelection=
             EasyKitchenContract.Recipe.TABLE_NAME+
                     "." + EasyKitchenContract.Recipe.COLUMN_SOURCE + " = ?";
-    //Recipe.favorite
+    //Recipe.favorite = yes
     private static final String sEasyKitchenByRecipeFavoriteSelection =
             EasyKitchenContract.Recipe.TABLE_NAME+
-                    "." + EasyKitchenContract.Recipe.COLUMN_FAVORITE;
+                    "." + EasyKitchenContract.Recipe.COLUMN_FAVORITE + " = ?";
 
     //Recipe.weight = ?
     private static final String sEasyKitchenByRecipeWeightSelection =
@@ -304,6 +304,22 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
+    private Cursor getRecipeByName(
+            Uri uri, String[] projection, String sortOrder) {
+
+        String name = EasyKitchenContract.Recipe.getNameFromUri(uri);
+        Log.v(LOG_TAG,"name = " + name);
+        sEasyKitchenQueryBuilder.setTables("recipe");
+        return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEasyKitchenByRecipeNameSelection,
+                new String[]{name},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     private Cursor getFavoriteRecipes(
             Uri uri, String[] projection, String sortOrder) {
 
@@ -311,7 +327,7 @@ public class EasyKitchenProvider extends ContentProvider {
         return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 sEasyKitchenByRecipeFavoriteSelection,
-                null,
+                new String[]{"yes"},
                 null,
                 null,
                 sortOrder
@@ -382,6 +398,10 @@ public class EasyKitchenProvider extends ContentProvider {
             }
             case EASY_KITCHEN_RECIPE_WITH_FAVORITE:{
                 retCursor = getFavoriteRecipes(uri, projection, sortOrder);
+                break;
+            }
+            case EASY_KITCHEN_RECIPE_WITH_NAME: {
+                retCursor = getRecipeByName(uri, projection, sortOrder);
                 break;
             }
             default:

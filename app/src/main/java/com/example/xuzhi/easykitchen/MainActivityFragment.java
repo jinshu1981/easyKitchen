@@ -60,8 +60,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 if (cursor != null) {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
                     String name = cursor.getString(nameIndex);
-                    Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
+                    Intent intent = new Intent(getActivity(), RecipeActivity.class).setData(EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name));
                     startActivity(intent);
+
                 }
             }
         });
@@ -77,7 +78,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 if (cursor != null) {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
                     String name = cursor.getString(nameIndex);
-                    Intent intent = new Intent(getActivity(), RecipeActivity.class).putExtra(Intent.EXTRA_TEXT, name);
+                    Intent intent = new Intent(getActivity(), RecipeActivity.class).setData(EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name));
                     startActivity(intent);
                 }
             }

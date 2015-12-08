@@ -30,6 +30,7 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class AddNewRecipeActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private final String LOG_TAG = this.getClass().getSimpleName();
+    private static final int RECIPE_LOADER_CUSTOM = 0;
     EditText mRecipeName,mRecipeMaterials,mRecipeSteps;
     SimpleCursorAdapter mCustomRecipeslistAdapter;
     View mRootView;
@@ -37,7 +38,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
     ListView mCustomListView;
     Context mContext;
     Cursor mCursor;
-    private static final int RECIPE_LOADER_CUSTOM = 0;
+
     public AddNewRecipeActivityFragment() {
 
     }
@@ -49,8 +50,8 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         mRootView = rootView;
         mContext = getActivity();
         //Load custom recipes
-        String [] dataColumns = {"image","name"};
-        int [] viewIDs = {R.id.image,R.id.name};
+        String [] dataColumns = {"image","name","material"};
+        int [] viewIDs = {R.id.image,R.id.name,R.id.material};
         mCustomRecipeslistAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_custom_recipe_item, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         mCustomListView = (ListView)rootView.findViewById(R.id.custom_recipes_list);
         mCustomListView.setAdapter(mCustomRecipeslistAdapter);
@@ -64,7 +65,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         //Show items of add new recipes and hide recipe list
         mButton_add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ShowItemsOfAddRecipeandHideList();
+                ShowItemsOfAddRecipeAndHideList();
             }
         });
 
@@ -77,7 +78,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
                 String recipeSteps = mRecipeSteps.getText().toString();
                 Log.v(LOG_TAG, "recipe is " + recipeName + recipeMaterials + recipeSteps);
 
-                String []recipe = {recipeName,recipeMaterials,recipeSteps,"custom","NO"};
+                String[] recipe = {recipeName, recipeMaterials, recipeSteps, "custom", "NO"};
                 //check and insert the recipe
                 insertCustomRecipe(getActivity(), recipe);
 
@@ -142,6 +143,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
     public void insertCustomRecipe(Context c,String[] recipe) {
         if (CustomRecipeIsValid(c,recipe)){
             insertRecipes(c, recipe);
+
         }
 
     }
@@ -157,14 +159,13 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_IMAGE, R.mipmap.temp);
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_SOURCE, recipe[3]);
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_FAVORITE, recipe[4]);
-        //init weight by materials number
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, Utility.getRecipeWeight(recipe[1]));
+        //calc weight by materials number
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, getCustomRecipeWeight(recipe));
         // Finally, insert recipe data into the database.
         insertedUri = c.getContentResolver().insert(
                 EasyKitchenContract.Recipe.CONTENT_URI,
                 recipeValues
         );
-
         //实例化对话框;
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder.setTitle("下一步");
@@ -194,6 +195,34 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         });
         builder.show();
         Log.v(LOG_TAG, "insertedUri = " + insertedUri);
+    }
+    private int getCustomRecipeWeight(String[] recipe)
+    {
+        String recipeMaterial = recipe[1];
+        int weight = Utility.getRecipeWeight(recipeMaterial);
+        Uri materialUri = EasyKitchenContract.Material.buildMaterialUriByStatus("YES");
+        String sortOrder = EasyKitchenContract.Material.COLUMN_NAME + " ASC";
+        Cursor cursor = mContext.getContentResolver().query(materialUri, null, null, null, sortOrder);
+        try{
+            if ((cursor!= null)&& cursor.moveToFirst())
+            {
+                for (int i =  0;i < cursor.getCount();i++)
+                {
+                    int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
+                    String name = cursor.getString(nameIndex);
+                    if (recipeMaterial.contains(name))
+                    {
+                        weight--;
+                    }
+                    cursor.moveToNext();
+                }
+            }
+        }finally {
+            cursor.moveToFirst();
+            cursor.close();
+        }
+        assert (weight >=0);
+        return weight;
     }
     static public boolean CustomRecipeIsValid(Context c,String[] recipe) {
         //实例化对话框;
@@ -243,8 +272,9 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
                 int stepsIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_STEP);
                 String steps = mCursor.getString(stepsIndex);
                 //hide the listview and show edit interface
-                ShowItemsOfAddRecipeandHideList();
+                ShowItemsOfAddRecipeAndHideList();
                 mRecipeName.setText(name);
+                mRecipeName.setEnabled(false);//can't be edited
                 mRecipeMaterials.setText(material);
                 mRecipeSteps.setText(steps);
 
@@ -262,7 +292,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         });
         builder.show();
     }
-    private void ShowItemsOfAddRecipeandHideList()
+    private void ShowItemsOfAddRecipeAndHideList()
     {
         mButton_confirm.setVisibility(View.VISIBLE);
         mRecipeName.setVisibility(View.VISIBLE);
@@ -275,5 +305,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         mCustomListView.setVisibility((View.GONE));
         mButton_add.setVisibility(View.GONE);
         ((TextView)mRootView.findViewById(R.id.textview_4)).setVisibility((View.GONE));
+
+        mRecipeName.setEnabled(true);//can be edited
     }
 }

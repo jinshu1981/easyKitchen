@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EasyKitchen</string>
+    <string name="app_name">逸厨</string>
     <string name="hello_world">Hello world!</string>
     <string name="vegetable">素菜</string>
     <string name="meat">荤菜</string>
@@ -10,19 +10,21 @@
     <string name="title_activity_arrange">ArrangeActivity</string>
     <string name="add">单击增加或删除食材</string>
     <string name="delete">耗尽</string>
-    <string name="title_activity_recipe">RecipeActivity</string>
-    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_recipe">菜谱</string>
+    <string name="title_activity_menu">菜单</string>
     <drawable name="bkcolor">#ffeff6</drawable>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="my_favorite_menu">我喜欢的菜单</string>
-    <string name="add_new_menu">添加新菜单</string>
-    <string name="display_new_menu">自定义菜单</string>
+    <string name="my_favorite_menu">最爱菜谱</string>
+    <string name="add_new_menu">添加新菜谱</string>
+    <string name="display_new_menu">自定义菜谱</string>
     <string name="my_info">关于我</string>
 
-    <string name="title_activity_mine">MineActivity</string>
-    <string name="title_activity_add_new_recipe">AddNewRecipeActivity</string>
+    <string name="title_activity_mine">我</string>
+    <string name="title_activity_add_new_recipe">自定义菜谱</string>
     <string name="recipe_name">菜谱名</string>
     <string name="recipe_material">材料</string>
     <string name="recipe_steps">步骤</string>
+    <string name="title_activity_favorite_recipes">最爱菜谱</string>
+    <string name="title_activity_start">StartActivity</string>
 </resources>

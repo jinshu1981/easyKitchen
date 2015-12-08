@@ -3,43 +3,46 @@ package com.example.xuzhi.easykitchen;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MenuActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-    static public MaterialAdapter mMenuAdapter;
-    private static final int MATERIAL_LOADER_MENU = 5;
+public class FavoriteRecipesActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private final String LOG_TAG = this.getClass().getSimpleName();
-    View mRootView;
-    public MenuActivityFragment() {
+    private static final int RECIPE_LOADER_FAVORITE = 0;
+
+    private SimpleCursorAdapter mFavoriteRecipesListAdapter;
+    private ListView mFavoriteListView;
+    public FavoriteRecipesActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
-        mRootView = rootView;
+        View rootView = inflater.inflate(R.layout.fragment_favorite_recipes, container, false);
 
-       mMenuAdapter = new MaterialAdapter(getContext(), null, 0);
-        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
-        gridView.setAdapter(mMenuAdapter);
+        String [] dataColumns = {"image","name"};
+        int [] viewIDs = {R.id.image,R.id.name};
+        mFavoriteRecipesListAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_custom_recipe_item, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        mFavoriteListView = (ListView)rootView.findViewById(R.id.favorite_recipes_list);
+        mFavoriteListView.setAdapter(mFavoriteRecipesListAdapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mFavoriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -51,22 +54,22 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
                 }
             }
         });
-        return rootView;
 
+        return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(MATERIAL_LOADER_MENU, null, this);
+        getLoaderManager().initLoader(RECIPE_LOADER_FAVORITE, null, this);
         super.onActivityCreated(savedInstanceState);
     }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        //String locationSetting = Utility.getPreferredLocation(getActivity());
 
+        // Sort order:  Ascending, by date.
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        //weight = 0 means all materials are in kitchen
-        Uri uri = EasyKitchenContract.Recipe.buildRecipeUriByWeight(0);
+        Uri uri= EasyKitchenContract.Recipe.buildRecipeUriByFavorite();
         return new CursorLoader(getActivity(),
                 uri,
                 null,
@@ -78,18 +81,20 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
-        mMenuAdapter.swapCursor(cursor);
-        if ((cursor == null)||(cursor.getCount()==0))
+        if (cursor==null)
         {
-            ((TextView) mRootView.findViewById(R.id.no_menu_text))
-                    .setText("对不起，找到没有合适的菜单");
+            Log.v(LOG_TAG, " return cursorLoader.getId()" + cursorLoader.getId());
+            return;
         }
-        Log.v(LOG_TAG, "onLoadFinished");
 
+        Log.v(LOG_TAG, cursor.toString());
+        mFavoriteRecipesListAdapter.swapCursor(cursor);
+        Log.v(LOG_TAG, "onLoadFinished");
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mMenuAdapter.swapCursor(null);
+        mFavoriteRecipesListAdapter.swapCursor(null);
     }
+
 }

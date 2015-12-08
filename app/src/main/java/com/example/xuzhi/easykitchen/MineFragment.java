@@ -67,8 +67,8 @@ public class MineFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_mine, container, false);
-        TextView addNewRecipe = (TextView)rootView.findViewById(R.id.id_add_new_menu);
 
+        TextView addNewRecipe = (TextView)rootView.findViewById(R.id.id_add_new_menu);
         addNewRecipe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +77,14 @@ public class MineFragment extends Fragment {
             }
         });
 
+        TextView favoriteRecipe = (TextView)rootView.findViewById(R.id.id_my_favorite_menu);
+        favoriteRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FavoriteRecipesActivity.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 

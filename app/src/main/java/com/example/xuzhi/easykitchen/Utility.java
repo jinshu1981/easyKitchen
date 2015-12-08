@@ -1,13 +1,13 @@
 package com.example.xuzhi.easykitchen;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.text.TextPaint;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 import com.example.xuzhi.easykitchen.data.EasyKitchenDbHelper;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class Utility {
     private final static String LOG_TAG = Utility.class.getSimpleName();
-
+/*
     static public void insertVegetables(Context c) {
         // Now that the content provider is set up, inserting rows of data is pretty simple.
         // First create a ContentValues object to hold the data you want to insert.
@@ -58,7 +58,7 @@ public class Utility {
         }
 
     }
-
+*/
     static public void UpdateSingleCursor(Context c, Cursor cursor) {
         ContentValues MaterialValues = new ContentValues();
 
@@ -88,11 +88,11 @@ public class Utility {
                 recipeNameIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
                 recipeName = recipeCursor.getString(recipeNameIndex);
                 //filter the unsuitable recipes
-              /*  if (recipeFiltered(name,recipeCursor))
+               if (recipeFiltered(name,recipeCursor))
                 {
                     recipeCursor.moveToNext();
                     continue;
-                }*/
+                }
 
                 weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
                 //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
@@ -110,14 +110,14 @@ public class Utility {
     }
     static public boolean recipeFiltered(String materialName,Cursor recipeCursor)
     {
-        String [][] recipes = {{"油","蚝油，麻油"}};
+        String [][] recipes = {{"油","蚝油，麻油，酱油"},{"鸡","鸡精"},{"虾","虾仁"}};
         int recipeMaterialIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MATERIAL);
         String recipeMaterial = recipeCursor.getString(recipeMaterialIndex);
 
 
         for (String[] materialCouple:recipes)
         {
-            if (materialCouple[0] == materialName)
+            if (materialCouple[0].equals(materialName))
             {
                 return filterTheMaterials(materialCouple[1].split("，"),recipeMaterial);
             }
@@ -205,5 +205,10 @@ public class Utility {
         } else {
             return R.mipmap.temp_grey;
         }
+    }
+
+    static public void setBoldTextStyle(TextView text){
+        TextPaint tp = text.getPaint();
+        tp.setFakeBoldText(true);
     }
 }

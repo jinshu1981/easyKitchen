@@ -62,7 +62,8 @@
         android:ems = "6"
         android:id="@+id/new_recipe_material"
         android:layout_gravity="center"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <TextView android:text="@string/recipe_steps" android:layout_width="wrap_content"
         android:layout_height="wrap_content"

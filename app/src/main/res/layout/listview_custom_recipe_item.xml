@@ -2,10 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
@@ -19,14 +16,13 @@
         android:padding="2sp"
         android:layout_gravity="center"
         />
-    </LinearLayout>
     <TextView
-        android:id="@+id/delete"
-        android:text="删"
+        android:id="@+id/material"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="2sp"
         android:layout_gravity="center"
-        android:layout_weight="0.5"
-        android:visibility="visible"/>
+        />
+
+
 </LinearLayout>
