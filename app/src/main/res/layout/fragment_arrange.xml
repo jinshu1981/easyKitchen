@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="5dp"
-            android:background="@color/grey"/>
+            android:background="@drawable/textview_border"/>
 
         <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

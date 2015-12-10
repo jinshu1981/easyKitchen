@@ -20,11 +20,14 @@
     <string name="display_new_menu">自定义菜谱</string>
     <string name="my_info">关于我</string>
 
-    <string name="title_activity_mine">我</string>
+    <string name="title_activity_mine">我的厨房</string>
     <string name="title_activity_add_new_recipe">自定义菜谱</string>
     <string name="recipe_name">菜谱名</string>
     <string name="recipe_material">材料</string>
     <string name="recipe_steps">步骤</string>
-    <string name="title_activity_favorite_recipes">最爱菜谱</string>
+    <string name="title_activity_favorite_recipes">我喜爱的菜谱</string>
     <string name="title_activity_start">StartActivity</string>
+
+    <string name="action_my_kitchen">厨</string>
+
 </resources>

@@ -12,6 +12,7 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -19,10 +20,14 @@
         <provider
             android:name=".data.EasyKitchenProvider"
             android:authorities="com.example.xuzhi.easykitchen" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.xuzhi.easykitchen.MineActivity" />
         </activity>
         <activity
             android:name=".ArrangeActivity"
@@ -38,7 +43,7 @@
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+                android:value="com.example.xuzhi.easykitchen.MenuActivity" />
         </activity>
         <activity
             android:name=".MenuActivity"
@@ -46,23 +51,30 @@
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+                android:value="com.example.xuzhi.easykitchen.StartActivity" />
         </activity>
         <activity
             android:name=".AddNewRecipeActivity"
             android:label="@string/title_activity_add_new_recipe" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+                android:value="com.example.xuzhi.easykitchen.MineActivity" />
         </activity>
         <activity
             android:name=".FavoriteRecipesActivity"
             android:label="@string/title_activity_favorite_recipes" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+                android:value="com.example.xuzhi.easykitchen.MineActivity" />
         </activity>
-
+        <activity
+            android:name=".MineActivity"
+            android:label="@string/title_activity_mine"
+            android:parentActivityName=".MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.xuzhi.easykitchen.MenuActivity" />
+        </activity>
     </application>
 
 </manifest>
