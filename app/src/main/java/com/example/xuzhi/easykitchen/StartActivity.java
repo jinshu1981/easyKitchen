@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class StartActivity extends AppCompatActivity {
     private final String LOG_TAG = this.getClass().getSimpleName();
+    public static String[] materialList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,7 @@ public class StartActivity extends AppCompatActivity {
             }
 
         }
+        Utility.GenerateMaterialList(getBaseContext());
     }
 
 

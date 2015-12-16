@@ -26,6 +26,10 @@ public class EasyKitchenContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_MATERIAL = "Material";
     public static final String PATH_RECIPE = "Recipe";
+    public static final String YES = "yes";
+    public static final String NO = "no";
+    public static final String DEFAULTS = "d";
+    public static final String CUSTOMISED = "c";
 
 
     public static final class Material implements BaseColumns {
@@ -44,7 +48,7 @@ public class EasyKitchenContract {
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_IMAGE_GREY = "image_grey";
         public static final String COLUMN_STATUS = "status";
-
+        public static final String COLUMN_SOURCE  ="source";
         static public String MATERIAL_TYPE_VEGETABLE = "素";
         static public String MATERIAL_TYPE_MEAT = "荤";
         static public String MATERIAL_TYPE_SEASONING = "调";
@@ -79,6 +83,9 @@ public class EasyKitchenContract {
         public static Uri buildMaterialUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+        public static Uri buildAllMaterialUri() {
+            return CONTENT_URI;
+        }
     }
 
     public static final class Recipe implements BaseColumns{
@@ -102,7 +109,8 @@ public class EasyKitchenContract {
         public static final String COLUMN_MEAL_TYPE  ="mealType";
 
         public static final String MEAL_TYPE_BREAKFAST = "B";
-        public static final String MEAL_TYPE_MEAL = "M";
+        public static final String MEAL_TYPE_LUNCH = "L";
+        public static final String MEAL_TYPE_SUPPER = "S";
 
         public static Uri buildRecipeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

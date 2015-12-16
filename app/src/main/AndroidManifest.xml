@@ -40,7 +40,7 @@
         <activity
             android:name=".RecipeActivity"
             android:label="@string/title_activity_recipe"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MenuActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xuzhi.easykitchen.MenuActivity" />
@@ -48,7 +48,7 @@
         <activity
             android:name=".MenuActivity"
             android:label="@string/title_activity_menu"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".StartActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xuzhi.easykitchen.StartActivity" />
@@ -74,6 +74,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xuzhi.easykitchen.MenuActivity" />
+        </activity>
+        <activity
+            android:name=".AddMaterialActivity"
+            android:label="@string/title_activity_add_material"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.xuzhi.easykitchen.MainActivity" />
         </activity>
     </application>
 

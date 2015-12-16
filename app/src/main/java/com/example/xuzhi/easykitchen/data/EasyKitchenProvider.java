@@ -214,7 +214,16 @@ public class EasyKitchenProvider extends ContentProvider {
                 new String[]{name});
 
     }
+    private int DeleteTheMaterialByName(Uri uri) {
 
+        String name = EasyKitchenContract.Material.getNameFromUri(uri);
+        Log.v(LOG_TAG, "name = " + name);
+
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        return  db.delete(
+                EasyKitchenContract.Material.TABLE_NAME, sEasyKitchenByMaterialNameSelection, new String[]{name});
+
+    }
     /***********************************Recipe Table*********************************************/
     //Recipe.material Like ?
     private static final String sEasyKitchenByRecipeMaterialMatchSelection =
@@ -474,6 +483,9 @@ public class EasyKitchenProvider extends ContentProvider {
                 break;
             case EASY_KITCHEN_RECIPE_WITH_NAME:
                 rowsDeleted = DeleteTheRecipeByName(uri);
+                break;
+            case EASY_KITCHEN_MATERIAL_WITH_NAME:
+                rowsDeleted = DeleteTheMaterialByName(uri);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

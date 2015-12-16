@@ -16,14 +16,27 @@
         android:orientation="vertical"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_gravity="center">
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2sp"
-            android:layout_gravity ="bottom"
-            android:textStyle="bold"
-            android:text = "name"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_gravity="center">
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2sp"
+                android:layout_gravity ="bottom"
+                android:textStyle="bold"
+                android:text = "name"/>
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2sp"
+                android:layout_gravity="bottom"
+                android:text = "author"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/material"
@@ -32,5 +45,7 @@
             android:padding="2sp"
             android:layout_gravity="bottom"
             android:text = "material"/>
+
+
     </LinearLayout>
 </LinearLayout>

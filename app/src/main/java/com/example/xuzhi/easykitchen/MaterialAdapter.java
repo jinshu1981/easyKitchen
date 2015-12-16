@@ -1,12 +1,12 @@
 package com.example.xuzhi.easykitchen;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
@@ -27,6 +27,44 @@ public class MaterialAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.gridview_item_main, parent, false);
+        final TextView materialText = (TextView)view.findViewById(R.id.name);
+        materialText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MainActivityFragment.deletebleTag == true) {
+                    String name = materialText.getText().toString();
+
+                    Cursor cursor = mContext.getContentResolver().query(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null, null, null);
+                    try{
+                        if ((cursor != null)&&(cursor.moveToFirst())){
+                        int sourceIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_SOURCE);
+                        String source = cursor.getString(sourceIndex);
+                        if (source.equals(EasyKitchenContract.DEFAULTS)){
+                            ContentValues newValue = new ContentValues();
+                            newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.NO);
+                            mContext.getContentResolver().update(EasyKitchenContract.Material.buildMaterialUriByName(name), newValue, null, null);
+                        }
+                        else
+                        {
+                            mContext.getContentResolver().delete(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null);}
+                        }
+                    }finally{
+                        cursor.moveToFirst();
+                        cursor.close();
+                }
+                    materialText.setBackgroundResource(R.color.gray);
+                }}
+
+        });
+
+        if (MainActivityFragment.deletebleTag == true)
+        {
+            materialText.setBackgroundResource(R.color.lightgray);
+        }
+        else
+        {
+            materialText.setBackgroundResource(R.color.white);
+        }
         return view;
     }
 
@@ -36,27 +74,12 @@ public class MaterialAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        ImageView image = (ImageView)view.findViewById(R.id.image);
+        //ImageView image = (ImageView)view.findViewById(R.id.image);
         TextView text = (TextView)view.findViewById(R.id.name);
 
         int textIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
         String textString = cursor.getString(textIndex);
         text.setText(textString);
-
-       // int imageIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_IMAGE);
-        //Log.v(LOG_TAG, "name = " + textString);
-        //Log.v(LOG_TAG,"Activity =" + context.getClass().toString());
-        /*
-        if (-1 == cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS))
-        {
-            image.setImageResource(Utility.getImagebyName(textString));
-        }
-        else {
-            int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
-
-            String status = cursor.getString(statusIndex);
-            image.setImageResource(Utility.getImagebyNameandStatus(textString,status));
-        }*/
 
     }
 }

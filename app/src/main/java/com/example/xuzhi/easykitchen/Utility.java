@@ -239,4 +239,60 @@ public class Utility {
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
     }
+
+    static public void setMenuTextViewColor(Context c,String mealType,TextView breakfastText,TextView lunchText,TextView supperText) {
+        int colorSelected = c.getResources().getColor(R.color.black);
+        int colorUnselected = c.getResources().getColor(R.color.lightgray);
+        switch (mealType){
+            case EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST:
+                breakfastText.setTextColor(colorSelected);
+                lunchText.setTextColor(colorUnselected);
+                supperText.setTextColor(colorUnselected);
+                break;
+            case EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH:
+                breakfastText.setTextColor(colorUnselected);
+                lunchText.setTextColor(colorSelected);
+                supperText.setTextColor(colorUnselected);
+                break;
+            case EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER:
+                breakfastText.setTextColor(colorUnselected);
+                lunchText.setTextColor(colorUnselected);
+                supperText.setTextColor(colorSelected);
+                break;
+            default:break;
+        }
+
+    }
+    static public void GenerateMaterialList(Context c)
+    {
+        Uri uri = EasyKitchenContract.Material.buildAllMaterialUri();
+        String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
+        Cursor cursor = c.getContentResolver().query(uri,  new String[]{EasyKitchenContract.Recipe.COLUMN_NAME}, null, null, sortOrder);
+        int nameIndex;
+         String name;
+
+        StartActivity.materialList = new String[cursor.getCount()];
+
+        try{
+            if ((cursor != null) && (cursor.moveToFirst())) {
+
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
+                    name = cursor.getString(nameIndex);
+                    StartActivity.materialList[i] = name;
+                    cursor.moveToNext();
+                }
+            }}finally {
+            cursor.moveToFirst();
+            cursor.close();
+        }
+        Log.v(LOG_TAG,"materialList length= " + StartActivity.materialList.length );
+        String temp = "";
+        for (int i = 0;i < StartActivity.materialList.length;i++)
+        {
+            temp += StartActivity.materialList[i] + "，";
+        }
+        Log.v(LOG_TAG,"materialList content= " + temp );
+        
+    }
 }

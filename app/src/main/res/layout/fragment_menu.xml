@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.xuzhi.easykitchen.MenuActivityFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <TextView
         android:id="@+id/no_menu_text"
@@ -13,11 +14,47 @@
         android:layout_gravity="center"
         android:padding="2sp"
         android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/id_tab_contacts_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
+        <TextView
+            android:id="@+id/button_breakfast"
+            android:text="早餐"
+            android:textColor="@color/lightgray"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@drawable/textview_border_menu_breakfast"/>
+        <TextView
+            android:id="@+id/button_lunch"
+            android:text="午餐"
+            android:textColor="@color/lightgray"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/textview_border_menu_lunch"/>
+        <TextView
+            android:id="@+id/button_supper"
+            android:text="晚餐"
+            android:textColor="@color/lightgray"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/textview_border_menu_supper"/>
+    </LinearLayout>
 
     <ListView
-        android:id="@+id/recommended_recipes_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    android:id="@+id/recommended_recipes_list"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
     </ListView>
+
+
 
 </LinearLayout>

@@ -23,7 +23,11 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    static public GridView mVegetableGridView;
+    static public GridView mMeatGridView;
+    static public GridView mSeasoningGridView;
 
     static public MaterialAdapter mVegetableAdapter;
     static public MaterialAdapter mMeatAdapter;
@@ -34,25 +38,31 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private static final int MATERIAL_LOADER_SEASONING = 2;
 
     private final String LOG_TAG = this.getClass().getSimpleName();
+    public static boolean deletebleTag = false;
+    private View mRootView;
+    private static MainActivityFragment mThis;
 
     public MainActivityFragment() {
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
-
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        mRootView = rootView;
+        mThis = this;
         mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
-        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
-        gridView.setAdapter(mVegetableAdapter);
+        mVegetableGridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
+        mVegetableGridView.setAdapter(mVegetableAdapter);
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mVegetableGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -62,15 +72,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     String name = cursor.getString(nameIndex);
                     Intent intent = new Intent(getActivity(), RecipeActivity.class).setData(EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name));
                     startActivity(intent);
-
                 }
             }
         });
 
         mMeatAdapter = new MaterialAdapter(getActivity(), null, 0);
-        gridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
-        gridView.setAdapter(mMeatAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mMeatGridView = (GridView) rootView.findViewById(R.id.grid_view_meat);
+        mMeatGridView.setAdapter(mMeatAdapter);
+        mMeatGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -85,8 +94,31 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         });
 
         mSeasoningAdapter = new MaterialAdapter(getActivity(), null, 0);
-        gridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
-        gridView.setAdapter(mSeasoningAdapter);
+        mSeasoningGridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
+        mSeasoningGridView.setAdapter(mSeasoningAdapter);
+
+        /*add materials*/
+       /* TextView addVegetableText = (TextView) rootView.findViewById(R.id.btn_add_vegetable);
+        addVegetableText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddMaterialActivity.class).putExtra(Intent.EXTRA_STREAM, EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE);
+                startActivity(intent);
+            }
+        });
+
+        //del material
+        TextView delVegetableText = (TextView) rootView.findViewById(R.id.btn_del_vegetable);
+        delVegetableText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletebleTag = (deletebleTag == true)?false:true;
+                mVegetableGridView.setAdapter(mVegetableAdapter);
+                mMeatGridView.setAdapter(mMeatAdapter);
+                mSeasoningGridView.setAdapter(mSeasoningAdapter);
+
+            }
+        });*/
         return rootView;
     }
 
@@ -110,9 +142,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public boolean onOptionsItemSelected(MenuItem item) {
         // 处理动作按钮的点击事件
         switch (item.getItemId()) {
-            case R.id.action_modify:
-                openModifyActivity();
+            case R.id.action_add:
+                openAddMaterialActivity();
                 return true;
+            case R.id.action_del: {
+                onDeleteOperation(item);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -126,10 +162,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         String sortOrder = EasyKitchenContract.Material.COLUMN_NAME + " ASC";
         Uri movieUri;
         String type = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
-        switch (i)
-        {
+        switch (i) {
             case MATERIAL_LOADER_VEGETABLE:
-                type =EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
+                type = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
                 break;
             case MATERIAL_LOADER_MEAT:
                 type = EasyKitchenContract.Material.MATERIAL_TYPE_MEAT;
@@ -141,7 +176,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 break;
 
         }
-        movieUri = EasyKitchenContract.Material.buildMaterialUriByTypeAndStatus(type, "YES");
+        movieUri = EasyKitchenContract.Material.buildMaterialUriByTypeAndStatus(type, EasyKitchenContract.YES);
 
         return new CursorLoader(getActivity(),
                 movieUri,
@@ -155,17 +190,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 
         MaterialAdapter adapter = mVegetableAdapter;
-        if (cursor==null)
-        {
-            Log.v(LOG_TAG, " return cursorLoader.getId()" +cursorLoader.getId());
+        if (cursor == null) {
+            Log.v(LOG_TAG, " return cursorLoader.getId()" + cursorLoader.getId());
             return;
         }
-        switch (cursorLoader.getId())
-        {
+        switch (cursorLoader.getId()) {
             case MATERIAL_LOADER_VEGETABLE:
                 adapter = mVegetableAdapter;
                 break;
-             case MATERIAL_LOADER_MEAT:
+            case MATERIAL_LOADER_MEAT:
                 adapter = mMeatAdapter;
                 break;
             case MATERIAL_LOADER_SEASONING:
@@ -175,7 +208,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 break;
         }
 
-       // Log.v(LOG_TAG, cursor.toString());
+        // Log.v(LOG_TAG, cursor.toString());
         adapter.swapCursor(cursor);
         Log.v(LOG_TAG, "onLoadFinished");
 
@@ -185,12 +218,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
         MaterialAdapter adapter = mVegetableAdapter;
-        switch (cursorLoader.getId())
-        {
+        switch (cursorLoader.getId()) {
             case MATERIAL_LOADER_VEGETABLE:
                 adapter = mVegetableAdapter;
                 break;
-             case MATERIAL_LOADER_MEAT:
+            case MATERIAL_LOADER_MEAT:
                 adapter = mMeatAdapter;
                 break;
             case MATERIAL_LOADER_SEASONING:
@@ -199,16 +231,32 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             default:
                 break;
         }
-         adapter.swapCursor(null);
+        adapter.swapCursor(null);
     }
 
-    public void  openModifyActivity()
-    {
-        Intent intent = new Intent(getActivity(), ArrangeActivity.class);
+    public void openAddMaterialActivity() {
+        Intent intent = new Intent(getActivity(), AddMaterialActivity.class);
         startActivity(intent);
     }
 
-
+    public void onDeleteOperation(MenuItem item) {
+        deletebleTag = (deletebleTag == true)?false:true;
+        mVegetableGridView.setAdapter(mVegetableAdapter);
+        mMeatGridView.setAdapter(mMeatAdapter);
+        mSeasoningGridView.setAdapter(mSeasoningAdapter);
+        if(deletebleTag == true)
+        {
+            item.setTitle(R.string.action_endDel);
+        }
+        else
+        {
+            /*结束删除操作后，刷新界面*/
+            item.setTitle(R.string.action_del);
+            getLoaderManager().restartLoader(MATERIAL_LOADER_VEGETABLE, null, this);
+            getLoaderManager().restartLoader(MATERIAL_LOADER_MEAT, null, this);
+            getLoaderManager().restartLoader(MATERIAL_LOADER_SEASONING, null, this);
+        }
+    }
 }
 
 

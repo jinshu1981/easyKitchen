@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -25,7 +27,7 @@ public class StartActivityFragment extends Fragment {
         breakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType","B");
+                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType", EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST);
                 startActivity(intent);
             }
         });
@@ -34,7 +36,7 @@ public class StartActivityFragment extends Fragment {
         lunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType","M");
+                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType",EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH);
                 startActivity(intent);
             }
         });
@@ -42,7 +44,7 @@ public class StartActivityFragment extends Fragment {
         supper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType","M");
+                Intent intent = new Intent(getActivity(), MenuActivity.class).putExtra("mealType",EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER);
                 startActivity(intent);
             }
         });

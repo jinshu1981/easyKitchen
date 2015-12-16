@@ -1,6 +1,7 @@
 package com.example.xuzhi.easykitchen;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
     static public MenuAdapter mMenuAdapter;
     private static final int MATERIAL_LOADER_MENU = 5;
     private final String LOG_TAG = this.getClass().getSimpleName();
+    private static MenuActivityFragment mThis;
+    private static String mMealType = "null";
+
     View mRootView;
     public MenuActivityFragment() {
     }
@@ -37,27 +41,16 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         mRootView = rootView;
-
-       /* mMenuAdapter = new MaterialAdapter(getContext(), null, 0);
-        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_menu);
-        gridView.setAdapter(mMenuAdapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
-                    int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                    String name = cursor.getString(nameIndex);
-                    Intent intent = new Intent(getActivity(), RecipeActivity.class).setData(EasyKitchenContract.Recipe.buildRecipeUriByName(name));
-                    startActivity(intent);
-                }
-            }
-        });*/
+        mThis = this;
+        final TextView breakfastText = (TextView) rootView.findViewById(R.id.button_breakfast);
+        final TextView lunchText = (TextView) rootView.findViewById(R.id.button_lunch);
+        final TextView supperText = (TextView) rootView.findViewById(R.id.button_supper);
         mMenuAdapter = new MenuAdapter(getContext(), null, 0);
         ListView listView = (ListView) rootView.findViewById(R.id.recommended_recipes_list);
         listView.setAdapter(mMenuAdapter);
         Utility.setListViewHeightBasedOnChildren(listView);
+        Utility.setMenuTextViewColor(getActivity(), mMealType, breakfastText, lunchText, supperText);
+        Log.v(LOG_TAG, "setMenuTextViewColor mMealType = " + mMealType);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -71,6 +64,41 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
+
+        breakfastText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                mMealType = EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST;
+                bundle.putString("mealType", mMealType);
+                getLoaderManager().restartLoader(MATERIAL_LOADER_MENU, bundle, mThis);
+                Utility.setMenuTextViewColor(getActivity(), mMealType, breakfastText, lunchText, supperText);
+            }
+        });
+
+
+        lunchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                mMealType = EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH;
+                bundle.putString("mealType", mMealType);
+                getLoaderManager().restartLoader(MATERIAL_LOADER_MENU, bundle, mThis);
+                Utility.setMenuTextViewColor(getActivity(),mMealType,breakfastText,lunchText,supperText);
+            }
+        });
+
+         supperText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                mMealType = EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER;
+                bundle.putString("mealType", mMealType);
+                getLoaderManager().restartLoader(MATERIAL_LOADER_MENU, bundle, mThis);
+                Utility.setMenuTextViewColor(getActivity(),mMealType,breakfastText,lunchText,supperText);
+            }
+        });
+
         return rootView;
 
     }
@@ -79,10 +107,29 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        /*get resume args*/
+        String extra = getActivity().getIntent().getStringExtra("mealType");
+        SharedPreferences settings = getActivity().getPreferences(0);
+        String mealType = settings.getString("mealType", "NULL");
+        if (extra == null){
+
+            Log.v(LOG_TAG," onCreate no extra mealType = " + mealType);
+            mMealType = mealType;
+        }
+        else
+        {
+            mMealType = extra;
+            Log.v(LOG_TAG,"onCreate mMealType = " + mMealType);
+            getActivity().getIntent().removeExtra("mealType");
+        }
+
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(MATERIAL_LOADER_MENU, null, this);
+        Bundle bundle = new Bundle();
+        bundle.putString("mealType", mMealType);
+        getLoaderManager().initLoader(MATERIAL_LOADER_MENU, bundle, this);
+
         super.onActivityCreated(savedInstanceState);
     }
     @Override
@@ -102,7 +149,18 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
                 return super.onOptionsItemSelected(item);
         }
     }
+    @Override
+    public void onPause()
+    {
+        SharedPreferences settings = getActivity().getPreferences(0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("mealType", mMealType);
+        // Commit the edits!
+        editor.commit();
+        Log.v(LOG_TAG, "onPause mMealType = " + mMealType);
+        super.onPause();
 
+    }
     public void  openMineActivity()
     {
         Intent intent = new Intent(getActivity(), MineActivity.class);
@@ -112,7 +170,8 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        String extra = getActivity().getIntent().getStringExtra("mealType");
+        String extra = bundle.getString("mealType");
+        Log.v(LOG_TAG, "onCreateLoader mMealType = " + mMealType);
         Uri uri;
         if (extra == null)/*all type*/ {
 
@@ -123,6 +182,7 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         {
             uri = EasyKitchenContract.Recipe.buildRecipeUriByMealTypeAndWeight(extra,0);
         }
+        mMealType = extra;
         return new CursorLoader(getActivity(),
                 uri,
                 null,

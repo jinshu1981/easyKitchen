@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.xuzhi.easykitchen.MyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -11,73 +8,77 @@
         android:orientation="vertical"
         android:background="@color/highlightpink">
 
-        <TextView android:text="@string/vegetable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5sp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/textview_border"/>
 
-        <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grid_view_vegetable"
-            android:columnWidth="90dp"
-            android:numColumns="4"
-            android:verticalSpacing="5sp"
-            android:horizontalSpacing="5sp"
-            android:stretchMode="columnWidth"
-            android:gravity="center"
-            android:minWidth="45dp"
-            android:visibility="visible"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
-        </com.example.xuzhi.easykitchen.MaterialGridView>
+    <TextView android:text="@string/vegetable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5sp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/textview_border"/>
 
-        <TextView android:text="@string/meat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:padding="5sp"
-            android:background="@drawable/textview_border"/>
+    <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/grid_view_vegetable"
+        android:columnWidth="90sp"
+        android:numColumns="4"
+        android:verticalSpacing="5sp"
+        android:horizontalSpacing="5sp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:minWidth="45dp"
+        android:visibility="visible"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+    </com.example.xuzhi.easykitchen.MaterialGridView>
 
-        <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grid_view_meat"
-            android:columnWidth="90dp"
-            android:numColumns="4"
-            android:verticalSpacing="5sp"
-            android:horizontalSpacing="5sp"
-            android:stretchMode="columnWidth"
-            android:gravity="center"
-            android:minWidth="45dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:visibility="visible">
-        </com.example.xuzhi.easykitchen.MaterialGridView>
 
-          <TextView android:text="@string/seasoning"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@drawable/textview_border"
-            android:padding="5sp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+    <TextView android:text="@string/meat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:padding="5sp"
+        android:background="@drawable/textview_border"/>
 
-        <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/grid_view_seasoning"
-            android:columnWidth="90dp"
-            android:numColumns="4"
-            android:verticalSpacing="5sp"
-            android:horizontalSpacing="5sp"
-            android:stretchMode="columnWidth"
-            android:gravity="center"
-            android:minWidth="45dp"
-            android:visibility="visible"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
-        </com.example.xuzhi.easykitchen.MaterialGridView>
-    </LinearLayout>
-</com.example.xuzhi.easykitchen.MyScrollView>
+    <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/grid_view_meat"
+        android:columnWidth="90dp"
+        android:numColumns="4"
+        android:verticalSpacing="5sp"
+        android:horizontalSpacing="5sp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:minWidth="45dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:visibility="visible">
+    </com.example.xuzhi.easykitchen.MaterialGridView>
+
+
+
+      <TextView android:text="@string/seasoning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:padding="5sp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+    <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/grid_view_seasoning"
+        android:columnWidth="90dp"
+        android:numColumns="4"
+        android:verticalSpacing="5sp"
+        android:horizontalSpacing="5sp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:minWidth="45dp"
+        android:visibility="visible"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+    </com.example.xuzhi.easykitchen.MaterialGridView>
+</LinearLayout>
+
