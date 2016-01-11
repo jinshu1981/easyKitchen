@@ -38,6 +38,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
     ListView mCustomListView;
     Context mContext;
     Cursor mCursor;
+    private AddNewRecipeActivityFragment mThis;
 
     public AddNewRecipeActivityFragment() {
 
@@ -49,6 +50,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         View rootView = inflater.inflate(R.layout.fragment_add_new_recipe, container, false);
         mRootView = rootView;
         mContext = getActivity();
+        mThis = this;
         //Load custom recipes
         String [] dataColumns = {"image","name","material"};
         int [] viewIDs = {R.id.image,R.id.name,R.id.material};
@@ -161,6 +163,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_FAVORITE, recipe[4]);
         //calc weight by materials number
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, getCustomRecipeWeight(recipe));
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE,EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST);
         // Finally, insert recipe data into the database.
         insertedUri = c.getContentResolver().insert(
                 EasyKitchenContract.Recipe.CONTENT_URI,
@@ -200,16 +203,18 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
     {
         String recipeMaterial = recipe[1];
         int weight = Utility.getRecipeWeight(recipeMaterial);
-        Uri materialUri = EasyKitchenContract.Material.buildMaterialUriByStatus("YES");
+        Uri materialUri = EasyKitchenContract.Material.buildMaterialUriByStatus(EasyKitchenContract.YES);
         String sortOrder = EasyKitchenContract.Material.COLUMN_NAME + " ASC";
         Cursor cursor = mContext.getContentResolver().query(materialUri, null, null, null, sortOrder);
         try{
             if ((cursor!= null)&& cursor.moveToFirst())
             {
+                Log.v(LOG_TAG, "cursor.getCount() = " + cursor.getCount());
                 for (int i =  0;i < cursor.getCount();i++)
                 {
                     int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
                     String name = cursor.getString(nameIndex);
+                    Log.v(LOG_TAG, "material name = " + name);
                     if (recipeMaterial.contains(name))
                     {
                         weight--;
@@ -222,6 +227,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
             cursor.close();
         }
         assert (weight >=0);
+        Log.v(LOG_TAG, "CustomRecipeWeight = " + weight);
         return weight;
     }
     static public boolean CustomRecipeIsValid(Context c,String[] recipe) {
@@ -287,6 +293,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
                 int nameIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
                 String name = mCursor.getString(nameIndex);
                 mContext.getContentResolver().delete(EasyKitchenContract.Recipe.buildRecipeUriByName(name),null,null);
+                getLoaderManager().restartLoader(RECIPE_LOADER_CUSTOM, null, mThis);
 
             }
         });

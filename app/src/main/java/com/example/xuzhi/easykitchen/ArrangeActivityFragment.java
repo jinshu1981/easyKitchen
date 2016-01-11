@@ -43,7 +43,7 @@ public class ArrangeActivityFragment extends Fragment implements LoaderManager.L
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 try{
-                    Utility.UpdateSingleCursor(getActivity(), cursor);
+                   // Utility.UpdateSingleCursor(getActivity(), cursor);
                 }finally{
                     //cursor.close();
                 }}

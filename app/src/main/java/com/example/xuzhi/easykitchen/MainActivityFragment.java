@@ -96,29 +96,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         mSeasoningAdapter = new MaterialAdapter(getActivity(), null, 0);
         mSeasoningGridView = (GridView) rootView.findViewById(R.id.grid_view_seasoning);
         mSeasoningGridView.setAdapter(mSeasoningAdapter);
-
-        /*add materials*/
-       /* TextView addVegetableText = (TextView) rootView.findViewById(R.id.btn_add_vegetable);
-        addVegetableText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddMaterialActivity.class).putExtra(Intent.EXTRA_STREAM, EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE);
-                startActivity(intent);
-            }
-        });
-
-        //del material
-        TextView delVegetableText = (TextView) rootView.findViewById(R.id.btn_del_vegetable);
-        delVegetableText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deletebleTag = (deletebleTag == true)?false:true;
-                mVegetableGridView.setAdapter(mVegetableAdapter);
-                mMeatGridView.setAdapter(mMeatAdapter);
-                mSeasoningGridView.setAdapter(mSeasoningAdapter);
-
-            }
-        });*/
         return rootView;
     }
 

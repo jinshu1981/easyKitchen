@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 设置透明背景色 -->
+    <solid android:color="@color/paleturquoise" />
+
+    <!-- 设置一个白色边框 -->
+    <stroke
+        android:width="1sp"
+        android:color="@color/lightblue" />
+    <!-- 填充的颜色,渐变色 -->
+    <gradient
+        android:startColor= "@color/lightblue"
+        android:centerColor="@color/lightseagreen"
+        android:endColor="@color/lightblue"
+        android:angle="90" />
+    <!-- 设置四个圆角的半径 -->
+    <corners
+        android:bottomLeftRadius="10sp"
+        android:bottomRightRadius="10sp"
+        android:topLeftRadius="10sp"
+        android:topRightRadius="10sp" />
+    <!-- 设置一下边距,让空间大一点 -->
+    <padding
+        android:bottom="5sp"
+        android:left="50sp"
+        android:right="50sp"
+        android:top="5sp" />
+
+</shape> 

@@ -40,12 +40,33 @@
 
     <MultiAutoCompleteTextView
         android:id="@+id/add_material"
-        android:hint="食材"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:dropDownHeight = "wrap_content"
-        android:dropDownWidth = "wrap_content"/>
+        android:dropDownWidth = "wrap_content"
+        android:background="@drawable/edittext_border"
+        android:minLines="2"/>
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/add_material_meat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:dropDownHeight = "wrap_content"
+        android:dropDownWidth = "wrap_content"
+        android:background="@drawable/edittext_border"
+        android:minLines="2"/>
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/add_material_seasoning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:dropDownHeight = "wrap_content"
+        android:dropDownWidth = "wrap_content"
+        android:background="@drawable/edittext_border"
+        android:minLines="2"/>
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +79,8 @@
         android:text="确定"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:background="@drawable/button_border"/>
 
 </LinearLayout>
 

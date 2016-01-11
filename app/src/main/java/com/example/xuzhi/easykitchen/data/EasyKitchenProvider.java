@@ -246,15 +246,15 @@ public class EasyKitchenProvider extends ContentProvider {
             EasyKitchenContract.Recipe.TABLE_NAME+
                     "." + EasyKitchenContract.Recipe.COLUMN_FAVORITE + " = ?";
 
-    //Recipe.weight = ?
+    //Recipe.weight <= ?
     private static final String sEasyKitchenByRecipeWeightSelection =
             EasyKitchenContract.Recipe.TABLE_NAME+
-                    "." + EasyKitchenContract.Recipe.COLUMN_WEIGHT + " = ?";
-    //recipe.mealType LIKE ? AND status = ?
+                    "." + EasyKitchenContract.Recipe.COLUMN_WEIGHT + " <= ?";
+    //recipe.mealType LIKE ? AND weight <= ?
     private static final String sEasyKitchenByRecipeTypeAndWeightSelection =
             EasyKitchenContract.Recipe.TABLE_NAME +
                     "." + EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE + " LIKE ? AND " +
-                    EasyKitchenContract.Recipe.COLUMN_WEIGHT + " = ? ";
+                    EasyKitchenContract.Recipe.COLUMN_WEIGHT + " <= ? ";
 
     private Cursor getRecipeByMatchMaterial(
             Uri uri, String[] projection, String sortOrder) {

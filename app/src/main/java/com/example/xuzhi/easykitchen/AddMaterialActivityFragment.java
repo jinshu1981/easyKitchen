@@ -174,12 +174,15 @@ public class AddMaterialActivityFragment extends Fragment {
                     mHintText.setVisibility(View.GONE);
                     int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
                     String status = cursor.getString(statusIndex);
+                    Log.v(LOG_TAG, "material= "+material+", status= " + status);
                     if (status.equals(EasyKitchenContract.NO))
                     {
                         ContentValues newValue = new ContentValues();
                         newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.YES);
                         c.getContentResolver().update(EasyKitchenContract.Material.buildMaterialUriByName(material), newValue, null, null);
                         Log.v(LOG_TAG, "material in kitchen= " + material);
+                        //新增食材，菜谱权重-1
+                        Utility.UpdateSingleCursor(getActivity(), material, -1);
                     }
                 }
                 else{
@@ -191,6 +194,8 @@ public class AddMaterialActivityFragment extends Fragment {
                     newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.YES);
                     c.getContentResolver().insert(EasyKitchenContract.Material.CONTENT_URI, newValue);
                     Log.v(LOG_TAG, "new material in kitchen= " + material);
+                    //新增食材，菜谱权重-1
+                    Utility.UpdateSingleCursor(getActivity(), material,-1);
 
                 }
 

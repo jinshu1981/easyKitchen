@@ -180,7 +180,7 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         }
         else
         {
-            uri = EasyKitchenContract.Recipe.buildRecipeUriByMealTypeAndWeight(extra,0);
+            uri = EasyKitchenContract.Recipe.buildRecipeUriByMealTypeAndWeight(extra,100);
         }
         mMealType = extra;
         return new CursorLoader(getActivity(),

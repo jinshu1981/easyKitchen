@@ -36,24 +36,29 @@ public class MaterialAdapter extends CursorAdapter {
 
                     Cursor cursor = mContext.getContentResolver().query(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null, null, null);
                     try{
-                        if ((cursor != null)&&(cursor.moveToFirst())){
-                        int sourceIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_SOURCE);
-                        String source = cursor.getString(sourceIndex);
-                        if (source.equals(EasyKitchenContract.DEFAULTS)){
-                            ContentValues newValue = new ContentValues();
-                            newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.NO);
-                            mContext.getContentResolver().update(EasyKitchenContract.Material.buildMaterialUriByName(name), newValue, null, null);
-                        }
-                        else
-                        {
-                            mContext.getContentResolver().delete(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null);}
+                            if ((cursor != null)&&(cursor.moveToFirst())){
+                            int sourceIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_SOURCE);
+                            String source = cursor.getString(sourceIndex);
+                            if (source.equals(EasyKitchenContract.DEFAULTS)){
+                                ContentValues newValue = new ContentValues();
+                                newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.NO);
+                                mContext.getContentResolver().update(EasyKitchenContract.Material.buildMaterialUriByName(name), newValue, null, null);
+                            }
+                            else
+                            {
+                                mContext.getContentResolver().delete(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null);
+                            }
+                            //新增食材，菜谱权重+1
+                            Utility.UpdateSingleCursor(mContext, name,1);
                         }
                     }finally{
                         cursor.moveToFirst();
                         cursor.close();
                 }
-                    materialText.setBackgroundResource(R.color.gray);
-                }}
+                    materialText.setBackgroundResource(R.color.highlightpink);
+                    materialText.setTextColor(mContext.getResources().getColor(R.color.highlightpink));
+                }
+            }
 
         });
 

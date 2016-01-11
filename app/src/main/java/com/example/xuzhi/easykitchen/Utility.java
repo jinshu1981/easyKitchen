@@ -63,7 +63,43 @@ public class Utility {
 
     }
 */
-    static public void UpdateSingleCursor(Context c, Cursor cursor) {
+    static public void UpdateSingleCursor(Context c, String name,int subWeight) {
+        Uri recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name);
+        String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
+        Cursor recipeCursor = c.getContentResolver().query(recipeUri, new String[]{EasyKitchenContract.Recipe.COLUMN_NAME,EasyKitchenContract.Recipe.COLUMN_MATERIAL, EasyKitchenContract.Recipe.COLUMN_WEIGHT}, null, null, sortOrder);
+        try{
+            if ((recipeCursor != null) && (recipeCursor.moveToFirst())) {
+                ContentValues recipeValues = new ContentValues();
+                int weightIndex;
+                int weight;
+                int recipeNameIndex;
+                String recipeName;
+                for (int i = 0; i < recipeCursor.getCount(); i++) {
+                    recipeNameIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
+                    recipeName = recipeCursor.getString(recipeNameIndex);
+                    //filter the unsuitable recipes
+                    if (recipeFiltered(name,recipeCursor))
+                    {
+                        recipeCursor.moveToNext();
+                        continue;
+                    }
+
+                    weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
+                    //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
+                    weight = recipeCursor.getInt(weightIndex) + subWeight;
+                    recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, weight);
+                    Log.v(LOG_TAG, "weight = " + weight + ",recipeName = " + recipeName);
+                    c.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(recipeName), recipeValues, null, null);
+                    recipeCursor.moveToNext();
+                }
+            }}finally {
+            recipeCursor.moveToFirst();
+            recipeCursor.close();
+        }
+
+    }
+
+    /*static public void UpdateSingleCursor(Context c, Cursor cursor) {
         ContentValues MaterialValues = new ContentValues();
 
         //update material status
@@ -77,41 +113,41 @@ public class Utility {
         c.getContentResolver().update(EasyKitchenContract.Material.buildMaterialUriByName(name), MaterialValues, null, null);
 
         //update weight of recipes
-        int subWeight = (status == "NO") ? 1 : -1;
+        int subWeight = (status.equals(EasyKitchenContract.NO)) ? 1 : -1;
         Uri recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name);
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
         Cursor recipeCursor = c.getContentResolver().query(recipeUri, null, null, null, sortOrder);
         try{
-        if ((recipeCursor != null) && (recipeCursor.moveToFirst())) {
-            ContentValues recipeValues = new ContentValues();
-            int weightIndex;
-            int weight;
-            int recipeNameIndex;
-            String recipeName;
-            for (int i = 0; i < recipeCursor.getCount(); i++) {
-                recipeNameIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                recipeName = recipeCursor.getString(recipeNameIndex);
-                //filter the unsuitable recipes
-               if (recipeFiltered(name,recipeCursor))
-                {
-                    recipeCursor.moveToNext();
-                    continue;
-                }
+            if ((recipeCursor != null) && (recipeCursor.moveToFirst())) {
+                ContentValues recipeValues = new ContentValues();
+                int weightIndex;
+                int weight;
+                int recipeNameIndex;
+                String recipeName;
+                for (int i = 0; i < recipeCursor.getCount(); i++) {
+                    recipeNameIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
+                    recipeName = recipeCursor.getString(recipeNameIndex);
+                    //filter the unsuitable recipes
+                    if (recipeFiltered(name,recipeCursor))
+                    {
+                        recipeCursor.moveToNext();
+                        continue;
+                    }
 
-                weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
-                //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
-                weight = recipeCursor.getInt(weightIndex) + subWeight;
-                recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, weight);
-                Log.v(LOG_TAG, "weight = " + weight + ",recipeName = " + recipeName);
-                c.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(recipeName), recipeValues, null, null);
-                recipeCursor.moveToNext();
-            }
-        }}finally {
+                    weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
+                    //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
+                    weight = recipeCursor.getInt(weightIndex) + subWeight;
+                    recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, weight);
+                    Log.v(LOG_TAG, "weight = " + weight + ",recipeName = " + recipeName);
+                    c.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(recipeName), recipeValues, null, null);
+                    recipeCursor.moveToNext();
+                }
+            }}finally {
             recipeCursor.moveToFirst();
             recipeCursor.close();
         }
 
-    }
+    }*/
     static public boolean recipeFiltered(String materialName,Cursor recipeCursor)
     {
         String [][] recipes = {{"油","蚝油，麻油，酱油"},{"鸡","鸡精"},{"虾","虾仁"}};
