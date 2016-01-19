@@ -100,6 +100,11 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
             ((TextView) mRootView.findViewById(R.id.material))
                     .setText(content);
 
+            index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_SEASONING);
+            content = cursor.getString(index);
+            ((TextView) mRootView.findViewById(R.id.seasoning))
+                    .setText(content);
+
             index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_STEP);
             content = cursor.getString(index);
             ((TextView) mRootView.findViewById(R.id.step))

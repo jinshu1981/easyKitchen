@@ -5,12 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
@@ -66,7 +70,7 @@ public class Utility {
     static public void UpdateSingleCursor(Context c, String name,int subWeight) {
         Uri recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name);
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        Cursor recipeCursor = c.getContentResolver().query(recipeUri, new String[]{EasyKitchenContract.Recipe.COLUMN_NAME,EasyKitchenContract.Recipe.COLUMN_MATERIAL, EasyKitchenContract.Recipe.COLUMN_WEIGHT}, null, null, sortOrder);
+        Cursor recipeCursor = c.getContentResolver().query(recipeUri, new String[]{EasyKitchenContract.Recipe.COLUMN_NAME, EasyKitchenContract.Recipe.COLUMN_MATERIAL, EasyKitchenContract.Recipe.COLUMN_WEIGHT}, null, null, sortOrder);
         try{
             if ((recipeCursor != null) && (recipeCursor.moveToFirst())) {
                 ContentValues recipeValues = new ContentValues();
@@ -194,11 +198,23 @@ public class Utility {
         while (m.find()) {
             num++;
         }
+        Log.v(LOG_TAG, "num = " + num);
+        /*联想输入最后自带一个中文逗号*/
+        if(materials.endsWith("，")) num = num -1;
+        Log.v(LOG_TAG, "materials = " + materials);
         Log.v(LOG_TAG, "RecipeWeight = " + num);
         return num;
     }
-
-
+    /*去除字符串末尾的中文逗号，联想输入时可能会引入*/
+    static public String formatString(String string)
+    {
+        String formatString = string;
+        if(string.endsWith("，"))
+        {
+            formatString = string.substring(0,string.length()-1);
+        }
+        return formatString;
+    }
     /**
      * Copies your database from your local assets-folder to the just created
      * empty database in the system folder, from where it can be accessed and
@@ -330,5 +346,57 @@ public class Utility {
         }
         Log.v(LOG_TAG,"materialList content= " + temp );
         
+    }
+
+    /*中文逗号分隔符接口*/
+    public static class CCommaTokenizer implements MultiAutoCompleteTextView.Tokenizer {
+        public int findTokenStart(CharSequence text, int cursor) {
+            int i = cursor;
+
+            while (i > 0 && text.charAt(i - 1) != '，') {
+                i--;
+            }
+            while (i < cursor && text.charAt(i) == ' ') {
+                i++;
+            }
+
+            return i;
+        }
+
+        public int findTokenEnd(CharSequence text, int cursor) {
+            int i = cursor;
+            int len = text.length();
+
+            while (i < len) {
+                if (text.charAt(i) == '，') {
+                    return i;
+                } else {
+                    i++;
+                }
+            }
+
+            return len;
+        }
+
+        public CharSequence terminateToken(CharSequence text) {
+            int i = text.length();
+
+            while (i > 0 && text.charAt(i - 1) == ' ') {
+                i--;
+            }
+
+            if (i > 0 && text.charAt(i - 1) == '，') {
+                return text;
+            } else {
+                if (text instanceof Spanned) {
+                    SpannableString sp = new SpannableString(text + "， ");
+                    TextUtils.copySpansFrom((Spanned) text, 0, text.length(),
+                            Object.class, sp, 0);
+                    return sp;
+                } else {
+                    return text + "， ";
+                }
+            }
+        }
     }
 }

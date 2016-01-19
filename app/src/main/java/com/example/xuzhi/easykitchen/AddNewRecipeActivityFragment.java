@@ -1,47 +1,45 @@
 package com.example.xuzhi.easykitchen;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.MultiAutoCompleteTextView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class AddNewRecipeActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class AddNewRecipeActivityFragment extends Fragment{
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private static final int RECIPE_LOADER_CUSTOM = 0;
-    EditText mRecipeName,mRecipeMaterials,mRecipeSteps;
-    SimpleCursorAdapter mCustomRecipeslistAdapter;
+    static EditText mRecipeName,mRecipeSteps;
+    static MultiAutoCompleteTextView mRecipeMaterials,mRecipeSeasoning;
+    static public ArrayAdapter<String> mAdapter;
     View mRootView;
-    Button mButton_add,mButton_confirm;
-    ListView mCustomListView;
+    Button mButton_confirm;
+    static CheckBox mCheckBox_breakfast,mCheckBox_lunch,mCheckBox_supper;
     Context mContext;
-    Cursor mCursor;
+   // String mMealType = "";
+    static int mMealType = 0;/*0-0-0,breakfast-lunch-supper */
     private AddNewRecipeActivityFragment mThis;
-
     public AddNewRecipeActivityFragment() {
-
+        mMealType = 0;
     }
 
     @Override
@@ -51,51 +49,71 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         mRootView = rootView;
         mContext = getActivity();
         mThis = this;
-        //Load custom recipes
-        String [] dataColumns = {"image","name","material"};
-        int [] viewIDs = {R.id.image,R.id.name,R.id.material};
-        mCustomRecipeslistAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_custom_recipe_item, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        mCustomListView = (ListView)rootView.findViewById(R.id.custom_recipes_list);
-        mCustomListView.setAdapter(mCustomRecipeslistAdapter);
-
-        mButton_add = (Button)rootView.findViewById(R.id.button_add);
         mButton_confirm = (Button)rootView.findViewById(R.id.button_confirm);
         mRecipeName = (EditText)rootView.findViewById(R.id.new_recipe_name);
-        mRecipeMaterials = (EditText)rootView.findViewById(R.id.new_recipe_material);
         mRecipeSteps = (EditText)rootView.findViewById(R.id.new_recipe_steps);
 
-        //Show items of add new recipes and hide recipe list
-        mButton_add.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                ShowItemsOfAddRecipeAndHideList();
+        mRecipeMaterials = (MultiAutoCompleteTextView)rootView.findViewById(R.id.new_recipe_material);
+        mRecipeSeasoning = (MultiAutoCompleteTextView)rootView.findViewById(R.id.new_recipe_seasoning);
+
+        /*根据内置食材资料自动提示*/
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_multiple_choice,
+                StartActivity.materialList);
+        mRecipeMaterials.setAdapter(mAdapter);
+        mRecipeMaterials.setThreshold(1);
+        mRecipeMaterials.setTokenizer(new Utility.CCommaTokenizer());//设置为中文逗号
+        mRecipeSeasoning.setAdapter(mAdapter);
+        mRecipeSeasoning.setThreshold(1);
+        mRecipeSeasoning.setTokenizer(new Utility.CCommaTokenizer());//设置为中文逗号
+
+        mCheckBox_breakfast = (CheckBox)rootView.findViewById(R.id.checkbox_breakfast);
+        mCheckBox_lunch = (CheckBox)rootView.findViewById(R.id.checkbox_lunch);
+        mCheckBox_supper = (CheckBox)rootView.findViewById(R.id.checkbox_supper);
+
+        if (getActivity().getIntent().hasExtra(Intent.EXTRA_TEXT))
+        {
+            String recipe = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            String[] recipes = recipe.split("@@");
+            mRecipeName.setText(recipes[0]);
+            mRecipeMaterials.setText(recipes[1]);
+            mRecipeSeasoning.setText(recipes[4]);
+            mRecipeSteps.setText(recipes[2]);
+            if (recipes[3].contains(EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST))
+            {
+                mCheckBox_breakfast.setChecked(true);
             }
-        });
+            if (recipes[3].contains(EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH))
+            {
+                mCheckBox_lunch.setChecked(true);
+            }
+            if (recipes[3].contains(EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER))
+            {
+                mCheckBox_supper.setChecked(true);
+            }
+        }
 
         //add new recipes
         mButton_confirm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                String recipeName = mRecipeName.getText().toString();
-                String recipeMaterials = mRecipeMaterials.getText().toString();
-                String recipeSteps = mRecipeSteps.getText().toString();
-                Log.v(LOG_TAG, "recipe is " + recipeName + recipeMaterials + recipeSteps);
+                String recipeName = mRecipeName.getText().toString().trim();
+                String recipeMaterials = Utility.formatString(mRecipeMaterials.getText().toString().trim());
+                String recipeSeasoning = Utility.formatString(mRecipeSeasoning.getText().toString().trim());
+                /*如果食谱没有辅料，默认填充为“无”*/
+                if (recipeSeasoning == null || recipeSeasoning.trim().length() == 0 || "".equals(recipeSeasoning.trim()))
+                {
+                    recipeSeasoning = "无";
+                }
+                String recipeSteps = mRecipeSteps.getText().toString().trim();
+                String mealType = getMealTypeString(mCheckBox_breakfast,mCheckBox_lunch,mCheckBox_supper);
+                Log.v(LOG_TAG, "recipe is " + recipeName + recipeMaterials + recipeSeasoning + recipeSteps + mealType);
 
-                String[] recipe = {recipeName, recipeMaterials, recipeSteps, "custom", "NO"};
+                String[] recipe = {recipeName, recipeMaterials, recipeSteps, "custom", "NO",mealType,recipeSeasoning,};
                 //check and insert the recipe
                 insertCustomRecipe(getActivity(), recipe);
 
             }
-        });
-        //delete recipe
-        mCustomListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                EditOrDeleteTheRecipe(cursor);
-                return true;
-            }
-
         });
 
         return rootView;
@@ -103,43 +121,8 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(RECIPE_LOADER_CUSTOM, null, this);
+        //getLoaderManager().initLoader(RECIPE_LOADER_CUSTOM, null, this);
         super.onActivityCreated(savedInstanceState);
-    }
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        //String locationSetting = Utility.getPreferredLocation(getActivity());
-
-        // Sort order:  Ascending, by date.
-        String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        Uri uri= EasyKitchenContract.Recipe.buildRecipeUriBySource("custom");
-
-
-        return new CursorLoader(getActivity(),
-                uri,
-                null,
-                null,
-                null,
-                sortOrder);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-
-        if (cursor==null)
-        {
-            Log.v(LOG_TAG, " return cursorLoader.getId()" + cursorLoader.getId());
-            return;
-        }
-
-        Log.v(LOG_TAG, cursor.toString());
-        mCustomRecipeslistAdapter.swapCursor(cursor);
-        Log.v(LOG_TAG, "onLoadFinished");
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mCustomRecipeslistAdapter.swapCursor(null);
     }
 
     public void insertCustomRecipe(Context c,String[] recipe) {
@@ -163,45 +146,21 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_FAVORITE, recipe[4]);
         //calc weight by materials number
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, getCustomRecipeWeight(recipe));
-        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE,EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST);
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE,recipe[5]);
+
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_SEASONING, recipe[6]);
         // Finally, insert recipe data into the database.
         insertedUri = c.getContentResolver().insert(
                 EasyKitchenContract.Recipe.CONTENT_URI,
                 recipeValues
         );
-        //实例化对话框;
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("下一步");
-        builder.setNegativeButton("继续添加", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mRecipeName.setText("");
-                mRecipeMaterials.setText("");
-                mRecipeSteps.setText("");
-            }
-        });
-        builder.setPositiveButton("结束", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mButton_confirm.setVisibility(View.GONE);
-                mRecipeName.setVisibility(View.GONE);
-                mRecipeMaterials.setVisibility(View.GONE);
-                mRecipeSteps.setVisibility(View.GONE);
-                ((TextView) mRootView.findViewById(R.id.textview_1)).setVisibility((View.GONE));
-                ((TextView) mRootView.findViewById(R.id.textview_2)).setVisibility((View.GONE));
-                ((TextView) mRootView.findViewById(R.id.textview_3)).setVisibility((View.GONE));
 
-                mCustomListView.setVisibility((View.VISIBLE));
-                mButton_add.setVisibility(View.VISIBLE);
-                ((TextView) mRootView.findViewById(R.id.textview_4)).setVisibility((View.VISIBLE));
-            }
-        });
-        builder.show();
+        new ConfirmDialogFragment().show(this.getFragmentManager(),"confirm");
         Log.v(LOG_TAG, "insertedUri = " + insertedUri);
     }
     private int getCustomRecipeWeight(String[] recipe)
     {
-        String recipeMaterial = recipe[1];
+        String recipeMaterial = recipe[1].trim();
         int weight = Utility.getRecipeWeight(recipeMaterial);
         Uri materialUri = EasyKitchenContract.Material.buildMaterialUriByStatus(EasyKitchenContract.YES);
         String sortOrder = EasyKitchenContract.Material.COLUMN_NAME + " ASC";
@@ -230,10 +189,7 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
         Log.v(LOG_TAG, "CustomRecipeWeight = " + weight);
         return weight;
     }
-    static public boolean CustomRecipeIsValid(Context c,String[] recipe) {
-        //实例化对话框;
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("提示信息");
+    public boolean CustomRecipeIsValid(Context c,String[] recipe) {
 
         //判断菜谱信息是否为空;
         boolean validFlag = true;
@@ -246,73 +202,81 @@ public class AddNewRecipeActivityFragment extends Fragment implements LoaderMana
             }
         }
         if(!validFlag){
-            builder.setMessage("菜谱信息不能为空，请输入内容.");
-            builder.setPositiveButton("确认", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //do nothing
-                }
-            }).show();
+            new ValidInputCheckDialogFragment().show(this.getFragmentManager(), "CheckValidInput");
             return false;
         }else
         {
             return true;
         }
-
     }
-    private void EditOrDeleteTheRecipe(Cursor cursor)
+    public String getMealTypeString(CheckBox breakfast_checkbox,CheckBox lunch_checkbox,CheckBox supper_checkbox)
     {
-        mCursor = cursor;
-
-        //实例化对话框;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("编辑或删除");
-        builder.setNegativeButton("编辑", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //get old recipe info
-                int nameIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                String name = mCursor.getString(nameIndex);
-                int materialIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MATERIAL);
-                String material = mCursor.getString(materialIndex);
-                int stepsIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_STEP);
-                String steps = mCursor.getString(stepsIndex);
-                //hide the listview and show edit interface
-                ShowItemsOfAddRecipeAndHideList();
-                mRecipeName.setText(name);
-                mRecipeName.setEnabled(false);//can't be edited
-                mRecipeMaterials.setText(material);
-                mRecipeSteps.setText(steps);
-
-
-            }
-        });
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int nameIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                String name = mCursor.getString(nameIndex);
-                mContext.getContentResolver().delete(EasyKitchenContract.Recipe.buildRecipeUriByName(name),null,null);
-                getLoaderManager().restartLoader(RECIPE_LOADER_CUSTOM, null, mThis);
-
-            }
-        });
-        builder.show();
+        String mealString = "";
+        if (breakfast_checkbox.isChecked())
+        {
+            mealString = mealString + EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST;;
+        }
+        if (lunch_checkbox.isChecked())
+        {
+            mealString = mealString + EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH;;
+        }
+        if (supper_checkbox.isChecked())
+        {
+            mealString = mealString + EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER;;
+        }
+        if (mealString.equals(""))
+        {
+            return "BLS";
+        }
+        else {
+            return mealString;
+        }
     }
-    private void ShowItemsOfAddRecipeAndHideList()
-    {
-        mButton_confirm.setVisibility(View.VISIBLE);
-        mRecipeName.setVisibility(View.VISIBLE);
-        mRecipeMaterials.setVisibility(View.VISIBLE);
-        mRecipeSteps.setVisibility(View.VISIBLE);
-        ((TextView)mRootView.findViewById(R.id.textview_1)).setVisibility((View.VISIBLE));
-        ((TextView)mRootView.findViewById(R.id.textview_2)).setVisibility((View.VISIBLE));
-        ((TextView)mRootView.findViewById(R.id.textview_3)).setVisibility((View.VISIBLE));
 
-        mCustomListView.setVisibility((View.GONE));
-        mButton_add.setVisibility(View.GONE);
-        ((TextView)mRootView.findViewById(R.id.textview_4)).setVisibility((View.GONE));
+    public static class ValidInputCheckDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        mRecipeName.setEnabled(true);//can be edited
+            builder.setTitle("提示信息");
+            builder.setMessage("菜谱信息不能为空，请输入内容.");
+            builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //do nothing
+                }
+            });
+            return builder.create();
+        }
+    }
+
+    public static class ConfirmDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setTitle("下一步");
+            builder.setNegativeButton("继续添加", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mRecipeName.setText("");
+                    mRecipeMaterials.setText("");
+                    mRecipeSteps.setText("");
+                    mCheckBox_breakfast.setChecked(false);
+                    mCheckBox_lunch.setChecked(false);
+                    mCheckBox_supper.setChecked(false);
+                }
+            });
+            builder.setPositiveButton("结束", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getActivity(), CustomRecipesActivity.class);
+                    startActivity(intent);
+                }
+            });
+            return builder.create();
+        }
     }
 }

@@ -120,6 +120,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         // 处理动作按钮的点击事件
         switch (item.getItemId()) {
             case R.id.action_add:
+                if (deletebleTag == false)
                 openAddMaterialActivity();
                 return true;
             case R.id.action_del: {

@@ -99,8 +99,10 @@ public class EasyKitchenContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RECIPE;
 
         public static final String TABLE_NAME = "recipe";
+        public static final String COLUMN_ID = "_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_MATERIAL = "material";
+        public static final String COLUMN_SEASONING = "seasoning";
         public static final String COLUMN_STEP = "step";
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_WEIGHT  ="weight";
@@ -124,13 +126,14 @@ public class EasyKitchenContract {
         public static String getNameFromUri(Uri uri) {
             return getMaterialFromUri(uri);
         }
-        public static String getWeightFromUri(Uri uri) {
-            return getMaterialFromUri(uri);
-        }
+        public static String getWeightFromUri(Uri uri) {return getMaterialFromUri(uri);   }
         public static String getSourceFromUri(Uri uri) {
             return getMaterialFromUri(uri);
         }
         public static String getMealTypeFromUri(Uri uri) {
+            return getMaterialFromUri(uri);
+        }
+        public static String getIdFromUri(Uri uri) {
             return getMaterialFromUri(uri);
         }
         public static String getWeightFromUriWithMealType(Uri uri) {
@@ -142,6 +145,10 @@ public class EasyKitchenContract {
         public static Uri buildRecipeUriByName(String name)
         {
             return CONTENT_URI.buildUpon().appendPath("name").appendPath(name).build();
+        }
+        public static Uri buildRecipeUriById(int id)
+        {
+            return CONTENT_URI.buildUpon().appendPath("id").appendPath(Integer.toString(id)).build();
         }
         public static Uri buildRecipeUriByWeight(int weight)
         {

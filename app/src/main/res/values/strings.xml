@@ -25,7 +25,8 @@
     <string name="title_activity_mine">我的厨房</string>
     <string name="title_activity_add_new_recipe">自定义菜谱</string>
     <string name="recipe_name">菜谱名</string>
-    <string name="recipe_material">材料</string>
+    <string name="recipe_material">主料</string>
+    <string name="recipe_seasoning">辅料</string>
     <string name="recipe_steps">步骤</string>
     <string name="title_activity_favorite_recipes">我喜爱的菜谱</string>
     <string name="title_activity_start">StartActivity</string>
@@ -33,6 +34,7 @@
     <string name="action_my_kitchen">厨</string>
     <string name="title_activity_add_material">AddMaterialActivity</string>
     <string name="add_material">添加食材</string>
+    <string name="title_activity_custom_recipes">CustomRecipesActivity</string>
 
 
 </resources>

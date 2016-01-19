@@ -56,9 +56,10 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                    String name = cursor.getString(nameIndex);
-                    Intent intent = new Intent(getActivity(), RecipeActivity.class).setData(EasyKitchenContract.Recipe.buildRecipeUriByName(name));
+                    int idIndex = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_ID);
+                    int id = cursor.getInt(idIndex);
+                    Log.v(LOG_TAG, "recipe id = " + id);
+                    Intent intent = new Intent(getActivity(), RecipeActivity.class).setData(EasyKitchenContract.Recipe.buildRecipeUriById(id));
                     startActivity(intent);
                 }
             }
@@ -180,7 +181,7 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         }
         else
         {
-            uri = EasyKitchenContract.Recipe.buildRecipeUriByMealTypeAndWeight(extra,100);
+            uri = EasyKitchenContract.Recipe.buildRecipeUriByMealTypeAndWeight(extra,0);
         }
         mMealType = extra;
         return new CursorLoader(getActivity(),

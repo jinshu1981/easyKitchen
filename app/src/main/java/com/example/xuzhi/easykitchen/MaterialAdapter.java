@@ -39,6 +39,7 @@ public class MaterialAdapter extends CursorAdapter {
                             if ((cursor != null)&&(cursor.moveToFirst())){
                             int sourceIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_SOURCE);
                             String source = cursor.getString(sourceIndex);
+                            /*内置食材改变状态，用户自定义食材删除*/
                             if (source.equals(EasyKitchenContract.DEFAULTS)){
                                 ContentValues newValue = new ContentValues();
                                 newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.NO);
@@ -48,28 +49,31 @@ public class MaterialAdapter extends CursorAdapter {
                             {
                                 mContext.getContentResolver().delete(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null);
                             }
-                            //新增食材，菜谱权重+1
+                            //删除食材，相关菜谱权重+1
                             Utility.UpdateSingleCursor(mContext, name,1);
                         }
                     }finally{
                         cursor.moveToFirst();
                         cursor.close();
                 }
-                    materialText.setBackgroundResource(R.color.highlightpink);
-                    materialText.setTextColor(mContext.getResources().getColor(R.color.highlightpink));
+                    //materialText.setBackgroundResource(R.color.highlightpink);
+                    //materialText.setTextColor(mContext.getResources().getColor(R.color.highlightpink));
+                    materialText.setAlpha((float)0.5);
                 }
             }
 
         });
-
+/*
         if (MainActivityFragment.deletebleTag == true)
         {
-            materialText.setBackgroundResource(R.color.lightgray);
+            //materialText.setBackgroundResource(R.color.lightgray);
+            materialText.setAlpha((float) 0.5);
         }
         else
         {
-            materialText.setBackgroundResource(R.color.white);
-        }
+            //materialText.setBackgroundResource(R.color.white);
+            materialText.setAlpha((float)1);
+        }*/
         return view;
     }
 

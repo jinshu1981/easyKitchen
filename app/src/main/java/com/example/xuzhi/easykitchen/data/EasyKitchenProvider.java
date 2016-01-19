@@ -33,6 +33,7 @@ public class EasyKitchenProvider extends ContentProvider {
     static final int EASY_KITCHEN_RECIPE_WITH_SOURCE = 205;
     static final int EASY_KITCHEN_RECIPE_WITH_FAVORITE = 206;
     static final int EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT = 207;
+    static final int EASY_KITCHEN_RECIPE_WITH_ID = 208;
 
 
     private static final SQLiteQueryBuilder sEasyKitchenQueryBuilder;
@@ -65,6 +66,8 @@ public class EasyKitchenProvider extends ContentProvider {
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/source/*", EASY_KITCHEN_RECIPE_WITH_SOURCE);
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/favorite", EASY_KITCHEN_RECIPE_WITH_FAVORITE);
         matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/mealType/*/*", EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT);
+        matcher.addURI(authority, EasyKitchenContract.PATH_RECIPE + "/id/*", EASY_KITCHEN_RECIPE_WITH_ID);
+
 
         return matcher;
     }
@@ -97,9 +100,10 @@ public class EasyKitchenProvider extends ContentProvider {
             case EASY_KITCHEN_RECIPE_WITH_SOURCE:
             case EASY_KITCHEN_RECIPE_WITH_FAVORITE:
             case EASY_KITCHEN_RECIPE_WITH_TYPE_AND_WEIGHT:
+            case EASY_KITCHEN_RECIPE_WITH_NAME:
                 return EasyKitchenContract.Recipe.CONTENT_TYPE;
 
-            case EASY_KITCHEN_RECIPE_WITH_NAME:
+            case EASY_KITCHEN_RECIPE_WITH_ID:
                 return EasyKitchenContract.Recipe.CONTENT_ITEM_TYPE;
 
             default:
@@ -255,6 +259,10 @@ public class EasyKitchenProvider extends ContentProvider {
             EasyKitchenContract.Recipe.TABLE_NAME +
                     "." + EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE + " LIKE ? AND " +
                     EasyKitchenContract.Recipe.COLUMN_WEIGHT + " <= ? ";
+    //recipe.ID = ?
+    private static final String sEasyKitchenByRecipeIdSelection =
+            EasyKitchenContract.Recipe.TABLE_NAME +
+                    "." + EasyKitchenContract.Recipe.COLUMN_ID + " = ? ";
 
     private Cursor getRecipeByMatchMaterial(
             Uri uri, String[] projection, String sortOrder) {
@@ -318,7 +326,21 @@ public class EasyKitchenProvider extends ContentProvider {
                 sortOrder
         );
     }
+    private Cursor getRecipeById(
+            Uri uri, String[] projection, String sortOrder) {
 
+        String id = EasyKitchenContract.Recipe.getIdFromUri(uri);
+        Log.v(LOG_TAG,"id = " + id);
+        sEasyKitchenQueryBuilder.setTables("recipe");
+        return sEasyKitchenQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                sEasyKitchenByRecipeIdSelection,
+                new String[]{id},
+                null,
+                null,
+                sortOrder
+        );
+    }
     private Cursor getFavoriteRecipes(
             Uri uri, String[] projection, String sortOrder) {
 
@@ -352,6 +374,15 @@ public class EasyKitchenProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         return  db.delete(
                 EasyKitchenContract.Recipe.TABLE_NAME, sEasyKitchenByRecipeNameSelection, new String[]{name});
+
+    }
+    private int DeleteTheRecipeById(Uri uri) {
+
+        String id = EasyKitchenContract.Recipe.getIdFromUri(uri);
+        Log.v(LOG_TAG, "id = " + id);
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        return  db.delete(
+                EasyKitchenContract.Recipe.TABLE_NAME, sEasyKitchenByRecipeIdSelection, new String[]{id});
 
     }
 
@@ -427,6 +458,10 @@ public class EasyKitchenProvider extends ContentProvider {
                 retCursor = getRecipeByMealTypeAndWeight(uri, projection, sortOrder);
                 break;
             }
+            case EASY_KITCHEN_RECIPE_WITH_ID: {
+                retCursor = getRecipeById(uri, projection, sortOrder);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -483,6 +518,9 @@ public class EasyKitchenProvider extends ContentProvider {
                 break;
             case EASY_KITCHEN_RECIPE_WITH_NAME:
                 rowsDeleted = DeleteTheRecipeByName(uri);
+                break;
+            case EASY_KITCHEN_RECIPE_WITH_ID:
+                rowsDeleted = DeleteTheRecipeById(uri);
                 break;
             case EASY_KITCHEN_MATERIAL_WITH_NAME:
                 rowsDeleted = DeleteTheMaterialByName(uri);

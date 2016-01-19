@@ -9,44 +9,27 @@
 
     <TextView android:text="@string/add_material" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/start_border"/>
+
+        <TextView android:text="素" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <MultiAutoCompleteTextView
+            android:id="@+id/add_material_vege"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:dropDownHeight = "wrap_content"
+            android:dropDownWidth = "wrap_content"
+            android:background="@drawable/edittext_border"
+            android:minLines="2"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <TextView android:text="荤" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"/>
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:layout_marginRight="@dimen/activity_horizontal_margin">
-
-        <RadioButton
-            android:id="@+id/rbtnV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="素"
-            android:checked="true"/>
-
-        <RadioButton
-            android:id="@+id/rbtnM"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="荤"/>
-
-        <RadioButton
-            android:id="@+id/rbtnS"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="调料"/>
-    </RadioGroup>
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/add_material"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:dropDownHeight = "wrap_content"
-        android:dropDownWidth = "wrap_content"
-        android:background="@drawable/edittext_border"
-        android:minLines="2"/>
 
     <MultiAutoCompleteTextView
         android:id="@+id/add_material_meat"
@@ -56,8 +39,12 @@
         android:dropDownHeight = "wrap_content"
         android:dropDownWidth = "wrap_content"
         android:background="@drawable/edittext_border"
-        android:minLines="2"/>
+        android:minLines="2"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
+    <TextView android:text="调料" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
     <MultiAutoCompleteTextView
         android:id="@+id/add_material_seasoning"
         android:layout_width="match_parent"
@@ -66,7 +53,8 @@
         android:dropDownHeight = "wrap_content"
         android:dropDownWidth = "wrap_content"
         android:background="@drawable/edittext_border"
-        android:minLines="2"/>
+        android:minLines="2"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
     <TextView android:layout_width="wrap_content"
         android:layout_height="wrap_content"

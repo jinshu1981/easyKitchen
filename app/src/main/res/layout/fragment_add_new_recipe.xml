@@ -1,3 +1,6 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -6,31 +9,32 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.xuzhi.easykitchen.AddNewRecipeActivityFragment"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@color/highlightpink">
 
-    <ListView
-        android:id="@+id/custom_recipes_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1sp"
-        android:background="@color/lightgray"
-        android:id="@+id/textview_4"/>
-    <Button
-        android:id="@+id/button_add"
-        android:text="添加新菜谱"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"/>
-
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        <CheckBox android:id="@+id/checkbox_breakfast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="早餐"/>
+        <CheckBox android:id="@+id/checkbox_lunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="午餐"/>
+        <CheckBox android:id="@+id/checkbox_supper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="晚餐"/>
+        </LinearLayout>>
 
     <TextView android:text="@string/recipe_name" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:id="@+id/textview_1"
         android:background="@drawable/textview_border"/>
 
@@ -40,7 +44,6 @@
         android:id="@+id/new_recipe_name"
         android:layout_gravity="center"
         android:gravity="top"
-        android:visibility="gone"
         android:background="@drawable/edittext_border"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
@@ -48,17 +51,34 @@
     <TextView android:text="@string/recipe_material" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:id="@+id/textview_2"
         android:background="@drawable/textview_border"/>
 
-    <EditText
+    <MultiAutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/new_recipe_material"
         android:layout_gravity="center"
         android:gravity="top"
-        android:visibility="gone"
+        android:singleLine="false"
+        android:scrollHorizontally="false"
+        android:minLines="2"
+        android:background="@drawable/edittext_border"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+
+    <TextView android:text="@string/recipe_seasoning" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/textview_4"
+        android:background="@drawable/textview_border"/>
+
+    <MultiAutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/new_recipe_seasoning"
+        android:layout_gravity="center"
+        android:gravity="top"
         android:singleLine="false"
         android:scrollHorizontally="false"
         android:minLines="2"
@@ -68,7 +88,6 @@
     <TextView android:text="@string/recipe_steps" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:id="@+id/textview_3"
         android:background="@drawable/textview_border"/>
 
@@ -78,7 +97,6 @@
         android:id="@+id/new_recipe_steps"
         android:layout_gravity="center"
         android:gravity="top"
-        android:visibility="gone"
         android:singleLine="false"
         android:inputType="textMultiLine"
         android:minLines="4"
@@ -88,11 +106,11 @@
 
     <Button
         android:id="@+id/button_confirm"
-        android:text="确定"
+        android:text="确 定"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:background="@drawable/button_border"/>
 </LinearLayout>
-
+</ScrollView>

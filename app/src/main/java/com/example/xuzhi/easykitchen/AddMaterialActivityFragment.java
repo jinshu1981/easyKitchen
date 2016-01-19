@@ -2,13 +2,11 @@ package com.example.xuzhi.easykitchen;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
@@ -27,16 +23,17 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class AddMaterialActivityFragment extends Fragment {
     private final String LOG_TAG = this.getClass().getSimpleName();
-    static public MultiAutoCompleteTextView mMaterialText;
-
+    static public MultiAutoCompleteTextView mVegeMaterialText;
+    static public MultiAutoCompleteTextView mMeatMaterialText;
+    static public MultiAutoCompleteTextView mSeasoningMaterialText;
     static public ArrayAdapter<String> mAdapter;
     static public TextView mHintText;
     static public Button mBConfirm;
-    static public String mMaterialType = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
-    static public RadioGroup mRadioGroup;
+    public String mMaterialType = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
+    /*static public RadioGroup mRadioGroup;
     static public RadioButton mRadioV;
     static public RadioButton mRadioM;
-    static public RadioButton mRadioS;
+    static public RadioButton mRadioS;*/
     public AddMaterialActivityFragment() {
     }
 
@@ -45,7 +42,9 @@ public class AddMaterialActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_material, container, false);
 
-        mMaterialText = (MultiAutoCompleteTextView) rootView.findViewById(R.id.add_material);
+        mVegeMaterialText = (MultiAutoCompleteTextView) rootView.findViewById(R.id.add_material_vege);
+        mMeatMaterialText = (MultiAutoCompleteTextView) rootView.findViewById(R.id.add_material_meat);
+        mSeasoningMaterialText = (MultiAutoCompleteTextView) rootView.findViewById(R.id.add_material_seasoning);
         mHintText = (TextView) rootView.findViewById(R.id.add_material_hint);
         mBConfirm = (Button)rootView.findViewById(R.id.button_add_material);
 
@@ -53,43 +52,38 @@ public class AddMaterialActivityFragment extends Fragment {
         mAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_multiple_choice,
                 StartActivity.materialList);
-        mMaterialText.setAdapter(mAdapter);
-        mMaterialText.setThreshold(1);
-        mMaterialText.setTokenizer(new AddMaterialActivityFragment.CCommaTokenizer());//设置为中文逗号
+        mVegeMaterialText.setAdapter(mAdapter);
+        mVegeMaterialText.setThreshold(1);
+        mVegeMaterialText.setTokenizer(new Utility.CCommaTokenizer());//设置为中文逗号
 
-        /*设置RadioGroup*/
-        mRadioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup);
-        mRadioV = (RadioButton) rootView.findViewById(R.id.rbtnV);
-        mRadioM = (RadioButton) rootView.findViewById(R.id.rbtnM);
-        mRadioS = (RadioButton) rootView.findViewById(R.id.rbtnS);
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == mRadioV.getId()) {
-                    mMaterialType = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
+        mMeatMaterialText.setAdapter(mAdapter);
+        mMeatMaterialText.setThreshold(1);
+        mMeatMaterialText.setTokenizer(new Utility.CCommaTokenizer());//设置为中文逗号
 
-                } else if (checkedId == mRadioM.getId()) {
-                    mMaterialType = EasyKitchenContract.Material.MATERIAL_TYPE_MEAT;
-                }else if (checkedId == mRadioS.getId()) {
-                    mMaterialType = EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING;
-                }else{
-                    Log.e(LOG_TAG,"invaid type");
-                }
-            }
-        });
+        mSeasoningMaterialText.setAdapter(mAdapter);
+        mSeasoningMaterialText.setThreshold(1);
+        mSeasoningMaterialText.setTokenizer(new Utility.CCommaTokenizer());//设置为中文逗号
+
         Button bAddMaterial = (Button) rootView.findViewById(R.id.button_add_material);
         bAddMaterial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String material = mMaterialText.getText().toString();
-                if (material == null || material.trim().length() == 0 || "".equals(material.trim()))
+                String vegeMaterial = mVegeMaterialText.getText().toString();
+                String meatMaterial = mMeatMaterialText.getText().toString();
+                String seaoningMaterial = mSeasoningMaterialText.getText().toString();
+                if ((vegeMaterial == null || vegeMaterial.trim().length() == 0 || "".equals(vegeMaterial.trim()))
+                    &&(meatMaterial == null || meatMaterial.trim().length() == 0 || "".equals(meatMaterial.trim()))
+                    &&(seaoningMaterial == null || seaoningMaterial.trim().length() == 0 || "".equals(seaoningMaterial.trim())))
                 {
                     ShowHintText("无效输入，请重新输入食材");
                 }
                 else
                 {
                     mHintText.setVisibility(View.GONE);
-                    UpdateMaterialDb(getActivity(),material);
+                    UpdateMaterialDb(getActivity(), vegeMaterial, EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE);
+                    UpdateMaterialDb(getActivity(),meatMaterial,EasyKitchenContract.Material.MATERIAL_TYPE_MEAT);
+                    UpdateMaterialDb(getActivity(),seaoningMaterial,EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING);
+                    startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             }
         });
@@ -98,7 +92,7 @@ public class AddMaterialActivityFragment extends Fragment {
         return rootView;
     }
     /*中文逗号分隔符接口*/
-    public static class CCommaTokenizer implements MultiAutoCompleteTextView.Tokenizer {
+   /* public static class CCommaTokenizer implements MultiAutoCompleteTextView.Tokenizer {
         public int findTokenStart(CharSequence text, int cursor) {
             int i = cursor;
 
@@ -147,7 +141,7 @@ public class AddMaterialActivityFragment extends Fragment {
                 }
             }
         }
-    }
+    }*/
 
     private void ShowHintText(String s)
     {
@@ -155,7 +149,7 @@ public class AddMaterialActivityFragment extends Fragment {
         mHintText.setVisibility(View.VISIBLE);
     }
 
-    private void UpdateMaterialDb(Context c,String allMaterials)
+    private void UpdateMaterialDb(Context c,String allMaterials,String materialType)
     {
         String[] materialList = allMaterials.toString().split("，");
         Log.v(LOG_TAG,"mMaterialText = " + allMaterials);
@@ -188,13 +182,13 @@ public class AddMaterialActivityFragment extends Fragment {
                 else{
                     ContentValues newValue = new ContentValues();
                     newValue.put(EasyKitchenContract.Material.COLUMN_NAME, material);
-                    newValue.put(EasyKitchenContract.Material.COLUMN_TYPE, mMaterialType);
+                    newValue.put(EasyKitchenContract.Material.COLUMN_TYPE, materialType);
                     newValue.put(EasyKitchenContract.Material.COLUMN_IMAGE, 0);
                     newValue.put(EasyKitchenContract.Material.COLUMN_IMAGE_GREY, 0);
                     newValue.put(EasyKitchenContract.Material.COLUMN_STATUS, EasyKitchenContract.YES);
                     c.getContentResolver().insert(EasyKitchenContract.Material.CONTENT_URI, newValue);
                     Log.v(LOG_TAG, "new material in kitchen= " + material);
-                    //新增食材，菜谱权重-1
+                    //新增食材，菜谱权重-1 
                     Utility.UpdateSingleCursor(getActivity(), material,-1);
 
                 }
