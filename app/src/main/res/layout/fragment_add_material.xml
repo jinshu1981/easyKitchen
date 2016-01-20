@@ -7,13 +7,8 @@
     tools:context="com.example.xuzhi.easykitchen.AddMaterialActivityFragment"
     android:orientation="vertical">
 
-    <TextView android:text="@string/add_material" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:background="@drawable/start_border"/>
 
-        <TextView android:text="素" android:layout_width="wrap_content"
+        <TextView android:text="@string/vegetable" android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
         <MultiAutoCompleteTextView
@@ -27,7 +22,7 @@
             android:minLines="2"
             android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <TextView android:text="荤" android:layout_width="wrap_content"
+    <TextView android:text="@string/meat" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
@@ -42,7 +37,7 @@
         android:minLines="2"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <TextView android:text="调料" android:layout_width="wrap_content"
+    <TextView android:text="@string/seasoning" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
     <MultiAutoCompleteTextView
@@ -64,7 +59,7 @@
 
     <Button
         android:id="@+id/button_add_material"
-        android:text="确定"
+        android:text="@string/button_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

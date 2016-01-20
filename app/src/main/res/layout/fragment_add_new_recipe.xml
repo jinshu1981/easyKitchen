@@ -21,18 +21,18 @@
         <CheckBox android:id="@+id/checkbox_breakfast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="早餐"/>
+            android:text="@string/menu_breakfast"/>
         <CheckBox android:id="@+id/checkbox_lunch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="午餐"/>
+            android:text="@string/menu_lunch"/>
         <CheckBox android:id="@+id/checkbox_supper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="晚餐"/>
+            android:text="@string/menu_supper"/>
         </LinearLayout>>
 
-    <TextView android:text="@string/recipe_name" android:layout_width="wrap_content"
+    <TextView android:text="@string/new_recipes_name" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/textview_1"
@@ -48,7 +48,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 
-    <TextView android:text="@string/recipe_material" android:layout_width="wrap_content"
+    <TextView android:text="@string/new_recipes_material" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/textview_2"
@@ -67,7 +67,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 
-    <TextView android:text="@string/recipe_seasoning" android:layout_width="wrap_content"
+    <TextView android:text="@string/new_recipes_other_material" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/textview_4"
@@ -85,7 +85,7 @@
         android:background="@drawable/edittext_border"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
-    <TextView android:text="@string/recipe_steps" android:layout_width="wrap_content"
+    <TextView android:text="@string/new_recipes_steps" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/textview_3"
@@ -106,7 +106,7 @@
 
     <Button
         android:id="@+id/button_confirm"
-        android:text="确 定"
+        android:text="@string/button_confirm"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:gravity="center"

@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="主料："
+                android:text="@string/recipes_material"
                 android:id ="@+id/title_material"
                 android:layout_gravity="left"/>
             <TextView
@@ -68,7 +68,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="辅料："
+                android:text="@string/recipes_other_material"
                 android:id ="@+id/title_seasoning"
                 android:layout_gravity="left"/>
             <TextView
@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="步骤："
+                android:text="@string/recipes_steps"
                 android:id ="@+id/title_step"
                 android:layout_gravity="left"/>
             <TextView

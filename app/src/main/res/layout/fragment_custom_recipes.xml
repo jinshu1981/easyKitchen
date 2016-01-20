@@ -13,10 +13,9 @@
     </ListView>
     <TextView
         android:id="@+id/hintText"
-        android:text="现在还没有您定义的菜谱，请点击 增加 新增菜谱"
+        android:text="@string/no_recipes_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:visibility="gone"
-        />
+        android:visibility="gone"/>
 </RelativeLayout>

@@ -200,7 +200,7 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         {
             TextView noMenuText = (TextView) mRootView.findViewById(R.id.no_menu_text);
             noMenuText.setVisibility(View.GONE);
-            noMenuText.setText("对不起，找到没有合适的菜单");
+            noMenuText.setText(R.string.menu_no_list);
 
         }
         Log.v(LOG_TAG, "onLoadFinished");

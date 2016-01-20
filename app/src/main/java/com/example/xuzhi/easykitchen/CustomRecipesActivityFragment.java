@@ -1,12 +1,14 @@
 package com.example.xuzhi.easykitchen;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -34,10 +36,10 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
     private static final int RECIPE_LOADER_CUSTOM = 0;
     SimpleCursorAdapter mCustomRecipesListAdapter;
     ListView mCustomListView;
-    Cursor mCursor;
-    Context mContext;
+    static Cursor mCursor;
+    static Context mContext;
     TextView mHintText;
-    private CustomRecipesActivityFragment mThis;
+    static private CustomRecipesActivityFragment mThis;
     public CustomRecipesActivityFragment() {
     }
     @Override
@@ -157,11 +159,12 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
     private void EditOrDeleteTheRecipe(Cursor cursor)
     {
         mCursor = cursor;
-
+        new EditOrDeleteDialogFragment().show(getFragmentManager(),"EditOrDeleteDialog");
+        /*
         //实例化对话框;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("编辑或删除");
-        builder.setNegativeButton("编辑", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.dialog_edit_or_delete);
+        builder.setNegativeButton(R.string.dialog_edit, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //get old recipe info
@@ -182,7 +185,7 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
 
             }
         });
-        builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.dialog_delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int idIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_ID);
@@ -192,7 +195,47 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
 
             }
         });
-        builder.show();
+        builder.show();*/
     }
+    public static class EditOrDeleteDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState)
+        {
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.dialog_edit_or_delete_title);
+            builder.setNegativeButton(R.string.dialog_edit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //get old recipe info
+                    int nameIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
+                    String name = mCursor.getString(nameIndex);
+                    int materialIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MATERIAL);
+                    String material = mCursor.getString(materialIndex);
+                    int stepsIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_STEP);
+                    String steps = mCursor.getString(stepsIndex);
+                    int mealTypeIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE);
+                    String mealType = mCursor.getString(mealTypeIndex);
+                    int seasoningIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_SEASONING);
+                    String seasoning = mCursor.getString(seasoningIndex);
+                    Intent intent = new Intent(getActivity(), AddNewRecipeActivity.class).putExtra(Intent.EXTRA_TEXT,name +"@@" + material + "@@"+steps+"@@" +mealType + "@@" + seasoning);
+                    startActivity(intent);
+
+
+
+                }
+            });
+            builder.setPositiveButton(R.string.dialog_delete, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    int idIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_ID);
+                    int id = mCursor.getInt(idIndex);
+                    mContext.getContentResolver().delete(EasyKitchenContract.Recipe.buildRecipeUriById(id),null,null);
+                    getLoaderManager().restartLoader(RECIPE_LOADER_CUSTOM, null, mThis);
+
+                }
+            });
+            return builder.create();
+        }
+    }
 }

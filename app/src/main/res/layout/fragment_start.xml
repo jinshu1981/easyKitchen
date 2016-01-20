@@ -18,7 +18,7 @@
         android:alpha="0.9"/>
 
 
-    <TextView android:text="早 餐" android:layout_width="wrap_content"
+    <TextView android:text="@string/breakfast" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity = "center"
         android:background="@drawable/start_border"
@@ -26,7 +26,7 @@
         android:id = "@+id/id_breakfast"
         android:alpha="0.8"/>
 
-    <TextView android:text="午 餐" android:layout_width="wrap_content"
+    <TextView android:text="@string/lunch" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity = "center"
         android:background="@drawable/start_border"
@@ -34,7 +34,7 @@
         android:id = "@+id/id_lunch"
         android:alpha="0.8"/>
 
-    <TextView android:text="晚 餐" android:layout_width="wrap_content"
+    <TextView android:text="@string/supper" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity = "center"
         android:background="@drawable/start_border"
@@ -42,7 +42,7 @@
         android:id = "@+id/id_supper"
         android:alpha="0.8"/>
 
-    <TextView android:text="看我的厨房" android:layout_width="wrap_content"
+    <TextView android:text="@string/myKitchen" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity = "center"
         android:background="@drawable/start1_border"

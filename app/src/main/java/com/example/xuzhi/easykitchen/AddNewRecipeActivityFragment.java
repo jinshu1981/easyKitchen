@@ -239,9 +239,9 @@ public class AddNewRecipeActivityFragment extends Fragment{
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            builder.setTitle("提示信息");
-            builder.setMessage("菜谱信息不能为空，请输入内容.");
-            builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+            builder.setTitle(R.string.dialog_ValidInputCheck_title);
+            builder.setMessage(R.string.dialog_ValidInputCheck_message);
+            builder.setPositiveButton(R.string.dialog_ValidInputCheck_confirm, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //do nothing
@@ -257,8 +257,8 @@ public class AddNewRecipeActivityFragment extends Fragment{
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            builder.setTitle("下一步");
-            builder.setNegativeButton("继续添加", new DialogInterface.OnClickListener() {
+            builder.setTitle(R.string.dialog_confirm_title);
+            builder.setNegativeButton(R.string.dialog_confirm_continue, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mRecipeName.setText("");
@@ -269,7 +269,7 @@ public class AddNewRecipeActivityFragment extends Fragment{
                     mCheckBox_supper.setChecked(false);
                 }
             });
-            builder.setPositiveButton("结束", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(R.string.dialog_confirm_finish, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(getActivity(), CustomRecipesActivity.class);

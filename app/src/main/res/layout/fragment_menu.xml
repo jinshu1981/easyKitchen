@@ -25,14 +25,14 @@
         android:padding="@dimen/activity_horizontal_margin">
         <TextView
             android:id="@+id/button_breakfast"
-            android:text="早餐"
+            android:text="@string/menu_breakfast"
             android:textColor="@color/lightgray"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:background="@drawable/textview_border_menu_breakfast"/>
         <TextView
             android:id="@+id/button_lunch"
-            android:text="午餐"
+            android:text="@string/menu_lunch"
             android:textColor="@color/lightgray"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:background="@drawable/textview_border_menu_lunch"/>
         <TextView
             android:id="@+id/button_supper"
-            android:text="晚餐"
+            android:text="@string/menu_supper"
             android:textColor="@color/lightgray"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"

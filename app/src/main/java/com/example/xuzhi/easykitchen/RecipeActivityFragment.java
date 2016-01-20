@@ -56,6 +56,7 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
         });
         //set bold text style
         Utility.setBoldTextStyle((TextView) mRootView.findViewById(R.id.title_material));
+        Utility.setBoldTextStyle((TextView) mRootView.findViewById(R.id.title_seasoning));
         Utility.setBoldTextStyle((TextView) mRootView.findViewById(R.id.title_step));
         return rootView;
     }
