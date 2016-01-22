@@ -48,7 +48,7 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
                 String newFavoriteFlag = (mRecipeFavoriteFlag.equals("yes"))?"no":"yes";
                 recipeValues.put(EasyKitchenContract.Recipe.COLUMN_FAVORITE, newFavoriteFlag);
                 int value = mContext.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(mRecipeName), recipeValues, null, null);
-                int imageId = (newFavoriteFlag.equals("yes"))?R.mipmap.temp:R.mipmap.temp_grey;
+                int imageId = (newFavoriteFlag.equals(EasyKitchenContract.YES))?R.drawable.favorite:R.drawable.unfavorite;
                 ((ImageView) mRootView.findViewById(R.id.image_favorite)).setImageResource(imageId);
                 mRecipeFavoriteFlag = newFavoriteFlag;
                 Log.v(LOG_TAG,"update value = " + value);
@@ -63,8 +63,6 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(RECIPE_LOADER, null, this);
-        // getLoaderManager().initLoader(MATERIAL_LOADER_DELETE, null, this);
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -72,7 +70,6 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        /*String materialName = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);*/
         Uri recipeUri= getActivity().getIntent().getData();
         Log.v(LOG_TAG,"recipe uri ="+recipeUri.toString() );
         return new CursorLoader(getActivity(),
@@ -111,15 +108,13 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
             ((TextView) mRootView.findViewById(R.id.step))
                     .setText(content);
 
-            //index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_IMAGE);
-            //int imageid = cursor.getInt(index);
             ((ImageView) mRootView.findViewById(R.id.image)).setImageResource(Utility.getImagebyName(content));
 
             index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_FAVORITE);
             content = cursor.getString(index);
             mRecipeFavoriteFlag = content;
             Log.v(LOG_TAG,"favorite flag = " + content);
-            int imageId = (content.equals("yes") )?R.mipmap.temp:R.mipmap.temp_grey;
+            int imageId = (content.equals(EasyKitchenContract.YES) )?R.drawable.favorite:R.drawable.unfavorite;
             ((ImageView) mRootView.findViewById(R.id.image_favorite)).setImageResource(imageId);
 
         }

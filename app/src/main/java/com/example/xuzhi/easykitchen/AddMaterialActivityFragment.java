@@ -29,11 +29,6 @@ public class AddMaterialActivityFragment extends Fragment {
     static public ArrayAdapter<String> mAdapter;
     static public TextView mHintText;
     static public Button mBConfirm;
-    public String mMaterialType = EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE;
-    /*static public RadioGroup mRadioGroup;
-    static public RadioButton mRadioV;
-    static public RadioButton mRadioM;
-    static public RadioButton mRadioS;*/
     public AddMaterialActivityFragment() {
     }
 
@@ -47,6 +42,8 @@ public class AddMaterialActivityFragment extends Fragment {
         mSeasoningMaterialText = (MultiAutoCompleteTextView) rootView.findViewById(R.id.add_material_seasoning);
         mHintText = (TextView) rootView.findViewById(R.id.add_material_hint);
         mBConfirm = (Button)rootView.findViewById(R.id.button_add_material);
+
+        mHintText.setVisibility(View.GONE);
 
         /*根据内置食材资料自动提示*/
         mAdapter = new ArrayAdapter<String>(getActivity(),
@@ -75,7 +72,8 @@ public class AddMaterialActivityFragment extends Fragment {
                     &&(meatMaterial == null || meatMaterial.trim().length() == 0 || "".equals(meatMaterial.trim()))
                     &&(seaoningMaterial == null || seaoningMaterial.trim().length() == 0 || "".equals(seaoningMaterial.trim())))
                 {
-                    ShowHintText("无效输入，请重新输入食材");
+                    mHintText.setText(R.string.valid_check_hint);
+                    mHintText.setVisibility(View.VISIBLE);
                 }
                 else
                 {
@@ -83,70 +81,13 @@ public class AddMaterialActivityFragment extends Fragment {
                     UpdateMaterialDb(getActivity(), vegeMaterial, EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE);
                     UpdateMaterialDb(getActivity(),meatMaterial,EasyKitchenContract.Material.MATERIAL_TYPE_MEAT);
                     UpdateMaterialDb(getActivity(),seaoningMaterial,EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING);
-                    startActivity(new Intent(getActivity(), MainActivity.class));
+                    startActivity(new Intent(getActivity(), MaterialActivity.class));
                 }
             }
         });
 
 
         return rootView;
-    }
-    /*中文逗号分隔符接口*/
-   /* public static class CCommaTokenizer implements MultiAutoCompleteTextView.Tokenizer {
-        public int findTokenStart(CharSequence text, int cursor) {
-            int i = cursor;
-
-            while (i > 0 && text.charAt(i - 1) != '，') {
-                i--;
-            }
-            while (i < cursor && text.charAt(i) == ' ') {
-                i++;
-            }
-
-            return i;
-        }
-
-        public int findTokenEnd(CharSequence text, int cursor) {
-            int i = cursor;
-            int len = text.length();
-
-            while (i < len) {
-                if (text.charAt(i) == '，') {
-                    return i;
-                } else {
-                    i++;
-                }
-            }
-
-            return len;
-        }
-
-        public CharSequence terminateToken(CharSequence text) {
-            int i = text.length();
-
-            while (i > 0 && text.charAt(i - 1) == ' ') {
-                i--;
-            }
-
-            if (i > 0 && text.charAt(i - 1) == '，') {
-                return text;
-            } else {
-                if (text instanceof Spanned) {
-                    SpannableString sp = new SpannableString(text + "， ");
-                    TextUtils.copySpansFrom((Spanned) text, 0, text.length(),
-                            Object.class, sp, 0);
-                    return sp;
-                } else {
-                    return text + "， ";
-                }
-            }
-        }
-    }*/
-
-    private void ShowHintText(String s)
-    {
-        mHintText.setText(s);
-        mHintText.setVisibility(View.VISIBLE);
     }
 
     private void UpdateMaterialDb(Context c,String allMaterials,String materialType)

@@ -17,13 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MaterialActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     static public GridView mVegetableGridView;
     static public GridView mMeatGridView;
@@ -39,10 +40,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     public static boolean deletebleTag = false;
-    private View mRootView;
-    private static MainActivityFragment mThis;
 
-    public MainActivityFragment() {
+    public MaterialActivityFragment() {
     }
 
     @Override
@@ -55,9 +54,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        mRootView = rootView;
-        mThis = this;
+        View rootView = inflater.inflate(R.layout.fragment_material, container, false);
+
         mVegetableAdapter = new MaterialAdapter(getActivity(), null, 0);
         mVegetableGridView = (GridView) rootView.findViewById(R.id.grid_view_vegetable);
         mVegetableGridView.setAdapter(mVegetableAdapter);
@@ -112,7 +110,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_main_fragment, menu);
+        inflater.inflate(R.menu.menu_material_fragment, menu);
     }
 
     @Override
@@ -225,11 +223,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         if(deletebleTag == true)
         {
             item.setTitle(R.string.action_endDel);
+            item.setIcon(R.drawable.ok);
+            Toast.makeText(getActivity(), (String) "点击食材即可删除",
+                    Toast.LENGTH_LONG).show();
         }
         else
         {
             /*结束删除操作后，刷新界面*/
             item.setTitle(R.string.action_del);
+            item.setIcon(R.drawable.minus);
             getLoaderManager().restartLoader(MATERIAL_LOADER_VEGETABLE, null, this);
             getLoaderManager().restartLoader(MATERIAL_LOADER_MEAT, null, this);
             getLoaderManager().restartLoader(MATERIAL_LOADER_SEASONING, null, this);

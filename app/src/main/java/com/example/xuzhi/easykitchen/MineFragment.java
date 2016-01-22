@@ -92,7 +92,7 @@ public class MineFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case "我的食材":
-                        intent = new Intent(getActivity(), MainActivity.class);
+                        intent = new Intent(getActivity(), MaterialActivity.class);
                         startActivity(intent);
                         break;
                     case "自定义菜谱":

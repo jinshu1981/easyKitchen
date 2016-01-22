@@ -24,10 +24,12 @@
     <string name="menu_no_list">对不起，找到没有合适的菜单</string>
     <!-- fragment_mine -->
     <!-- none -->
-    <!-- fragment_main -->
+    <!-- fragment_material -->
     <string name="vegetable">素</string>
     <string name="meat">荤</string>
     <string name="seasoning">调料</string>
+    <!-- fragment_add_material -->
+    <string name="valid_check_hint">请至少输入一种食材</string>
     <!-- fragment_custom_reciepes -->
     <string name="no_recipes_hint">现在还没有您定义的菜谱，请点击 新增 增加菜谱</string>
     <!-- fragment_add_new_reciepes -->
@@ -35,6 +37,7 @@
     <string name="new_recipes_material">主料</string>
     <string name="new_recipes_other_material">辅料</string>
     <string name="new_recipes_steps">步骤</string>
+    <string name="new_recipes_none">无</string>
     <!-- fragment_reciepes -->
     <string name="recipes_material">主料：</string>
     <string name="recipes_other_material">辅料：</string>

@@ -3,13 +3,11 @@ package com.example.xuzhi.easykitchen;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +23,9 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 public class FavoriteRecipesActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static final int RECIPE_LOADER_FAVORITE = 0;
-
-    private SimpleCursorAdapter mFavoriteRecipesListAdapter;
+    //private SimpleCursorAdapter mFavoriteRecipesListAdapter;
     private ListView mFavoriteListView;
+    private MenuAdapter mFavoriteRecipesListAdapter;
     public FavoriteRecipesActivityFragment() {
     }
 
@@ -36,11 +34,16 @@ public class FavoriteRecipesActivityFragment extends Fragment implements LoaderM
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_favorite_recipes, container, false);
 
-        String [] dataColumns = {"image","name"};
+        /*String [] dataColumns = {"image","name"};
         int [] viewIDs = {R.id.image,R.id.name};
         mFavoriteRecipesListAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_custom_recipe_item, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         mFavoriteListView = (ListView)rootView.findViewById(R.id.favorite_recipes_list);
+        mFavoriteListView.setAdapter(mFavoriteRecipesListAdapter);*/
+
+        mFavoriteRecipesListAdapter = new MenuAdapter(getContext(), null, 0);
+        mFavoriteListView = (ListView) rootView.findViewById(R.id.favorite_recipes_list);
         mFavoriteListView.setAdapter(mFavoriteRecipesListAdapter);
+        Utility.setListViewHeightBasedOnChildren(mFavoriteListView);
 
         mFavoriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

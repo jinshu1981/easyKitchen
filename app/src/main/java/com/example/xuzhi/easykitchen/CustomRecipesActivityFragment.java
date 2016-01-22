@@ -120,7 +120,7 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
 
         // Sort order:  Ascending, by date.
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        Uri uri= EasyKitchenContract.Recipe.buildRecipeUriBySource("custom");
+        Uri uri= EasyKitchenContract.Recipe.buildRecipeUriBySource(EasyKitchenContract.CUSTOMISED);
 
 
         return new CursorLoader(getActivity(),
@@ -160,42 +160,6 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
     {
         mCursor = cursor;
         new EditOrDeleteDialogFragment().show(getFragmentManager(),"EditOrDeleteDialog");
-        /*
-        //实例化对话框;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.dialog_edit_or_delete);
-        builder.setNegativeButton(R.string.dialog_edit, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //get old recipe info
-                int nameIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                String name = mCursor.getString(nameIndex);
-                int materialIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MATERIAL);
-                String material = mCursor.getString(materialIndex);
-                int stepsIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_STEP);
-                String steps = mCursor.getString(stepsIndex);
-                int mealTypeIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE);
-                String mealType = mCursor.getString(mealTypeIndex);
-                int seasoningIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_SEASONING);
-                String seasoning = mCursor.getString(seasoningIndex);
-                Intent intent = new Intent(getActivity(), AddNewRecipeActivity.class).putExtra(Intent.EXTRA_TEXT,name +"@@" + material + "@@"+steps+"@@" +mealType + "@@" + seasoning);
-                startActivity(intent);
-
-
-
-            }
-        });
-        builder.setPositiveButton(R.string.dialog_delete, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int idIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_ID);
-                int id = mCursor.getInt(idIndex);
-                mContext.getContentResolver().delete(EasyKitchenContract.Recipe.buildRecipeUriById(id),null,null);
-                getLoaderManager().restartLoader(RECIPE_LOADER_CUSTOM, null, mThis);
-
-            }
-        });
-        builder.show();*/
     }
     public static class EditOrDeleteDialogFragment extends DialogFragment {
         @Override

@@ -31,7 +31,7 @@ public class MaterialAdapter extends CursorAdapter {
         materialText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivityFragment.deletebleTag == true) {
+                if (MaterialActivityFragment.deletebleTag == true) {
                     String name = materialText.getText().toString();
 
                     Cursor cursor = mContext.getContentResolver().query(EasyKitchenContract.Material.buildMaterialUriByName(name), null, null, null, null);
@@ -56,24 +56,12 @@ public class MaterialAdapter extends CursorAdapter {
                         cursor.moveToFirst();
                         cursor.close();
                 }
-                    //materialText.setBackgroundResource(R.color.highlightpink);
-                    //materialText.setTextColor(mContext.getResources().getColor(R.color.highlightpink));
                     materialText.setAlpha((float)0.5);
                 }
             }
 
         });
-/*
-        if (MainActivityFragment.deletebleTag == true)
-        {
-            //materialText.setBackgroundResource(R.color.lightgray);
-            materialText.setAlpha((float) 0.5);
-        }
-        else
-        {
-            //materialText.setBackgroundResource(R.color.white);
-            materialText.setAlpha((float)1);
-        }*/
+
         return view;
     }
 
@@ -83,7 +71,6 @@ public class MaterialAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        //ImageView image = (ImageView)view.findViewById(R.id.image);
         TextView text = (TextView)view.findViewById(R.id.name);
 
         int textIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);

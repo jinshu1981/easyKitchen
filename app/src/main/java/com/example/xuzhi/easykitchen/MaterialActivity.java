@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-public class MainActivity extends AppCompatActivity {
+public class MaterialActivity extends AppCompatActivity {
     private final String LOG_TAG = this.getClass().getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_material);
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Create a new Fragment to be placed in the activity layout
-            MainActivityFragment firstFragment = new MainActivityFragment();
+            MaterialActivityFragment firstFragment = new MaterialActivityFragment();
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments

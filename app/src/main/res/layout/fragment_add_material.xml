@@ -5,7 +5,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.xuzhi.easykitchen.AddMaterialActivityFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/start_background">
 
 
         <TextView android:text="@string/vegetable" android:layout_width="wrap_content"

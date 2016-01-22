@@ -103,13 +103,14 @@ public class AddNewRecipeActivityFragment extends Fragment{
                 /*如果食谱没有辅料，默认填充为“无”*/
                 if (recipeSeasoning == null || recipeSeasoning.trim().length() == 0 || "".equals(recipeSeasoning.trim()))
                 {
-                    recipeSeasoning = "无";
+                    recipeSeasoning = getResources().getString(R.string.new_recipes_none);
                 }
                 String recipeSteps = mRecipeSteps.getText().toString().trim();
                 String mealType = getMealTypeString(mCheckBox_breakfast,mCheckBox_lunch,mCheckBox_supper);
                 Log.v(LOG_TAG, "recipe is " + recipeName + recipeMaterials + recipeSeasoning + recipeSteps + mealType);
 
-                String[] recipe = {recipeName, recipeMaterials, recipeSteps, "custom", "NO",mealType,recipeSeasoning,};
+                /*菜谱名，主料，步骤，是否自定义，是否偏爱，早中晚餐类型，辅料*/
+                String[] recipe = {recipeName, recipeMaterials, recipeSteps, EasyKitchenContract.CUSTOMISED,EasyKitchenContract.NO,mealType,recipeSeasoning,};
                 //check and insert the recipe
                 insertCustomRecipe(getActivity(), recipe);
 
@@ -226,7 +227,7 @@ public class AddNewRecipeActivityFragment extends Fragment{
         }
         if (mealString.equals(""))
         {
-            return "BLS";
+            return EasyKitchenContract.Recipe.MEAL_TYPE_ALL;
         }
         else {
             return mealString;

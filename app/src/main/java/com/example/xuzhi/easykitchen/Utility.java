@@ -33,40 +33,7 @@ import java.util.regex.Pattern;
  */
 public class Utility {
     private final static String LOG_TAG = Utility.class.getSimpleName();
-/*
-    static public void insertVegetables(Context c) {
-        // Now that the content provider is set up, inserting rows of data is pretty simple.
-        // First create a ContentValues object to hold the data you want to insert.
-        ContentValues locationValues = new ContentValues();
-        Uri insertedUri;
-        String[][] database = {{"西瓜", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"黄瓜", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"西红柿", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"芹菜", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE},
-                {"香菜", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"西蓝花", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"冬瓜", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"香菇", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE},
-                {"西葫芦", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"茼蒿", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"绿豆", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE}, {"赤豆", EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE},
-                {"猪肉", EasyKitchenContract.Material.MATERIAL_TYPE_MEAT}, {"鸡肉", EasyKitchenContract.Material.MATERIAL_TYPE_MEAT}, {"牛肉", EasyKitchenContract.Material.MATERIAL_TYPE_MEAT}, {"羊肉", EasyKitchenContract.Material.MATERIAL_TYPE_MEAT},
-                {"葱", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}, {"生姜", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}, {"蒜", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}, {"花椒", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING},
-                {"生抽", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}, {"醋", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}, {"糖", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}, {"盐", EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING}
-        };
-        //read json file
 
-        for (String[] item : database) {
-            // Log.v(LOG_TAG,"item[0]="+ item[0]);
-            //Log.v(LOG_TAG,"item[1]="+ item[1]);
-            String status = "NO";
-
-            locationValues.put(EasyKitchenContract.Material.COLUMN_NAME, item[0]);
-            locationValues.put(EasyKitchenContract.Material.COLUMN_TYPE, item[1]);
-            locationValues.put(EasyKitchenContract.Material.COLUMN_IMAGE, R.mipmap.temp);
-            locationValues.put(EasyKitchenContract.Material.COLUMN_IMAGE_GREY, R.mipmap.temp_grey);
-            locationValues.put(EasyKitchenContract.Material.COLUMN_STATUS, status);
-            // Finally, insert location data into the database.
-            insertedUri = c.getContentResolver().insert(
-                    EasyKitchenContract.Material.CONTENT_URI,
-                    locationValues
-            );
-        }
-
-    }
-*/
     static public void UpdateSingleCursor(Context c, String name,int subWeight) {
         Uri recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name);
         String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
@@ -103,55 +70,6 @@ public class Utility {
 
     }
 
-    /*static public void UpdateSingleCursor(Context c, Cursor cursor) {
-        ContentValues MaterialValues = new ContentValues();
-
-        //update material status
-        int nameIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_NAME);
-        String name = cursor.getString(nameIndex);
-        Log.v(LOG_TAG, "recipe's materialName = " + name);
-        int statusIndex = cursor.getColumnIndex(EasyKitchenContract.Material.COLUMN_STATUS);
-        String status = getTheOppositeStatus(cursor.getString(statusIndex));
-
-        MaterialValues.put(EasyKitchenContract.Material.COLUMN_STATUS, status);
-        c.getContentResolver().update(EasyKitchenContract.Material.buildMaterialUriByName(name), MaterialValues, null, null);
-
-        //update weight of recipes
-        int subWeight = (status.equals(EasyKitchenContract.NO)) ? 1 : -1;
-        Uri recipeUri = EasyKitchenContract.Recipe.buildRecipeUriByMaterialName(name);
-        String sortOrder = EasyKitchenContract.Recipe.COLUMN_NAME + " ASC";
-        Cursor recipeCursor = c.getContentResolver().query(recipeUri, null, null, null, sortOrder);
-        try{
-            if ((recipeCursor != null) && (recipeCursor.moveToFirst())) {
-                ContentValues recipeValues = new ContentValues();
-                int weightIndex;
-                int weight;
-                int recipeNameIndex;
-                String recipeName;
-                for (int i = 0; i < recipeCursor.getCount(); i++) {
-                    recipeNameIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
-                    recipeName = recipeCursor.getString(recipeNameIndex);
-                    //filter the unsuitable recipes
-                    if (recipeFiltered(name,recipeCursor))
-                    {
-                        recipeCursor.moveToNext();
-                        continue;
-                    }
-
-                    weightIndex = recipeCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_WEIGHT);
-                    //Log.v(LOG_TAG, "weightIndex = " + weightIndex);
-                    weight = recipeCursor.getInt(weightIndex) + subWeight;
-                    recipeValues.put(EasyKitchenContract.Recipe.COLUMN_WEIGHT, weight);
-                    Log.v(LOG_TAG, "weight = " + weight + ",recipeName = " + recipeName);
-                    c.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(recipeName), recipeValues, null, null);
-                    recipeCursor.moveToNext();
-                }
-            }}finally {
-            recipeCursor.moveToFirst();
-            recipeCursor.close();
-        }
-
-    }*/
     static public boolean recipeFiltered(String materialName,Cursor recipeCursor)
     {
         String [][] recipes = {{"油","蚝油，麻油，酱油"},{"鸡","鸡精"},{"虾","虾仁"}};
@@ -254,14 +172,7 @@ public class Utility {
     {
         return R.mipmap.temp;
     }
-    static public int getImagebyNameandStatus(String name,String status)
-    {
-        if (status.equals("YES")) {
-            return R.mipmap.temp;
-        } else {
-            return R.mipmap.temp_grey;
-        }
-    }
+
 
     static public void setBoldTextStyle(TextView text){
         TextPaint tp = text.getPaint();

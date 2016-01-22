@@ -9,7 +9,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".StartActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,9 +23,9 @@
             android:authorities="com.example.xuzhi.easykitchen" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".MaterialActivity"
             android:label="@string/main_activity_name"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MaterialActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xuzhi.easykitchen.MineActivity" />
@@ -69,10 +71,10 @@
         <activity
             android:name=".AddMaterialActivity"
             android:label="@string/add_material_activity_name"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MaterialActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xuzhi.easykitchen.MainActivity" />
+                android:value=".MaterialActivity" />
         </activity>
         <activity
             android:name=".CustomRecipesActivity"

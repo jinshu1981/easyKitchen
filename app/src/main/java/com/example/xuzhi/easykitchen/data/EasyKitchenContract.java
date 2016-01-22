@@ -113,7 +113,7 @@ public class EasyKitchenContract {
         public static final String MEAL_TYPE_BREAKFAST = "B";
         public static final String MEAL_TYPE_LUNCH = "L";
         public static final String MEAL_TYPE_SUPPER = "S";
-
+        public static final String MEAL_TYPE_ALL = "BLS";
         public static Uri buildRecipeUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
