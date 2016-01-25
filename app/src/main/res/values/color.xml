@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    #
     <color name="highlightpink">#ffeff6</color><!--白色 -->
     <color name="white">#ffffff</color><!--白色 -->
 
