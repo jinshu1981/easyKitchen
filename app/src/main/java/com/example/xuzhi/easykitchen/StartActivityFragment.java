@@ -56,6 +56,14 @@ public class StartActivityFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        TextView haveALook = (TextView)rootView.findViewById(R.id.id_haveALook);
+        haveALook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), BrowseRecipeActivity.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 }

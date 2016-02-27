@@ -11,12 +11,15 @@
     <string name="add_material_activity_name">新增食材</string>
     <string name="recipe_activity_name">菜谱</string>
     <string name="new_recipe_activity_name">新增菜谱</string>
+    <string name="title_activity_browse_recipe">浏览菜谱</string>
+    <string name="title_activity_selected_recipes">待做清单</string>
 
     <!-- fragment_start -->
     <string name="breakfast">早 餐</string>
     <string name="lunch">午 餐</string>
     <string name="supper">晚 餐</string>
     <string name="myKitchen">去厨房看看</string>
+    <string name="haveALook">随便看看</string>
     <!-- fragment_menu -->
     <string name="menu_breakfast">早餐</string>
     <string name="menu_lunch">午餐</string>
@@ -42,6 +45,37 @@
     <string name="recipes_material">主料：</string>
     <string name="recipes_other_material">辅料：</string>
     <string name="recipes_steps">步骤：</string>
+
+    <string name="recipes_timeConsuming_begin">耗时-</string>
+    <string name="recipes_timeConsuming_default_value">15</string>
+    <string name="recipes_timeConsuming_end">分钟</string>
+
+    <string name="recipes_difficulty">难度-</string>
+    <string name="recipes_difficulty_default_value">简单</string>
+
+    <string-array name="difficulty_array">
+        <item>简单</item>
+        <item>中等</item>
+        <item>困难</item>
+    </string-array>
+
+    <string name="recipes_taste">口味-</string>
+    <string name="recipes_taste_default_value">大众</string>
+
+    <string name="recipes_popularity_begin">已有</string>
+    <string name="recipes_popularity_default_value">0</string>
+    <string name="recipes_popularity_end">人做过</string>
+
+    <string name="recipes_eaten_yes">您已经做过</string>
+    <string name="recipes_eaten_no_default_value">您还没尝试过</string>
+    <!-- fragment_browse_recipes -->
+    <string name="browse_recipes_timeConsuming">时间</string>
+    <string name="browse_recipes_difficulty">难度</string>
+    <string name="browse_recipes_popularity">欢迎程度</string>
+    <string name="table">餐桌</string>
+    <!-- fragment_to_buy -->
+    <string name="no_will_buy_hint">您还没有想买的食材</string>
+
     <!-- dialog -->
     <string name="dialog_edit_or_delete_title">编辑或删除</string>
     <string name="dialog_edit">编辑</string>
@@ -54,6 +88,13 @@
     <string name="dialog_confirm_title">下一步</string>
     <string name="dialog_confirm_continue">继续添加</string>
     <string name="dialog_confirm_finish">结束</string>
+
+    <string name="dialog_long_click_title">请选择</string>
+    <string name="dialog_long_click_rename">重命名</string>
+    <string name="dialog_long_click_delete">删除</string>
+
+    <string name="dialog_check_material_title">刷新食材</string>
+    <string name="dialog_check_material_confirm">确定</string>
     <!-- action -->
     <string name="action_my_kitchen">厨</string>
     <string name="action_add">新增</string>
@@ -65,6 +106,13 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_arrange">arrange</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_my_menu_lists">MyMenuListsActivity</string>
+    <string name="title_activity_update_material">UpdateMaterialActivity</string>
+    <string name="title_activity_to_buy">ToBuyActivity</string>
+
+
 
 
 

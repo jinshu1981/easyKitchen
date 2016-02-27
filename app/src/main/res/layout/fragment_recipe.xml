@@ -1,7 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/start_background">
+    android:layout_height="match_parent">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -25,12 +24,14 @@
                     android:id="@+id/image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="3sp"/>
+                    android:padding="3sp"
+                    android:src = "@mipmap/ic_launcher"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:id="@+id/name"/>
+                    android:id="@+id/name"
+                    android:text="菜谱名"/>
             </LinearLayout>
 
             <ImageView
@@ -38,8 +39,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.5"
+                android:src = "@drawable/favorite"/>
         </LinearLayout>
+
+        <View android:layout_height="1sp"
+            android:background="@color/lightgray"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="@dimen/activity_vertical_margin1"/>
+
+        <com.example.xuzhi.easykitchen.MaterialGridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/grid_view_attributes"
+            android:columnWidth="90sp"
+            android:numColumns="3"
+            android:verticalSpacing="2sp"
+            android:horizontalSpacing="2sp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:minWidth="45dp"
+            android:visibility="visible">
+        </com.example.xuzhi.easykitchen.MaterialGridView>
+
+        <View android:layout_height="1sp"
+            android:background="@color/lightgray"
+            android:layout_width="fill_parent"
+            android:layout_marginBottom="@dimen/activity_vertical_margin1"/>
 
         <LinearLayout
             android:layout_height="wrap_content"

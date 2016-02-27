@@ -42,6 +42,14 @@
         android:id = "@+id/id_supper"
         android:alpha="0.8"/>
 
+    <TextView android:text="@string/haveALook" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity = "center"
+        android:background="@drawable/start_border"
+        android:layout_marginTop="20sp"
+        android:id = "@+id/id_haveALook"
+        android:alpha="0.8"/>
+
     <TextView android:text="@string/myKitchen" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity = "center"

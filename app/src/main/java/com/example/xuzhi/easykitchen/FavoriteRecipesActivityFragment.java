@@ -1,6 +1,5 @@
 package com.example.xuzhi.easykitchen;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
@@ -45,7 +43,7 @@ public class FavoriteRecipesActivityFragment extends Fragment implements LoaderM
         mFavoriteListView.setAdapter(mFavoriteRecipesListAdapter);
         Utility.setListViewHeightBasedOnChildren(mFavoriteListView);
 
-        mFavoriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /* mFavoriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -56,7 +54,7 @@ public class FavoriteRecipesActivityFragment extends Fragment implements LoaderM
                     startActivity(intent);
                 }
             }
-        });
+        });*/
 
         return rootView;
     }

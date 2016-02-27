@@ -13,8 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,7 +32,8 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 public class CustomRecipesActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static final int RECIPE_LOADER_CUSTOM = 0;
-    SimpleCursorAdapter mCustomRecipesListAdapter;
+    //SimpleCursorAdapter mCustomRecipesListAdapter;
+    MenuAdapter mCustomRecipesListAdapter;
     ListView mCustomListView;
     static Cursor mCursor;
     static Context mContext;
@@ -58,10 +57,11 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
         //Load custom recipes
         String [] dataColumns = {"image","name","material"};
         int [] viewIDs = {R.id.image,R.id.name,R.id.material};
-        mCustomRecipesListAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_custom_recipe_item, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //mCustomRecipesListAdapter = new SimpleCursorAdapter(getActivity(), R.layout.listview_custom_recipe_item, null, dataColumns, viewIDs, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        mCustomRecipesListAdapter = new MenuAdapter(getContext(), null, 0);
         mCustomListView = (ListView)rootView.findViewById(R.id.custom_recipes_list);
         mCustomListView.setAdapter(mCustomRecipesListAdapter);
-        mCustomListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*mCustomListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -73,7 +73,7 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
                     startActivity(intent);
                 }
             }
-        });
+        });*/
         //delete or edit recipe
         mCustomListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -172,6 +172,8 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //get old recipe info
+                    int idIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_ID);
+                    int id = mCursor.getInt(idIndex) ;
                     int nameIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_NAME);
                     String name = mCursor.getString(nameIndex);
                     int materialIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_MATERIAL);
@@ -182,7 +184,29 @@ public class CustomRecipesActivityFragment extends Fragment implements LoaderMan
                     String mealType = mCursor.getString(mealTypeIndex);
                     int seasoningIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_SEASONING);
                     String seasoning = mCursor.getString(seasoningIndex);
-                    Intent intent = new Intent(getActivity(), AddNewRecipeActivity.class).putExtra(Intent.EXTRA_TEXT,name +"@@" + material + "@@"+steps+"@@" +mealType + "@@" + seasoning);
+                    int timeIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_TIME_CONSUMING);
+                    String time = Integer.toString(mCursor.getInt(timeIndex)) ;
+                    int difficultyIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_DIFFICULTY);
+                    String difficulty = mCursor.getString(difficultyIndex);
+                    int tasteIndex = mCursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_TASTE);
+                    String taste = mCursor.getString(tasteIndex);
+
+                    RecipeStruct recipe = new RecipeStruct(id,
+                    name,
+                    material,
+                    seasoning,
+                    steps,
+                    0,/*
+                    source,
+                    favorite,
+                    weight,*/
+                    mealType,
+                    time,
+                    difficulty,/*
+                    popularity,*/
+                    taste);
+                    Intent intent = new Intent(getActivity(), AddNewRecipeActivity.class).putExtra(Intent.EXTRA_TEXT,recipe);
+
                     startActivity(intent);
 
 

@@ -1,51 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/activity_horizontal_margin">
-
-    <ImageView
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin">
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:id="@+id/main_info">
+        <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src = "@mipmap/temp"
-        />
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:layout_gravity="center">
+        android:src = "@drawable/recipe"/>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="0dip" android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_gravity="center">
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="2sp"
-                android:layout_gravity ="bottom"
-                android:textStyle="bold"
-                android:text = "name"/>
-            <TextView
-                android:id="@+id/author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="2sp"
-                android:layout_gravity="bottom"
-                android:text = "author"/>
-        </LinearLayout>
+            android:layout_gravity="center"
+            android:layout_weight="1">
+                <TextView
+                    android:id="@+id/hideInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2sp"
+                    android:layout_gravity ="bottom"
+                    android:textStyle="bold"
+                    android:text = "name"
+                    android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/material"
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2sp"
+                    android:layout_gravity ="bottom"
+                    android:textStyle="bold"
+                    android:text = "name"/>
+                <TextView
+                    android:id="@+id/material"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2sp"
+                    android:layout_gravity="bottom"
+                    android:text = "material"/>
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2sp"
+                    android:layout_gravity="bottom"
+                    android:text = "author"
+                    android:textColor="@color/lightgray"/>
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/popularity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2sp"
+                        android:layout_gravity="bottom"
+                        android:text = "0人已做过 |"
+                        android:textColor="@color/gray"/>
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2sp"
+                        android:layout_gravity ="bottom"
+                        android:text = "15分钟 |"
+                        android:textColor="@color/gray"/>
+                    <TextView
+                        android:id="@+id/difficulty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2sp"
+                        android:layout_gravity="bottom"
+                        android:text = "简单 |"
+                        android:textColor="@color/gray"/>
+                </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/image_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="2sp"
-            android:layout_gravity="bottom"
-            android:text = "material"/>
-
-
+            android:layout_gravity="center"
+            android:src = "@drawable/expand_arrow"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text = "详情"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id = "@+id/layout_detail"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@color/lightseagreen"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/image_cookIt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src = "@drawable/kitchen_select"
+            android:text = "摆上餐桌"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        <ImageView
+            android:id="@+id/image_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src = "@drawable/like_unselected"
+            android:text = "收藏"/>
+    </LinearLayout>
+
 </LinearLayout>

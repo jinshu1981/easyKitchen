@@ -24,7 +24,7 @@ public class MineActivityFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_mine, container, false);
         final ListView listView = (ListView)rootView.findViewById(R.id.users_menu_list);
-        final String[] usersMenu = {"我的信息","我的食材","心爱菜谱","自定义菜谱","更新"};
+        final String[] usersMenu = {"我的信息","我的食材","心爱菜谱","自定义菜谱","更新","待做清单","我的菜单","待购清单"};
         mUsersListAdapter =
                 new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, usersMenu);
         listView.setAdapter(mUsersListAdapter);
@@ -55,6 +55,18 @@ public class MineActivityFragment extends Fragment {
                     case "更新":
                         FetchDbTask dbTask = new FetchDbTask(getActivity());
                         dbTask.execute();
+                        break;
+                    case "待做清单":
+                        intent = new Intent(getActivity(), SelectedRecipesActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "我的菜单":
+                        intent = new Intent(getActivity(), MyMenuListsActivity.class);
+                        startActivity(intent);
+                        break;
+                    case "待购清单":
+                        intent = new Intent(getActivity(), ToBuyActivity.class);
+                        startActivity(intent);
                         break;
                     default:
                         break;

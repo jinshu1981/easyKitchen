@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.Spinner;
 
 import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
 
@@ -28,9 +29,12 @@ import com.example.xuzhi.easykitchen.data.EasyKitchenContract;
  */
 public class AddNewRecipeActivityFragment extends Fragment{
     private final String LOG_TAG = this.getClass().getSimpleName();
-    static EditText mRecipeName,mRecipeSteps;
+    static EditText mRecipeName,mRecipeSteps,mRecipeTimeConsuming,mRecipeTaste;
     static MultiAutoCompleteTextView mRecipeMaterials,mRecipeSeasoning;
     static public ArrayAdapter<String> mAdapter;
+    static int mRecipeId;
+    static Spinner mDifficultySpinner;
+    Boolean isNewRecipe = true;
     View mRootView;
     Button mButton_confirm;
     static CheckBox mCheckBox_breakfast,mCheckBox_lunch,mCheckBox_supper;
@@ -52,6 +56,8 @@ public class AddNewRecipeActivityFragment extends Fragment{
         mButton_confirm = (Button)rootView.findViewById(R.id.button_confirm);
         mRecipeName = (EditText)rootView.findViewById(R.id.new_recipe_name);
         mRecipeSteps = (EditText)rootView.findViewById(R.id.new_recipe_steps);
+        mRecipeTimeConsuming =  (EditText)rootView.findViewById(R.id.timeConsuming);
+        mRecipeTaste = (EditText)rootView.findViewById(R.id.taste);
 
         mRecipeMaterials = (MultiAutoCompleteTextView)rootView.findViewById(R.id.new_recipe_material);
         mRecipeSeasoning = (MultiAutoCompleteTextView)rootView.findViewById(R.id.new_recipe_seasoning);
@@ -71,23 +77,51 @@ public class AddNewRecipeActivityFragment extends Fragment{
         mCheckBox_lunch = (CheckBox)rootView.findViewById(R.id.checkbox_lunch);
         mCheckBox_supper = (CheckBox)rootView.findViewById(R.id.checkbox_supper);
 
+        /*recipes difficulty*/
+        mDifficultySpinner  = (Spinner)rootView.findViewById(R.id.difficulty_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+                R.array.difficulty_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mDifficultySpinner.setAdapter(adapter);
+
+        /*编辑菜谱时，intent中传入数据*/
         if (getActivity().getIntent().hasExtra(Intent.EXTRA_TEXT))
         {
-            String recipe = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
-            String[] recipes = recipe.split("@@");
-            mRecipeName.setText(recipes[0]);
-            mRecipeMaterials.setText(recipes[1]);
-            mRecipeSeasoning.setText(recipes[4]);
-            mRecipeSteps.setText(recipes[2]);
-            if (recipes[3].contains(EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST))
+            isNewRecipe = false;
+            //String recipe = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            RecipeStruct recipe = (RecipeStruct) getActivity().getIntent().getExtras().getParcelable(Intent.EXTRA_TEXT);
+
+            Log.v(LOG_TAG, "recipe =" + recipe.mId +","+
+                            "recipe.mName = " + recipe.mName +","+
+                            "recipe.mMaterial = " + recipe.mMaterial +","+
+                            "recipe.mSeasoning = " + recipe.mSeasoning +","+
+                            "recipe.mSteps = " + recipe.mSteps +","+
+                            "recipe.mMealType = " + recipe.mMealType +","+
+                            "recipe.mDifficulty = " + recipe.mDifficulty +","+
+                            "recipe.mTimeConsuming = " +  recipe.mTimeConsuming +","+
+                            "recipe.mTaste = " + recipe.mTaste);
+            mRecipeId = recipe.mId;
+            //String[] recipes = recipe.split("@@");
+            mRecipeName.setText(recipe.mName);
+            mRecipeMaterials.setText(recipe.mMaterial);
+            mRecipeSeasoning.setText(recipe.mSeasoning);
+            mRecipeSteps.setText(recipe.mSteps);
+            mRecipeTimeConsuming.setText(recipe.mTimeConsuming);
+            mRecipeTaste.setText(recipe.mTaste);
+
+            int spinnerPosition = adapter.getPosition(recipe.mDifficulty);
+            mDifficultySpinner.setSelection(spinnerPosition);
+
+
+            if (recipe.mMealType.contains(EasyKitchenContract.Recipe.MEAL_TYPE_BREAKFAST))
             {
                 mCheckBox_breakfast.setChecked(true);
             }
-            if (recipes[3].contains(EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH))
+            if (recipe.mMealType.contains(EasyKitchenContract.Recipe.MEAL_TYPE_LUNCH))
             {
                 mCheckBox_lunch.setChecked(true);
             }
-            if (recipes[3].contains(EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER))
+            if (recipe.mMealType.contains(EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER))
             {
                 mCheckBox_supper.setChecked(true);
             }
@@ -107,10 +141,25 @@ public class AddNewRecipeActivityFragment extends Fragment{
                 }
                 String recipeSteps = mRecipeSteps.getText().toString().trim();
                 String mealType = getMealTypeString(mCheckBox_breakfast,mCheckBox_lunch,mCheckBox_supper);
-                Log.v(LOG_TAG, "recipe is " + recipeName + recipeMaterials + recipeSeasoning + recipeSteps + mealType);
+                String recipeTimeConsuming = mRecipeTimeConsuming.getText().toString().trim();
+                String recipeTaste = mRecipeTaste.getText().toString();
+                String recipeDifficulty = mDifficultySpinner.getSelectedItem().toString();
+                /*如果耗时没有输入，填充默认值*/
+                if (recipeTimeConsuming == null || recipeTimeConsuming.trim().length() == 0 || "".equals(recipeTimeConsuming.trim()))
+                {
+                    recipeTimeConsuming = getResources().getString(R.string.recipes_timeConsuming_default_value);
+                }
+                /*如果口味没有输入，填充默认值*/
+                if (recipeTaste == null || recipeTaste.trim().length() == 0 || "".equals(recipeTaste.trim()))
+                {
+                    recipeTaste = getResources().getString(R.string.recipes_taste_default_value);
+                }
+                Log.v(LOG_TAG,"recipeTimeConsuming = " + recipeTimeConsuming + ",recipeDifficulty = " + recipeDifficulty + ",recipeTaste = " + recipeTaste);
 
-                /*菜谱名，主料，步骤，是否自定义，是否偏爱，早中晚餐类型，辅料*/
-                String[] recipe = {recipeName, recipeMaterials, recipeSteps, EasyKitchenContract.CUSTOMISED,EasyKitchenContract.NO,mealType,recipeSeasoning,};
+                Log.v(LOG_TAG, "recipe is " + recipeName + recipeMaterials + recipeSeasoning + recipeSteps + mealType + recipeTimeConsuming + recipeDifficulty + recipeTaste);
+
+                /*菜谱名，主料，步骤，是否自定义，是否偏爱，早中晚餐类型，辅料，耗时，难度，口味*/
+                String[] recipe = {recipeName, recipeMaterials, recipeSteps, EasyKitchenContract.CUSTOMISED,EasyKitchenContract.NO,mealType,recipeSeasoning,recipeTimeConsuming,recipeDifficulty,recipeTaste};
                 //check and insert the recipe
                 insertCustomRecipe(getActivity(), recipe);
 
@@ -150,14 +199,39 @@ public class AddNewRecipeActivityFragment extends Fragment{
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_MEAL_TYPE,recipe[5]);
 
         recipeValues.put(EasyKitchenContract.Recipe.COLUMN_SEASONING, recipe[6]);
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_TIME_CONSUMING, Integer.parseInt(recipe[7]) );
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_DIFFICULTY, recipe[8]);
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_DIFFICULTY_LEVEL, getLevelbyDifficulty(recipe[8]));
+        recipeValues.put(EasyKitchenContract.Recipe.COLUMN_TASTE, recipe[9]);
         // Finally, insert recipe data into the database.
-        insertedUri = c.getContentResolver().insert(
-                EasyKitchenContract.Recipe.CONTENT_URI,
-                recipeValues
-        );
+        if (isNewRecipe == true)
+        {
+            insertedUri = c.getContentResolver().insert(
+                    EasyKitchenContract.Recipe.CONTENT_URI,
+                    recipeValues
+            );
+            Log.v(LOG_TAG, "insertedUri = " + insertedUri);}
+        else
+        {
+            c.getContentResolver().update(
+                    EasyKitchenContract.Recipe.buildRecipeUriById(mRecipeId),
+                    recipeValues, null, null);
+        }
 
-        new ConfirmDialogFragment().show(this.getFragmentManager(),"confirm");
-        Log.v(LOG_TAG, "insertedUri = " + insertedUri);
+        new ConfirmDialogFragment().show(this.getFragmentManager(), "confirm");
+    }
+    int getLevelbyDifficulty(String difficulty)
+    {
+
+        if (difficulty == EasyKitchenContract.Recipe.DIFFICULTY_TYPE_EASY)
+            return 1;
+        if (difficulty == EasyKitchenContract.Recipe.DIFFICULTY_TYPE_MIDIUM)
+            return 2;
+        if (difficulty == EasyKitchenContract.Recipe.DIFFICULTY_TYPE_HARD)
+            return 3;
+        Log.v(LOG_TAG,"unknown difficulty type = " + difficulty);
+        return 1;
+
     }
     private int getCustomRecipeWeight(String[] recipe)
     {
@@ -273,8 +347,10 @@ public class AddNewRecipeActivityFragment extends Fragment{
             builder.setPositiveButton(R.string.dialog_confirm_finish, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getActivity(), CustomRecipesActivity.class);
-                    startActivity(intent);
+                    /*Intent intent = new Intent(getActivity(), CustomRecipesActivity.class);
+                    startActivity(intent);*/
+                    /*back to previous activity*/
+                    getActivity().finish();
                 }
             });
             return builder.create();

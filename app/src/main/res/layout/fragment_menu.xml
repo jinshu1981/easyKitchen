@@ -1,12 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.xuzhi.easykitchen.MenuActivityFragment"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="@drawable/start_background">
+    android:background="@color/highlightpink">
 
     <TextView
         android:id="@+id/no_menu_text"
@@ -22,7 +21,8 @@
         android:focusable="false"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
         <TextView
             android:id="@+id/button_breakfast"
             android:text="@string/menu_breakfast"
@@ -55,7 +55,10 @@
     android:layout_height="0dp"
     android:layout_weight="1">
     </ListView>
-
-
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/plus" />
 </LinearLayout>

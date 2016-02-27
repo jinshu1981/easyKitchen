@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +28,8 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
     private final String LOG_TAG = RecipeActivityFragment.class.getSimpleName();
     private String mRecipeName,mRecipeFavoriteFlag;
     private Context mContext;
+    private RecipeAttributesAdapter attributesAdapter;
+    private GridView mAttributes;
     View mRootView;
     public RecipeActivityFragment() {
     }
@@ -41,23 +44,28 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
         ImageView imageFavorite = (ImageView)mRootView.findViewById(R.id.image_favorite);
         imageFavorite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (mRecipeName == null){
+                if (mRecipeName == null) {
                     return;
                 }
-                ContentValues recipeValues= new ContentValues();
-                String newFavoriteFlag = (mRecipeFavoriteFlag.equals("yes"))?"no":"yes";
+                ContentValues recipeValues = new ContentValues();
+                String newFavoriteFlag = (mRecipeFavoriteFlag.equals("yes")) ? "no" : "yes";
                 recipeValues.put(EasyKitchenContract.Recipe.COLUMN_FAVORITE, newFavoriteFlag);
                 int value = mContext.getContentResolver().update(EasyKitchenContract.Recipe.buildRecipeUriByName(mRecipeName), recipeValues, null, null);
-                int imageId = (newFavoriteFlag.equals(EasyKitchenContract.YES))?R.drawable.favorite:R.drawable.unfavorite;
+                int imageId = (newFavoriteFlag.equals(EasyKitchenContract.YES)) ? R.drawable.favorite : R.drawable.unfavorite;
                 ((ImageView) mRootView.findViewById(R.id.image_favorite)).setImageResource(imageId);
                 mRecipeFavoriteFlag = newFavoriteFlag;
-                Log.v(LOG_TAG,"update value = " + value);
+                Log.v(LOG_TAG, "update value = " + value);
             }
         });
         //set bold text style
         Utility.setBoldTextStyle((TextView) mRootView.findViewById(R.id.title_material));
         Utility.setBoldTextStyle((TextView) mRootView.findViewById(R.id.title_seasoning));
         Utility.setBoldTextStyle((TextView) mRootView.findViewById(R.id.title_step));
+
+        //attributesAdapter = new RecipeAttributesAdapter(mContext,null,0);
+        mAttributes = (GridView)mRootView.findViewById(R.id.grid_view_attributes);
+        //mAttributes.setAdapter(attributesAdapter);
+
         return rootView;
     }
     @Override
@@ -113,9 +121,13 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
             index = cursor.getColumnIndex(EasyKitchenContract.Recipe.COLUMN_FAVORITE);
             content = cursor.getString(index);
             mRecipeFavoriteFlag = content;
-            Log.v(LOG_TAG,"favorite flag = " + content);
+            Log.v(LOG_TAG, "favorite flag = " + content);
             int imageId = (content.equals(EasyKitchenContract.YES) )?R.drawable.favorite:R.drawable.unfavorite;
             ((ImageView) mRootView.findViewById(R.id.image_favorite)).setImageResource(imageId);
+
+            attributesAdapter = new RecipeAttributesAdapter(mContext,cursor,0);
+            //mAttributes = (GridView)mRootView.findViewById(R.id.grid_view_attributes);
+            mAttributes.setAdapter(attributesAdapter);
 
         }
         else
@@ -127,5 +139,5 @@ public class RecipeActivityFragment extends Fragment implements LoaderManager.Lo
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {    }
+    public void onLoaderReset(Loader<Cursor> cursorLoader) { }
 }

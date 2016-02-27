@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,13 +44,13 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         final TextView breakfastText = (TextView) rootView.findViewById(R.id.button_breakfast);
         final TextView lunchText = (TextView) rootView.findViewById(R.id.button_lunch);
         final TextView supperText = (TextView) rootView.findViewById(R.id.button_supper);
-        mMenuAdapter = new MenuAdapter(getContext(), null, 0);
+        mMenuAdapter = new MenuAdapter(getActivity(), null, 0);
         ListView listView = (ListView) rootView.findViewById(R.id.recommended_recipes_list);
         listView.setAdapter(mMenuAdapter);
         Utility.setListViewHeightBasedOnChildren(listView);
         Utility.setMenuTextViewColor(getActivity(), mMealType, breakfastText, lunchText, supperText);
         Log.v(LOG_TAG, "setMenuTextViewColor mMealType = " + mMealType);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -63,7 +62,7 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
                     startActivity(intent);
                 }
             }
-        });
+        });*/
 
 
         breakfastText.setOnClickListener(new View.OnClickListener() {
@@ -90,15 +89,16 @@ public class MenuActivityFragment extends Fragment implements LoaderManager.Load
         });
 
          supperText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                mMealType = EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER;
-                bundle.putString("mealType", mMealType);
-                getLoaderManager().restartLoader(MATERIAL_LOADER_MENU, bundle, mThis);
-                Utility.setMenuTextViewColor(getActivity(),mMealType,breakfastText,lunchText,supperText);
-            }
-        });
+             @Override
+             public void onClick(View v) {
+                 Bundle bundle = new Bundle();
+                 mMealType = EasyKitchenContract.Recipe.MEAL_TYPE_SUPPER;
+                 bundle.putString("mealType", mMealType);
+                 getLoaderManager().restartLoader(MATERIAL_LOADER_MENU, bundle, mThis);
+                 Utility.setMenuTextViewColor(getActivity(), mMealType, breakfastText, lunchText, supperText);
+             }
+         });
+
 
         return rootView;
 

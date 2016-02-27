@@ -2,7 +2,6 @@ package com.example.xuzhi.easykitchen;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -81,7 +80,10 @@ public class AddMaterialActivityFragment extends Fragment {
                     UpdateMaterialDb(getActivity(), vegeMaterial, EasyKitchenContract.Material.MATERIAL_TYPE_VEGETABLE);
                     UpdateMaterialDb(getActivity(),meatMaterial,EasyKitchenContract.Material.MATERIAL_TYPE_MEAT);
                     UpdateMaterialDb(getActivity(),seaoningMaterial,EasyKitchenContract.Material.MATERIAL_TYPE_SEASONING);
-                    startActivity(new Intent(getActivity(), MaterialActivity.class));
+                    //发起新activity
+                    //startActivity(new Intent(getActivity(), MaterialActivity.class));
+                    //返回上级activity
+                    getActivity().finish();
                 }
             }
         });
@@ -135,8 +137,10 @@ public class AddMaterialActivityFragment extends Fragment {
                 }
 
             }finally {
+                cursor.requery();
                 cursor.moveToFirst();
                 cursor.close();
+
             }
         }
     }

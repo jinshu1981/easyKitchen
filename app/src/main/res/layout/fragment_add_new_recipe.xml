@@ -1,6 +1,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/highlightpink">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -10,7 +11,7 @@
     tools:context="com.example.xuzhi.easykitchen.AddNewRecipeActivityFragment"
     android:orientation="vertical"
     android:weightSum="1"
-    android:background="@drawable/start_background">
+    android:background="@color/highlightpink">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -103,7 +104,66 @@
         android:scrollHorizontally="false"
         android:background="@drawable/edittext_border"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            <TextView android:text="耗时" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/title_timeConsuming"
+                android:background="@drawable/textview_border"/>
+            <EditText android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/timeConsuming"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:background="@drawable/edittext_border"
+                android:layout_weight="1"
+                android:inputType="number"/>
+            <TextView android:text="分钟" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            <TextView android:text="难度" android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/title_difficulty"
+                android:background="@drawable/textview_border"/>
+            <Spinner
+                android:id="@+id/difficulty_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/white"/>
+        </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        <TextView android:text="口味" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/title_taste"
+            android:background="@drawable/textview_border"/>
+        <EditText android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/taste"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:background="@drawable/edittext_border"
+            android:layout_weight="1"/>
+        </LinearLayout>
     <Button
         android:id="@+id/button_confirm"
         android:text="@string/button_confirm"
